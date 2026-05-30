@@ -1,4 +1,4 @@
-﻿# .NET Production Diagnostics Lab
+# .NET Production Diagnostics Lab
 
 A small ASP.NET Core diagnostics lab showing common production-style problems, how to detect them, and how to improve reliability, performance, and observability.
 
@@ -28,64 +28,54 @@ The API uses SQLite and creates local seed data automatically.
 
 ## Scenarios
 
-### 1. Slow data access
+### 1. [Slow data access](docs/01-slow-data-access.md)
 
 - Problem: `GET /api/orders/slow?customerId=42`
 - Improved: `GET /api/orders/improved?customerId=42`
-- Notes: `docs/01-slow-data-access.md`
 
-### 2. Cancellation
+### 2. [Cancellation](docs/02-cancellation.md)
 
 - Problem: `GET /api/reports/slow`
 - Improved: `GET /api/reports/cancellable`
-- Notes: `docs/02-cancellation.md`
 
-### 3. Observability
+### 3. [Observability](docs/03-observability.md)
 
 - Problem: `POST /api/payments/problem`
 - Improved: `POST /api/payments/observable`
-- Notes: `docs/03-observability.md`
 
-### 4. External dependency reliability
+### 4. [External dependency reliability](docs/04-external-dependencies.md)
 
 - Problem: `GET /api/shipping/problem?country=CZ`
 - Improved: `GET /api/shipping/resilient?country=CZ`
-- Notes: `docs/04-external-dependencies.md`
 
-### 5. N+1 / chatty data access
+### 5. [N+1 / chatty data access](docs/05-chatty-data-access.md)
 
 - Problem: `GET /api/customers/problem?take=25`
 - Improved: `GET /api/customers/improved?take=25`
-- Notes: `docs/05-chatty-data-access.md`
 
-### 6. Blocking request handling
+### 6. [Blocking request handling](docs/06-blocking-request-handling.md)
 
 - Problem: `GET /api/blocking/problem?delayMs=500`
 - Improved: `GET /api/blocking/improved?delayMs=500`
-- Notes: `docs/06-blocking-request-handling.md`
 
-### 7. Retry storm / controlled retry
+### 7. [Retry storm / controlled retry](docs/07-retry-storm.md)
 
 - Problem: `GET /api/inventory/problem?sku=FAIL`
 - Improved: `GET /api/inventory/improved?sku=FAIL`
-- Notes: `docs/07-retry-storm.md`
 
-### 8. Large response allocation / streaming
+### 8. [Large response allocation / streaming](docs/08-large-response-streaming.md)
 
 - Problem: `GET /api/exports/problem?rows=1000`
 - Improved: `GET /api/exports/improved?rows=1000`
-- Notes: `docs/08-large-response-streaming.md`
 
-### 9. Configuration validation
+### 9. [Configuration validation](docs/09-configuration-validation.md)
 
 - Problem: `GET /api/config/problem`
 - Improved: application startup validates `ExternalServices:BillingApiBaseUrl`
-- Notes: `docs/09-configuration-validation.md`
 
-### 10. Health checks
+### 10. [Health checks](docs/10-health-checks.md)
 
 - Improved: `GET /health/live` and `GET /health/ready`
-- Notes: `docs/10-health-checks.md`
 
 ## Tests
 
