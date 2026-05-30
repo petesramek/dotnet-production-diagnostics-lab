@@ -17,6 +17,7 @@ public static class DataSeeder
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+        await db.Database.EnsureDeletedAsync();
         await db.Database.EnsureCreatedAsync();
 
         if (!await db.Customers.AnyAsync())
@@ -39,12 +40,13 @@ public static class DataSeeder
         {
             var random = new Random(42);
             var statuses = new[] { "Created", "Paid", "Shipped", "Cancelled" };
+            var now = DateTime.UtcNow;
 
             var orders = Enumerable.Range(1, 10_000)
                 .Select(index => new Order
                 {
                     CustomerId = random.Next(1, 251),
-                    CreatedAt = DateTimeOffset.UtcNow.AddMinutes(-index),
+                    CreatedAtUtc = now.AddMinutes(-index),
                     Total = Math.Round((decimal)(random.NextDouble() * 500), 2),
                     Status = statuses[random.Next(statuses.Length)]
                 })

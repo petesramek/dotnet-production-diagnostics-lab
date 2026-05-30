@@ -16,9 +16,9 @@ public sealed class Order
     public int CustomerId { get; set; }
 
     /// <summary>
-    /// Gets or sets the date and time when the order was created.
+    /// Gets or sets the UTC date and time when the order was created.
     /// </summary>
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTime CreatedAtUtc { get; set; }
 
     /// <summary>
     /// Gets or sets the order total.

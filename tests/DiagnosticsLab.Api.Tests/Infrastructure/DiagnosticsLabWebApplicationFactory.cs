@@ -72,17 +72,14 @@ public sealed class DiagnosticsLabWebApplicationFactory : WebApplicationFactory<
     {
         try
         {
-            if (File.Exists(path))
-            {
+            if (File.Exists(path)) {
                 File.Delete(path);
             }
         }
-        catch (IOException)
-        {
+        catch (IOException) {
             // Best-effort cleanup. The OS can keep SQLite files briefly locked after test disposal.
         }
-        catch (UnauthorizedAccessException)
-        {
+        catch (UnauthorizedAccessException) {
             // Best-effort cleanup. Test isolation does not depend on deleting an already unique file.
         }
     }

@@ -26,9 +26,9 @@ public static class OrdersEndpoints
 
             var result = orders
                 .Where(order => order.CustomerId == customerId)
-                .OrderByDescending(order => order.CreatedAt)
+                .OrderByDescending(order => order.CreatedAtUtc)
                 .Take(20)
-                .Select(order => new OrderSummary(order.Id, order.CustomerId, order.CreatedAt, order.Total, order.Status));
+                .Select(order => new OrderSummary(order.Id, order.CustomerId, order.CreatedAtUtc, order.Total, order.Status));
 
             return Results.Ok(result);
         });
@@ -41,8 +41,8 @@ public static class OrdersEndpoints
             var result = await db.Orders
                 .AsNoTracking()
                 .Where(order => order.CustomerId == customerId)
-                .OrderByDescending(order => order.CreatedAt)
-                .Select(order => new OrderSummary(order.Id, order.CustomerId, order.CreatedAt, order.Total, order.Status))
+                .OrderByDescending(order => order.CreatedAtUtc)
+                .Select(order => new OrderSummary(order.Id, order.CustomerId, order.CreatedAtUtc, order.Total, order.Status))
                 .Take(20)
                 .ToListAsync(cancellationToken);
 
@@ -52,5 +52,5 @@ public static class OrdersEndpoints
         return endpoints;
     }
 
-    private sealed record OrderSummary(int Id, int CustomerId, DateTimeOffset CreatedAt, decimal Total, string Status);
+    private sealed record OrderSummary(int Id, int CustomerId, DateTime CreatedAtUtc, decimal Total, string Status);
 }
