@@ -26,6 +26,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<FakeShippingClient>();
 builder.Services.AddScoped<FakeInventoryClient>();
+builder.Services.AddSingleton<FakeStartupDependency>();
+builder.Services.AddSingleton<FakeAuditSink>();
 
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy("Application is running."));
@@ -49,6 +51,9 @@ app.MapShippingEndpoints();
 app.MapInventoryEndpoints();
 app.MapExportEndpoints();
 app.MapConfigurationEndpoints();
+app.MapStartupEndpoints();
+app.MapAuditEndpoints();
+app.MapUploadEndpoints();
 
 app.MapHealthChecks("/health/live");
 app.MapHealthChecks("/health/ready");

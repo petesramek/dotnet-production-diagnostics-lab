@@ -1,4 +1,4 @@
-# .NET Production Diagnostics Lab
+﻿# .NET Production Diagnostics Lab
 
 A small ASP.NET Core diagnostics lab showing common production-style problems, how to detect them, and how to improve reliability, performance, and observability.
 
@@ -16,6 +16,9 @@ This repository is a hands-on lab, not a production template and not an architec
 - Memory pressure caused by building large responses in memory
 - Configuration problems detected too late instead of at startup
 - Missing health checks for operational visibility
+- Startup work that fails silently instead of failing fast
+- Logging or audit sink failures leaking into business operations
+- Request body memory pressure caused by buffering large uploads
 
 ## How to run
 
@@ -76,6 +79,21 @@ The API uses SQLite and creates local seed data automatically.
 ### 10. [Health checks](docs/10-health-checks.md)
 
 - Improved: `GET /health/live` and `GET /health/ready`
+
+### 11. [Startup exception handling](docs/11-startup-exception-handling.md)
+
+- Problem: `GET /api/startup/problem`
+- Improved: `GET /api/startup/improved`
+
+### 12. [Logging failure isolation](docs/12-logging-failure-isolation.md)
+
+- Problem: `POST /api/audit/problem`
+- Improved: `POST /api/audit/improved`
+
+### 13. [Request body memory pressure](docs/13-request-body-memory-pressure.md)
+
+- Problem: `POST /api/uploads/problem`
+- Improved: `POST /api/uploads/improved`
 
 ## Tests
 
