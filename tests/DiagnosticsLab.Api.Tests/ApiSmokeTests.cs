@@ -26,4 +26,24 @@ public sealed class ApiSmokeTests(WebApplicationFactory<Program> factory) : ICla
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task Improved_customers_endpoint_returns_success()
+    {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/customers/improved?take=10");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Improved_blocking_endpoint_returns_success()
+    {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/blocking/improved?delayMs=1");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
 }

@@ -11,25 +11,40 @@ public static class DataSeeder
 
         await db.Database.EnsureCreatedAsync();
 
-        if (await db.Orders.AnyAsync())
+        if (!await db.Customers.AnyAsync())
         {
-            return;
+            var segments = new[] { "Startup", "SMB", "Enterprise" };
+
+            var customers = Enumerable.Range(1, 250)
+                .Select(index => new Customer
+                {
+                    Id = index,
+                    Name = $"Customer {index:000}",
+                    Segment = segments[index % segments.Length]
+                })
+                .ToArray();
+
+            await db.Customers.AddRangeAsync(customers);
         }
 
-        var random = new Random(42);
-        var statuses = new[] { "Created", "Paid", "Shipped", "Cancelled" };
+        if (!await db.Orders.AnyAsync())
+        {
+            var random = new Random(42);
+            var statuses = new[] { "Created", "Paid", "Shipped", "Cancelled" };
 
-        var orders = Enumerable.Range(1, 10_000)
-            .Select(index => new Order
-            {
-                CustomerId = random.Next(1, 250),
-                CreatedAt = DateTimeOffset.UtcNow.AddMinutes(-index),
-                Total = Math.Round((decimal)(random.NextDouble() * 500), 2),
-                Status = statuses[random.Next(statuses.Length)]
-            })
-            .ToArray();
+            var orders = Enumerable.Range(1, 10_000)
+                .Select(index => new Order
+                {
+                    CustomerId = random.Next(1, 251),
+                    CreatedAt = DateTimeOffset.UtcNow.AddMinutes(-index),
+                    Total = Math.Round((decimal)(random.NextDouble() * 500), 2),
+                    Status = statuses[random.Next(statuses.Length)]
+                })
+                .ToArray();
 
-        await db.Orders.AddRangeAsync(orders);
+            await db.Orders.AddRangeAsync(orders);
+        }
+
         await db.SaveChangesAsync();
     }
 }

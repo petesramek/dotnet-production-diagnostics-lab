@@ -7,7 +7,9 @@ This repository is a hands-on lab, not a production template and not an architec
 ## What this repo demonstrates
 
 - Slow data access caused by inefficient queries
+- N+1 / chatty data access caused by per-row database calls
 - Missing cancellation and timeout behavior
+- Sync-over-async / blocking request handling
 - Poor observability and weak logging
 - Reliability issues caused by unsafe external dependency calls
 
@@ -46,11 +48,25 @@ The API uses SQLite and creates local seed data automatically.
 - Improved: `GET /api/shipping/resilient?country=CZ`
 - Notes: `docs/04-external-dependencies.md`
 
+### 5. N+1 / chatty data access
+
+- Problem: `GET /api/customers/problem?take=25`
+- Improved: `GET /api/customers/improved?take=25`
+- Notes: `docs/05-chatty-data-access.md`
+
+### 6. Blocking request handling
+
+- Problem: `GET /api/blocking/problem?delayMs=500`
+- Improved: `GET /api/blocking/improved?delayMs=500`
+- Notes: `docs/06-blocking-request-handling.md`
+
 ## Tests
 
 ```bash
 dotnet test
 ```
+
+The tests include smoke checks and scenario checks proving that selected problem/improved endpoints return equivalent logical data while the improved versions use safer implementation patterns.
 
 ## Notes
 

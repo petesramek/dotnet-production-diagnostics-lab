@@ -27,7 +27,9 @@ app.MapGet("/", () => Results.Ok(new
 }));
 
 app.MapOrderEndpoints();
+app.MapCustomerEndpoints();
 app.MapReportEndpoints();
+app.MapBlockingEndpoints();
 app.MapPaymentEndpoints();
 app.MapShippingEndpoints();
 
