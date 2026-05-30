@@ -1,4 +1,4 @@
-﻿# .NET Production Diagnostics Lab
+# .NET Production Diagnostics Lab
 
 A small ASP.NET Core diagnostics lab showing common production-style problems, how to detect them, and how to improve reliability, performance, and observability.
 
