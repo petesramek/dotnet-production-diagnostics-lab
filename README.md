@@ -14,6 +14,8 @@ This repository is a hands-on lab, not a production template and not an architec
 - Reliability issues caused by unsafe external dependency calls
 - Retry storms caused by uncontrolled retries
 - Memory pressure caused by building large responses in memory
+- Configuration problems detected too late instead of at startup
+- Missing health checks for operational visibility
 
 ## How to run
 
@@ -74,13 +76,24 @@ The API uses SQLite and creates local seed data automatically.
 - Improved: `GET /api/exports/improved?rows=1000`
 - Notes: `docs/08-large-response-streaming.md`
 
+### 9. Configuration validation
+
+- Problem: `GET /api/config/problem`
+- Improved: application startup validates `ExternalServices:BillingApiBaseUrl`
+- Notes: `docs/09-configuration-validation.md`
+
+### 10. Health checks
+
+- Improved: `GET /health/live` and `GET /health/ready`
+- Notes: `docs/10-health-checks.md`
+
 ## Tests
 
 ```bash
 dotnet test
 ```
 
-The tests include smoke checks and scenario checks proving that selected problem/improved endpoints return equivalent logical data while the improved versions use safer implementation patterns.
+The tests include smoke checks, scenario checks, startup validation checks, and endpoint behavior checks.
 
 ## Notes
 

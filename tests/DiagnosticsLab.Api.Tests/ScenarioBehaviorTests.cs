@@ -1,12 +1,11 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace DiagnosticsLab.Api.Tests;
 
-public sealed class ScenarioBehaviorTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
 {
     [Fact]
     public async Task Orders_problem_and_improved_endpoints_return_same_order_ids()
@@ -111,3 +110,4 @@ public sealed class ScenarioBehaviorTests(WebApplicationFactory<Program> factory
                 item.GetProperty("totalSpent").GetDecimal()));
     }
 }
+

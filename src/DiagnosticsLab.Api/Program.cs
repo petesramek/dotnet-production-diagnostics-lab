@@ -1,12 +1,22 @@
-﻿using DiagnosticsLab.Api.Data;
+﻿using DiagnosticsLab.Api.Configuration;
+using DiagnosticsLab.Api.Data;
 using DiagnosticsLab.Api.Endpoints;
 using DiagnosticsLab.Api.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+
+builder.Services
+    .AddOptions<ExternalServicesOptions>()
+    .Bind(builder.Configuration.GetSection(ExternalServicesOptions.SectionName))
+    .ValidateDataAnnotations()
+    .Validate(options => Uri.TryCreate(options.BillingApiBaseUrl, UriKind.Absolute, out _), "Billing API base URL must be an absolute URI.")
+    .ValidateOnStart();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -16,6 +26,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<FakeShippingClient>();
 builder.Services.AddScoped<FakeInventoryClient>();
+
+builder.Services.AddHealthChecks()
+    .AddCheck("self", () => HealthCheckResult.Healthy("Application is running."));
 
 var app = builder.Build();
 
@@ -35,6 +48,10 @@ app.MapPaymentEndpoints();
 app.MapShippingEndpoints();
 app.MapInventoryEndpoints();
 app.MapExportEndpoints();
+app.MapConfigurationEndpoints();
+
+app.MapHealthChecks("/health/live");
+app.MapHealthChecks("/health/ready");
 
 app.Run();
 

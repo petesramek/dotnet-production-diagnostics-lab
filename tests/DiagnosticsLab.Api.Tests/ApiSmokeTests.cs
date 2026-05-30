@@ -1,11 +1,10 @@
 using System.Net;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace DiagnosticsLab.Api.Tests;
 
-public sealed class ApiSmokeTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
 {
     [Fact]
     public async Task Root_returns_success()
@@ -65,5 +64,17 @@ public sealed class ApiSmokeTests(WebApplicationFactory<Program> factory) : ICla
         var response = await client.GetAsync("/api/exports/improved?rows=10");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Health_endpoints_return_success()
+    {
+        using var client = factory.CreateClient();
+
+        var live = await client.GetAsync("/health/live");
+        var ready = await client.GetAsync("/health/ready");
+
+        live.StatusCode.Should().Be(HttpStatusCode.OK);
+        ready.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 }
