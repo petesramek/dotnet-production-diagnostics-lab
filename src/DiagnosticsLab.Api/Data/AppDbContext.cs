@@ -33,7 +33,6 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             entity.HasKey(order => order.Id);
             entity.HasIndex(order => order.CustomerId);
             entity.Property(order => order.Status).HasMaxLength(32);
-            entity.Property(order => order.Total).HasPrecision(18, 2);
         });
     }
 }

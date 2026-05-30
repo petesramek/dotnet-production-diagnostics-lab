@@ -47,7 +47,7 @@ public static class DataSeeder
                 {
                     CustomerId = random.Next(1, 251),
                     CreatedAtUtc = now.AddMinutes(-index),
-                    Total = Math.Round((decimal)(random.NextDouble() * 500), 2),
+                    Total = Math.Round(random.NextDouble() * 500, 2),
                     Status = statuses[random.Next(statuses.Length)]
                 })
                 .ToArray();

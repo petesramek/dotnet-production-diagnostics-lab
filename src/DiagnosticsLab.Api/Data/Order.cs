@@ -21,9 +21,9 @@ public sealed class Order
     public DateTime CreatedAtUtc { get; set; }
 
     /// <summary>
-    /// Gets or sets the order total.
+    /// Gets or sets the order total used by the diagnostics scenarios.
     /// </summary>
-    public decimal Total { get; set; }
+    public double Total { get; set; }
 
     /// <summary>
     /// Gets or sets the order status.

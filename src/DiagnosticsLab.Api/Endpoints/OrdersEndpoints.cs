@@ -52,5 +52,5 @@ public static class OrdersEndpoints
         return endpoints;
     }
 
-    private sealed record OrderSummary(int Id, int CustomerId, DateTime CreatedAtUtc, decimal Total, string Status);
+    private sealed record OrderSummary(int Id, int CustomerId, DateTime CreatedAtUtc, double Total, string Status);
 }

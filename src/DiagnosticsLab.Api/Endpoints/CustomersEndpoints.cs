@@ -1,4 +1,4 @@
-﻿using DiagnosticsLab.Api.Data;
+using DiagnosticsLab.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiagnosticsLab.Api.Endpoints;
@@ -41,8 +41,8 @@ public static class CustomersEndpoints
                 var totalSpent = await db.Orders
                     .AsNoTracking()
                     .Where(order => order.CustomerId == customer.Id)
-                    .Select(order => (decimal?)order.Total)
-                    .SumAsync(cancellationToken) ?? 0m;
+                    .Select(order => (double?)order.Total)
+                    .SumAsync(cancellationToken) ?? 0d;
 
                 result.Add(new CustomerSummary(customer.Id, customer.Name, customer.Segment, orderCount, totalSpent));
             }
@@ -68,8 +68,8 @@ public static class CustomersEndpoints
                     db.Orders.Count(order => order.CustomerId == customer.Id),
                     db.Orders
                         .Where(order => order.CustomerId == customer.Id)
-                        .Select(order => (decimal?)order.Total)
-                        .Sum() ?? 0m))
+                        .Select(order => (double?)order.Total)
+                        .Sum() ?? 0d))
                 .ToListAsync(cancellationToken);
 
             return Results.Ok(result);
@@ -83,5 +83,5 @@ public static class CustomersEndpoints
         return Math.Clamp(take ?? 25, 1, 100);
     }
 
-    private sealed record CustomerSummary(int Id, string Name, string Segment, int OrderCount, decimal TotalSpent);
+    private sealed record CustomerSummary(int Id, string Name, string Segment, int OrderCount, double TotalSpent);
 }
