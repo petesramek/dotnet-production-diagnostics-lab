@@ -50,16 +50,45 @@ public sealed class ScenarioBehaviorTests(WebApplicationFactory<Program> factory
         document.RootElement.GetProperty("blocking").GetBoolean().Should().BeFalse();
     }
 
+    [Fact]
+    public async Task Inventory_improved_endpoint_uses_fewer_attempts_than_problem_endpoint_for_failed_sku()
+    {
+        using var client = factory.CreateClient();
+
+        using var problem = await GetJsonDocumentAsync(client, "/api/inventory/problem?sku=FAIL", HttpStatusCode.ServiceUnavailable);
+        using var improved = await GetJsonDocumentAsync(client, "/api/inventory/improved?sku=FAIL", HttpStatusCode.ServiceUnavailable);
+
+        var problemAttempts = problem.RootElement.GetProperty("attempts").GetInt32();
+        var improvedAttempts = improved.RootElement.GetProperty("attempts").GetInt32();
+
+        improvedAttempts.Should().BeLessThan(problemAttempts);
+        improved.RootElement.GetProperty("resilient").GetBoolean().Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Export_problem_and_improved_endpoints_return_same_row_ids_for_small_export()
+    {
+        using var client = factory.CreateClient();
+
+        var problem = await GetJsonArrayAsync(client, "/api/exports/problem?rows=25");
+        var improved = await GetJsonArrayAsync(client, "/api/exports/improved?rows=25");
+
+        GetIds(problem).Should().Equal(GetIds(improved));
+    }
+
     private static async Task<JsonElement> GetJsonArrayAsync(HttpClient client, string requestUri)
     {
         using var document = await GetJsonDocumentAsync(client, requestUri);
         return document.RootElement.Clone();
     }
 
-    private static async Task<JsonDocument> GetJsonDocumentAsync(HttpClient client, string requestUri)
+    private static async Task<JsonDocument> GetJsonDocumentAsync(
+        HttpClient client,
+        string requestUri,
+        HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
     {
         var response = await client.GetAsync(requestUri);
-        response.EnsureSuccessStatusCode();
+        response.StatusCode.Should().Be(expectedStatusCode);
 
         var stream = await response.Content.ReadAsStreamAsync();
         return await JsonDocument.ParseAsync(stream);

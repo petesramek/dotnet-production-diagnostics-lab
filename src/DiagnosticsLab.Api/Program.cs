@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddScoped<FakeShippingClient>();
+builder.Services.AddScoped<FakeInventoryClient>();
 
 var app = builder.Build();
 
@@ -32,6 +33,8 @@ app.MapReportEndpoints();
 app.MapBlockingEndpoints();
 app.MapPaymentEndpoints();
 app.MapShippingEndpoints();
+app.MapInventoryEndpoints();
+app.MapExportEndpoints();
 
 app.Run();
 

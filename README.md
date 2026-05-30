@@ -12,6 +12,8 @@ This repository is a hands-on lab, not a production template and not an architec
 - Sync-over-async / blocking request handling
 - Poor observability and weak logging
 - Reliability issues caused by unsafe external dependency calls
+- Retry storms caused by uncontrolled retries
+- Memory pressure caused by building large responses in memory
 
 ## How to run
 
@@ -59,6 +61,18 @@ The API uses SQLite and creates local seed data automatically.
 - Problem: `GET /api/blocking/problem?delayMs=500`
 - Improved: `GET /api/blocking/improved?delayMs=500`
 - Notes: `docs/06-blocking-request-handling.md`
+
+### 7. Retry storm / controlled retry
+
+- Problem: `GET /api/inventory/problem?sku=FAIL`
+- Improved: `GET /api/inventory/improved?sku=FAIL`
+- Notes: `docs/07-retry-storm.md`
+
+### 8. Large response allocation / streaming
+
+- Problem: `GET /api/exports/problem?rows=1000`
+- Improved: `GET /api/exports/improved?rows=1000`
+- Notes: `docs/08-large-response-streaming.md`
 
 ## Tests
 

@@ -46,4 +46,24 @@ public sealed class ApiSmokeTests(WebApplicationFactory<Program> factory) : ICla
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task Improved_inventory_endpoint_returns_success_for_available_sku()
+    {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/inventory/improved?sku=ABC");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Improved_export_endpoint_returns_success()
+    {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/exports/improved?rows=10");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
 }
