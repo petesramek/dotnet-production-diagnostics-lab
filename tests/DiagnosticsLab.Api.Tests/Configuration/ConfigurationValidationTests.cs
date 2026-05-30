@@ -1,9 +1,10 @@
 using System.Net;
+using DiagnosticsLab.Api.Tests.Infrastructure;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Xunit;
 
-namespace DiagnosticsLab.Api.Tests;
+namespace DiagnosticsLab.Api.Tests.Configuration;
 
 /// <summary>
 /// Contains tests for startup configuration validation and validated configuration endpoints.
