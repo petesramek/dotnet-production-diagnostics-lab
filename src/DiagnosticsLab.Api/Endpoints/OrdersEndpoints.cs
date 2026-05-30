@@ -3,8 +3,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiagnosticsLab.Api.Endpoints;
 
+/// <summary>
+/// Maps endpoints for slow and improved order data access scenarios.
+/// </summary>
 public static class OrdersEndpoints
 {
+    /// <summary>
+    /// Adds order diagnostics endpoints to the endpoint route builder.
+    /// </summary>
+    /// <param name="endpoints">The endpoint route builder.</param>
+    /// <returns>The endpoint route builder.</returns>
     public static IEndpointRouteBuilder MapOrderEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/orders");

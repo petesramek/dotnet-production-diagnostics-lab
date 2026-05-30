@@ -2,8 +2,16 @@
 
 namespace DiagnosticsLab.Api.Endpoints;
 
+/// <summary>
+/// Maps endpoints for external dependency timeout scenarios.
+/// </summary>
 public static class ShippingEndpoints
 {
+    /// <summary>
+    /// Adds shipping diagnostics endpoints to the endpoint route builder.
+    /// </summary>
+    /// <param name="endpoints">The endpoint route builder.</param>
+    /// <returns>The endpoint route builder.</returns>
     public static IEndpointRouteBuilder MapShippingEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/shipping");

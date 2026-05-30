@@ -2,8 +2,16 @@
 
 namespace DiagnosticsLab.Api.Endpoints;
 
+/// <summary>
+/// Maps endpoints for retry storm and controlled retry scenarios.
+/// </summary>
 public static class InventoryEndpoints
 {
+    /// <summary>
+    /// Adds inventory diagnostics endpoints to the endpoint route builder.
+    /// </summary>
+    /// <param name="endpoints">The endpoint route builder.</param>
+    /// <returns>The endpoint route builder.</returns>
     public static IEndpointRouteBuilder MapInventoryEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/inventory");

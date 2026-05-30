@@ -2,8 +2,16 @@
 
 namespace DiagnosticsLab.Api.Endpoints;
 
+/// <summary>
+/// Maps endpoints for large allocation and streaming response scenarios.
+/// </summary>
 public static class ExportEndpoints
 {
+    /// <summary>
+    /// Adds export diagnostics endpoints to the endpoint route builder.
+    /// </summary>
+    /// <param name="endpoints">The endpoint route builder.</param>
+    /// <returns>The endpoint route builder.</returns>
     public static IEndpointRouteBuilder MapExportEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/exports");

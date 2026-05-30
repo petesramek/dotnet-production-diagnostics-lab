@@ -2,8 +2,16 @@
 
 namespace DiagnosticsLab.Api.Endpoints;
 
+/// <summary>
+/// Maps endpoints for blocking and asynchronous request handling scenarios.
+/// </summary>
 public static class BlockingEndpoints
 {
+    /// <summary>
+    /// Adds blocking diagnostics endpoints to the endpoint route builder.
+    /// </summary>
+    /// <param name="endpoints">The endpoint route builder.</param>
+    /// <returns>The endpoint route builder.</returns>
     public static IEndpointRouteBuilder MapBlockingEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/blocking");

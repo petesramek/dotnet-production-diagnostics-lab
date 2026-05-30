@@ -2,8 +2,16 @@
 
 namespace DiagnosticsLab.Api.Data;
 
+/// <summary>
+/// Creates deterministic sample data for the diagnostics lab.
+/// </summary>
 public static class DataSeeder
 {
+    /// <summary>
+    /// Ensures that the local database exists and contains sample customers and orders.
+    /// </summary>
+    /// <param name="services">The application service provider.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public static async Task SeedAsync(IServiceProvider services)
     {
         using var scope = services.CreateScope();

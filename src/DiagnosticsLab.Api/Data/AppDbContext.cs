@@ -2,12 +2,23 @@
 
 namespace DiagnosticsLab.Api.Data;
 
+/// <summary>
+/// Entity Framework Core database context used by the diagnostics lab.
+/// </summary>
+/// <param name="options">The database context options.</param>
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
+    /// <summary>
+    /// Gets the customers table.
+    /// </summary>
     public DbSet<Customer> Customers => Set<Customer>();
 
+    /// <summary>
+    /// Gets the orders table.
+    /// </summary>
     public DbSet<Order> Orders => Set<Order>();
 
+    /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Customer>(entity =>

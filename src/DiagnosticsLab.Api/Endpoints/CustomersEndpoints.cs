@@ -3,8 +3,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiagnosticsLab.Api.Endpoints;
 
+/// <summary>
+/// Maps endpoints for chatty and improved customer data access scenarios.
+/// </summary>
 public static class CustomersEndpoints
 {
+    /// <summary>
+    /// Adds customer diagnostics endpoints to the endpoint route builder.
+    /// </summary>
+    /// <param name="endpoints">The endpoint route builder.</param>
+    /// <returns>The endpoint route builder.</returns>
     public static IEndpointRouteBuilder MapCustomerEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/customers");
