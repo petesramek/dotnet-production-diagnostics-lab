@@ -1,12 +1,20 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
 using FluentAssertions;
 using Xunit;
 
 namespace DiagnosticsLab.Api.Tests;
 
+/// <summary>
+/// Contains behavior tests that compare problem and improved implementations for selected diagnostics scenarios.
+/// </summary>
+/// <param name="factory">The test application factory.</param>
 public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
 {
+    /// <summary>
+    /// Verifies that the slow and improved orders endpoints return the same logical order identifiers.
+    /// </summary>
+    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
     public async Task Orders_problem_and_improved_endpoints_return_same_order_ids()
     {
@@ -18,6 +26,10 @@ public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory fa
         GetIds(slow).Should().Equal(GetIds(improved));
     }
 
+    /// <summary>
+    /// Verifies that the chatty and improved customers endpoints return the same logical customer summaries.
+    /// </summary>
+    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
     public async Task Customers_problem_and_improved_endpoints_return_same_summaries()
     {
@@ -29,6 +41,10 @@ public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory fa
         NormalizeCustomerSummaries(problem).Should().Equal(NormalizeCustomerSummaries(improved));
     }
 
+    /// <summary>
+    /// Verifies that the resilient shipping endpoint returns a gateway timeout for the slow simulated dependency.
+    /// </summary>
+    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
     public async Task Shipping_resilient_endpoint_returns_gateway_timeout_for_slow_dependency()
     {
@@ -39,6 +55,10 @@ public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory fa
         response.StatusCode.Should().Be(HttpStatusCode.GatewayTimeout);
     }
 
+    /// <summary>
+    /// Verifies that the improved blocking endpoint reports non-blocking behavior.
+    /// </summary>
+    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
     public async Task Blocking_improved_endpoint_reports_non_blocking_behavior()
     {
@@ -49,6 +69,10 @@ public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory fa
         document.RootElement.GetProperty("blocking").GetBoolean().Should().BeFalse();
     }
 
+    /// <summary>
+    /// Verifies that the improved inventory endpoint uses fewer attempts than the problematic endpoint for a failed SKU.
+    /// </summary>
+    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
     public async Task Inventory_improved_endpoint_uses_fewer_attempts_than_problem_endpoint_for_failed_sku()
     {
@@ -64,6 +88,10 @@ public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory fa
         improved.RootElement.GetProperty("resilient").GetBoolean().Should().BeTrue();
     }
 
+    /// <summary>
+    /// Verifies that the problem and improved export endpoints return the same row identifiers for a small export.
+    /// </summary>
+    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
     public async Task Export_problem_and_improved_endpoints_return_same_row_ids_for_small_export()
     {
@@ -75,12 +103,25 @@ public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory fa
         GetIds(problem).Should().Equal(GetIds(improved));
     }
 
+    /// <summary>
+    /// Sends a request and parses the successful JSON array response.
+    /// </summary>
+    /// <param name="client">The HTTP client.</param>
+    /// <param name="requestUri">The request URI.</param>
+    /// <returns>The cloned JSON array root element.</returns>
     private static async Task<JsonElement> GetJsonArrayAsync(HttpClient client, string requestUri)
     {
         using var document = await GetJsonDocumentAsync(client, requestUri);
         return document.RootElement.Clone();
     }
 
+    /// <summary>
+    /// Sends a request and parses the JSON response, asserting the expected status code.
+    /// </summary>
+    /// <param name="client">The HTTP client.</param>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="expectedStatusCode">The expected HTTP status code.</param>
+    /// <returns>The parsed JSON document.</returns>
     private static async Task<JsonDocument> GetJsonDocumentAsync(
         HttpClient client,
         string requestUri,
@@ -93,12 +134,22 @@ public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory fa
         return await JsonDocument.ParseAsync(stream);
     }
 
+    /// <summary>
+    /// Extracts integer identifiers from an array of JSON objects.
+    /// </summary>
+    /// <param name="array">The JSON array.</param>
+    /// <returns>The identifiers from the JSON objects.</returns>
     private static IEnumerable<int> GetIds(JsonElement array)
     {
         return array.EnumerateArray()
             .Select(item => item.GetProperty("id").GetInt32());
     }
 
+    /// <summary>
+    /// Converts customer summary JSON objects to comparable string representations.
+    /// </summary>
+    /// <param name="array">The JSON array.</param>
+    /// <returns>The normalized customer summaries.</returns>
     private static IEnumerable<string> NormalizeCustomerSummaries(JsonElement array)
     {
         return array.EnumerateArray()
@@ -110,4 +161,3 @@ public sealed class ScenarioBehaviorTests(DiagnosticsLabWebApplicationFactory fa
                 item.GetProperty("totalSpent").GetDecimal()));
     }
 }
-

@@ -5,8 +5,14 @@ using Xunit;
 
 namespace DiagnosticsLab.Api.Tests;
 
+/// <summary>
+/// Contains tests for startup configuration validation and validated configuration endpoints.
+/// </summary>
 public sealed class ConfigurationValidationTests
 {
+    /// <summary>
+    /// Verifies that the application fails fast when required external service configuration is missing.
+    /// </summary>
     [Fact]
     public void Application_fails_fast_when_required_configuration_is_missing()
     {
@@ -19,6 +25,10 @@ public sealed class ConfigurationValidationTests
             .WithMessage("*BillingApiBaseUrl*");
     }
 
+    /// <summary>
+    /// Verifies that the improved configuration endpoint returns configuration validated at startup.
+    /// </summary>
+    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
     public async Task Improved_configuration_endpoint_returns_validated_configuration()
     {
