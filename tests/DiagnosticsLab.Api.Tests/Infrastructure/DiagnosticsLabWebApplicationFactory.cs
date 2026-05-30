@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using DiagnosticsLab.Api.Data;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DiagnosticsLab.Api.Tests.Infrastructure;
 
@@ -41,6 +45,16 @@ public sealed class DiagnosticsLabWebApplicationFactory : WebApplicationFactory<
             }
 
             configurationBuilder.AddInMemoryCollection(testConfiguration);
+        });
+
+        builder.ConfigureServices(services =>
+        {
+            services.RemoveAll<DbContextOptions<AppDbContext>>();
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlite($"Data Source={_databasePath}");
+            });
         });
     }
 
