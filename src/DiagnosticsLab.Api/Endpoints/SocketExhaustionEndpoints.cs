@@ -1,24 +1,39 @@
 namespace DiagnosticsLab.Api.Endpoints;
 
+/// <summary>
+/// Maps endpoints for HttpClient socket exhaustion scenarios.
+/// </summary>
 public static class SocketExhaustionEndpoints {
-    public static IEndpointRouteBuilder MapSocketExhaustionEndpoints(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/14-socket-exhaustion");
+    private const string Route = "/14-socket-exhaustion";
 
+    public static IEndpointRouteBuilder MapSocketExhaustionEndpoints(this IEndpointRouteBuilder endpoints) {
+        var group = endpoints.MapGroup(Route);
+
+        // Problem:
+        // Creating a new HttpClient per operation leads to excessive socket usage
+        // and can exhaust available connections under load.
         group.MapGet("/problem", async (
-            IHttpContextAccessor accessor,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) => {
                 var logger = loggerFactory.CreateLogger("SocketExhaustion.Problem");
 
-                var request = accessor.HttpContext!.Request;
-                var baseUri = new Uri($"{request.Scheme}://{request.Host}");
+                const int requests = 5;
 
-                const int requests = 5; // keep small for stability
+                logger.LogWarning("Creating {Requests} HttpClient instances", requests);
 
                 for (int i = 0; i < requests; i++) {
                     using var client = new HttpClient();
 
-                    // We are simulating HTTP call to external dependency e.g. await client.GetAync(...);
+                    // Simulation:
+                    // Each HttpClient instance may create its own connection pool.
+                    // In real systems this results in:
+                    // - many TCP connections being opened
+                    // - connections entering TIME_WAIT after use
+                    // - eventual exhaustion of available ports under load
+                    //
+                    // Task.Delay is used instead of real HTTP calls because
+                    // socket exhaustion depends on OS-level networking,
+                    // which cannot be reproduced inside this test environment.
                     await Task.Delay(10, cancellationToken);
                 }
 
@@ -28,22 +43,27 @@ public static class SocketExhaustionEndpoints {
                 });
             });
 
-        group.MapGet("/improved", async (
+        // Mitigation:
+        // Reuse HttpClient instances via IHttpClientFactory
+        // so underlying connections are pooled and reused.
+        group.MapGet("/mitigation", async (
             IHttpClientFactory factory,
-            IHttpContextAccessor accessor,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) => {
-                var logger = loggerFactory.CreateLogger("SocketExhaustion.Improved");
-
-                var request = accessor.HttpContext!.Request;
-                var baseUri = new Uri($"{request.Scheme}://{request.Host}");
+                var logger = loggerFactory.CreateLogger("SocketExhaustion.Mitigation");
 
                 const int requests = 5;
 
                 var client = factory.CreateClient();
 
+                logger.LogInformation("Reusing HttpClient for {Requests} operations", requests);
+
                 for (int i = 0; i < requests; i++) {
-                    // We are simulating HTTP call to external dependency e.g. await client.GetAync(...);
+                    // Simulation:
+                    // Reusing HttpClient represents connection pooling:
+                    // - connections are reused instead of recreated
+                    // - number of sockets remains stable
+                    // - system avoids port exhaustion and connection churn
                     await Task.Delay(10, cancellationToken);
                 }
 

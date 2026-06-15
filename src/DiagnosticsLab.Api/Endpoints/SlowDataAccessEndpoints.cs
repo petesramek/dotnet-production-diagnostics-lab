@@ -4,46 +4,97 @@ using Microsoft.EntityFrameworkCore;
 namespace DiagnosticsLab.Api.Endpoints;
 
 /// <summary>
-/// Maps endpoints for slow and improved order data access scenarios.
+/// Maps endpoints for slow data access scenarios.
 /// </summary>
 public static class SlowDataAccessEndpoints {
-    /// <summary>
-    /// Adds order diagnostics endpoints to the endpoint route builder.
-    /// </summary>
+    private const string Route = "/01-slow-data-access/orders";
+
     public static IEndpointRouteBuilder MapSlowDataAccessEndpoints(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/01-slow-data-access/orders");
+        var group = endpoints.MapGroup(Route);
 
-        group.MapGet("/problem", async (int customerId, AppDbContext db, ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
-            var logger = loggerFactory.CreateLogger("Orders.Slow");
+        // Problem:
+        // Loads the entire dataset into memory and filters afterward.
+        // This leads to unnecessary data transfer and poor performance.
+        group.MapGet("/problem", async (
+            int customerId,
+            AppDbContext db,
+            ILoggerFactory loggerFactory,
+            CancellationToken cancellationToken) => {
+                var logger = loggerFactory.CreateLogger("SlowDataAccess.Problem");
 
-            logger.LogInformation("Loading all orders before filtering for customer {CustomerId}", customerId);
+                logger.LogWarning("Loading all orders before filtering for customer {CustomerId}", customerId);
 
-            var orders = await db.Orders.ToListAsync(cancellationToken);
+                // Simulation:
+                // This represents fetching the full dataset from the database,
+                // then applying filtering in memory.
+                //
+                // Real-world equivalent:
+                // - dbContext.Orders.ToListAsync()
+                // - then applying LINQ filtering in application
+                //
+                // This causes:
+                // - unnecessary data transfer from database
+                // - higher memory usage
+                // - slower response times
 
-            var result = orders
-                .Where(order => order.CustomerId == customerId)
-                .OrderByDescending(order => order.CreatedAtUtc)
-                .Take(20)
-                .Select(order => new OrderSummary(order.Id, order.CustomerId, order.CreatedAtUtc, order.Total, order.Status));
+                var orders = await db.Orders.ToListAsync(cancellationToken);
 
-            return Results.Ok(result);
-        });
+                // Filtering happens AFTER data is already loaded into memory
+                var result = orders
+                    .Where(order => order.CustomerId == customerId)
+                    .OrderByDescending(order => order.CreatedAtUtc)
+                    .Take(20)
+                    .Select(order => new OrderSummary(
+                        order.Id,
+                        order.CustomerId,
+                        order.CreatedAtUtc,
+                        order.Total,
+                        order.Status));
 
-        group.MapGet("/improved", async (int customerId, AppDbContext db, ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
-            var logger = loggerFactory.CreateLogger("Orders.Improved");
+                return Results.Ok(result);
+            });
 
-            logger.LogInformation("Filtering orders in the database for customer {CustomerId}", customerId);
+        // Mitigation:
+        // Push filtering and projection to the database,
+        // ensuring only required data is fetched.
+        group.MapGet("/mitigation", async (
+            int customerId,
+            AppDbContext db,
+            ILoggerFactory loggerFactory,
+            CancellationToken cancellationToken) => {
+                var logger = loggerFactory.CreateLogger("SlowDataAccess.Mitigation");
 
-            var result = await db.Orders
-                .AsNoTracking()
-                .Where(order => order.CustomerId == customerId)
-                .OrderByDescending(order => order.CreatedAtUtc)
-                .Select(order => new OrderSummary(order.Id, order.CustomerId, order.CreatedAtUtc, order.Total, order.Status))
-                .Take(20)
-                .ToListAsync(cancellationToken);
+                logger.LogInformation("Filtering orders in database for customer {CustomerId}", customerId);
 
-            return Results.Ok(result);
-        });
+                // Simulation:
+                // This represents a properly constructed database query where:
+                // - filtering is executed in SQL
+                // - only necessary rows are returned
+                //
+                // Real-world equivalent:
+                // - SELECT ... WHERE CustomerId = ...
+                // - executed directly by the database engine
+                //
+                // This reduces:
+                // - data transfer
+                // - memory usage
+                // - query execution time
+
+                var result = await db.Orders
+                    .AsNoTracking()
+                    .Where(order => order.CustomerId == customerId)
+                    .OrderByDescending(order => order.CreatedAtUtc)
+                    .Select(order => new OrderSummary(
+                        order.Id,
+                        order.CustomerId,
+                        order.CreatedAtUtc,
+                        order.Total,
+                        order.Status))
+                    .Take(20)
+                    .ToListAsync(cancellationToken);
+
+                return Results.Ok(result);
+            });
 
         return endpoints;
     }

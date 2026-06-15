@@ -6,66 +6,77 @@ namespace DiagnosticsLab.Api.Endpoints;
 /// Maps endpoints for large response allocation and streaming scenarios.
 /// </summary>
 public static class LargeResponseEndpoints {
-    /// <summary>
-    /// Adds large response diagnostics endpoints to the endpoint route builder.
-    /// </summary>
-    public static IEndpointRouteBuilder MapLargeResponseEndpoints(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/08-large-response");
+    private const string Route = "/08-large-response";
 
+    public static IEndpointRouteBuilder MapLargeResponseEndpoints(this IEndpointRouteBuilder endpoints) {
+        var group = endpoints.MapGroup(Route);
+
+        // Problem:
+        // Entire dataset is loaded into memory before returning response.
         group.MapGet("/problem", (int? rows, ILoggerFactory loggerFactory) => {
-            var logger = loggerFactory.CreateLogger("Exports.Problem");
+            var logger = loggerFactory.CreateLogger("LargeResponse.Problem");
 
             var normalizedRows = NormalizeRows(rows);
 
-            logger.LogInformation(
-                "Building {Rows} export rows in memory before returning response",
-                normalizedRows);
+            logger.LogWarning("Building {Rows} rows in memory", normalizedRows);
 
+            // Simulation:
+            // Represents loading a large dataset (e.g. from database)
+            // fully into memory before returning it.
             var result = Enumerable.Range(1, normalizedRows)
-                .Select(index => new ExportRow(
-                    index,
-                    $"Customer {index:000}",
-                    Math.Round(index * 1.25m, 2)))
+                .Select(i => new ExportRow(
+                    i,
+                    $"Customer {i:000}",
+                    Math.Round(i * 1.25m, 2)))
                 .ToList();
 
             return Results.Ok(result);
         });
 
-        group.MapGet("/improved", (int? rows, ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
-            var logger = loggerFactory.CreateLogger("Exports.Improved");
+        // Mitigation:
+        // Stream response incrementally to avoid buffering full dataset.
+        group.MapGet("/mitigation", (int? rows, ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
+            var logger = loggerFactory.CreateLogger("LargeResponse.Mitigation");
 
             var normalizedRows = NormalizeRows(rows);
 
-            logger.LogInformation(
-                "Streaming {Rows} export rows without building the full response first",
-                normalizedRows);
+            logger.LogInformation("Streaming {Rows} rows", normalizedRows);
 
+            // Simulation:
+            // Data is produced incrementally instead of allocating full dataset.
             return Results.Ok(StreamRowsAsync(normalizedRows, cancellationToken));
         });
 
         return endpoints;
     }
 
+    /// <summary>
+    /// Normalizes the number of rows to a safe range.
+    /// </summary>
     private static int NormalizeRows(int? rows) {
-        return Math.Clamp(rows ?? 1_000, 1, 50_000);
+        return Math.Clamp(rows ?? 1000, 1, 50_000);
     }
 
+    /// <summary>
+    /// Streams rows incrementally to avoid large allocations.
+    /// </summary>
     private static async IAsyncEnumerable<ExportRow> StreamRowsAsync(
         int rows,
         [EnumeratorCancellation] CancellationToken cancellationToken) {
-        for (var index = 1; index <= rows; index++) {
+        for (var i = 1; i <= rows; i++) {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (index % 100 == 0) {
+            if (i % 100 == 0) {
                 await Task.Yield();
             }
 
             yield return new ExportRow(
-                index,
-                $"Customer {index:000}",
-                Math.Round(index * 1.25m, 2));
+                i,
+                $"Customer {i:000}",
+                Math.Round(i * 1.25m, 2));
         }
     }
 
     private sealed record ExportRow(int Id, string CustomerName, decimal Amount);
 }
+
