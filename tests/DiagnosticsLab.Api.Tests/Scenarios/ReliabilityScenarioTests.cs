@@ -1,6 +1,7 @@
-using System.Net;
 using DiagnosticsLab.Api.Tests.Infrastructure;
 using FluentAssertions;
+using System.Net;
+using System.Net.Http.Json;
 using Xunit;
 
 namespace DiagnosticsLab.Api.Tests.Scenarios;
@@ -101,6 +102,28 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
 
         var problem = await client.GetAsync("/17-cache-stampede/problem");
         var improved = await client.GetAsync("/17-cache-stampede/improved");
+
+        problem.EnsureSuccessStatusCode();
+        improved.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Verifies that both endpoints deserialize payload correctly.
+    /// </summary>
+    /// <remarks>
+    /// Functional test only. AOT behavior must be validated using native publish.
+    /// </remarks>
+    [Fact]
+    public async Task Native_aot_problem_and_improved_deserialize_payload() {
+        using var client = factory.CreateClient();
+
+        var payload = new {
+            Name = "Pete",
+            Age = 30
+        };
+
+        var problem = await client.PostAsJsonAsync("/18-native-aot/problem", payload);
+        var improved = await client.PostAsJsonAsync("/18-native-aot/improved", payload);
 
         problem.EnsureSuccessStatusCode();
         improved.EnsureSuccessStatusCode();

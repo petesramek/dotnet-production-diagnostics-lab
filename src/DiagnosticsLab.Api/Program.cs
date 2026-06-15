@@ -34,6 +34,7 @@ builder.Services.AddScoped<FakeInventoryClient>();
 builder.Services.AddSingleton<FakeStartupDependency>();
 builder.Services.AddSingleton<FakeAuditSink>();
 
+// 10. Health checks
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy("Application is running."));
 
@@ -47,6 +48,7 @@ app.MapGet("/", () => Results.Ok(new
     Description = "Small ASP.NET Core lab for production-style diagnostics scenarios."
 }));
 
+// 1. Slow data access
 app.MapSlowDataAccessEndpoints();
 app.MapCancellationTimeoutsEndpoints();
 app.MapObservabilityTracingEndpoints();
@@ -56,6 +58,9 @@ app.MapBlockingRequestHandlingEndpoints();
 app.MapUnboundedRetriesEndpoints();
 app.MapLargeResponseEndpoints();
 app.MapInvalidConfigurationEndpoints();
+// 10. Health checks
+app.MapHealthChecks("/health/live");
+app.MapHealthChecks("/health/ready");
 app.MapSilentStartupFailureEndpoints();
 app.MapLoggingFailureEndpoints();
 app.MapRequestBodyMemoryPressureEndpoints();
@@ -63,9 +68,7 @@ app.MapSocketExhaustionEndpoints();
 app.MapThreadPoolStarvationEndpoints();
 app.MapLohFragmentationEndpoints();
 app.MapCacheStampedeEndpoints();
-
-app.MapHealthChecks("/health/live");
-app.MapHealthChecks("/health/ready");
+app.MapNativeAotEndpoints();
 
 app.Run();
 
