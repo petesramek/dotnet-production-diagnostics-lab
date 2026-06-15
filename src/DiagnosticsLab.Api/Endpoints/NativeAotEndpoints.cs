@@ -1,6 +1,5 @@
 using DiagnosticsLab.Api;
 using System.Text.Json;
-usingpoints;
 
 /// <summary>
 /// Maps endpoints for Native AOT serialization scenarios.

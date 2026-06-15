@@ -7,7 +7,7 @@ namespace DiagnosticsLab.Api.Endpoints;
 /// Maps endpoints for slow data access scenarios.
 /// </summary>
 public static class SlowDataAccessEndpoints {
-    private const string Route = "/01-slow-data-access/orders";
+    private const string Route = "/01-slow-data-access";
 
     public static IEndpointRouteBuilder MapSlowDataAccessEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
