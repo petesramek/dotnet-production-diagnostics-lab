@@ -1,17 +1,42 @@
-﻿# Scenario 3: Poor observability
+## Scenario 3: Weak observability & tracing
 
-## Problem
+### Problem
 
-`POST /api/payments/problem` logs vague messages without enough context.
+POST /03-observability-tracing/problem
 
-This makes production troubleshooting harder because logs do not explain which payment, customer, or input caused the issue.
+Processes a payment but logs only vague messages without context.
 
-## Improved version
+Logs do not include identifiers such as PaymentId or CustomerId, making it
+difficult to trace issues in production.
 
-`POST /api/payments/observable` uses structured logging and a logging scope with payment and customer identifiers.
+---
 
-## What to observe
+### Improved version
 
-- Compare log messages from both endpoints.
-- Check whether logs contain enough context to diagnose failures.
-- Notice that useful logs are specific without exposing sensitive information.
+POST /03-observability-tracing/improved
+
+Uses structured logging and logging scopes with contextual information.
+
+Logs include:
+- PaymentId
+- CustomerId
+- Amount
+
+This enables easier correlation and debugging.
+
+---
+
+### Key issue
+
+The problem is missing contextual information in logs.
+
+Without structured logging, production debugging becomes slow and unreliable.
+
+---
+
+### What to observe
+
+- Compare log output between endpoints
+- Problem endpoint produces generic logs
+- Improved endpoint includes structured data and identifiers
+- Failed requests can be correlated with specific inputs

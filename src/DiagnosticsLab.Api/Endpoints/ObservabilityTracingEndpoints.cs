@@ -1,51 +1,43 @@
-﻿namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Endpoints;
 
 /// <summary>
 /// Maps endpoints for poor and improved observability scenarios.
 /// </summary>
-public static class PaymentsEndpoints
-{
+public static class ObservabilityTracingEndpoints {
     /// <summary>
-    /// Adds payment diagnostics endpoints to the endpoint route builder.
+    /// Adds observability diagnostics endpoints to the endpoint route builder.
     /// </summary>
-    /// <param name="endpoints">The endpoint route builder.</param>
-    /// <returns>The endpoint route builder.</returns>
-    public static IEndpointRouteBuilder MapPaymentEndpoints(this IEndpointRouteBuilder endpoints)
-    {
-        var group = endpoints.MapGroup("/api/payments");
+    public static IEndpointRouteBuilder MapObservabilityTracingEndpoints(this IEndpointRouteBuilder endpoints) {
+        var group = endpoints.MapGroup("/03-observability-tracing");
 
-        group.MapPost("/problem", (PaymentRequest request, ILoggerFactory loggerFactory) =>
-        {
+        group.MapPost("/problem", (PaymentRequest request, ILoggerFactory loggerFactory) => {
             var logger = loggerFactory.CreateLogger("Payments.Problem");
 
-            if (request.Amount <= 0)
-            {
+            if (request.Amount <= 0) {
                 logger.LogWarning("Payment failed");
                 return Results.BadRequest(new { Error = "Invalid payment" });
             }
 
             logger.LogInformation("Payment processed");
+
             return Results.Ok(new { Status = "Processed" });
         });
 
-        group.MapPost("/observable", (PaymentRequest request, ILoggerFactory loggerFactory) =>
-        {
+        group.MapPost("/improved", (PaymentRequest request, ILoggerFactory loggerFactory) => {
             var logger = loggerFactory.CreateLogger("Payments.Observable");
-            using var scope = logger.BeginScope(new Dictionary<string, object>
-            {
+
+            using var scope = logger.BeginScope(new Dictionary<string, object> {
                 ["PaymentId"] = request.PaymentId,
                 ["CustomerId"] = request.CustomerId
             });
 
-            if (request.Amount <= 0)
-            {
+            if (request.Amount <= 0) {
                 logger.LogWarning(
                     "Payment validation failed for customer {CustomerId}. Amount {Amount} is invalid.",
                     request.CustomerId,
                     request.Amount);
 
-                return Results.BadRequest(new
-                {
+                return Results.BadRequest(new {
                     Error = "Invalid payment amount",
                     request.PaymentId,
                     request.CustomerId
@@ -58,7 +50,10 @@ public static class PaymentsEndpoints
                 request.CustomerId,
                 request.Amount);
 
-            return Results.Ok(new { Status = "Processed", request.PaymentId });
+            return Results.Ok(new {
+                Status = "Processed",
+                request.PaymentId
+            });
         });
 
         return endpoints;

@@ -43,10 +43,10 @@ app.MapGet("/", () => Results.Ok(new
 }));
 
 app.MapSlowDataAccessEndpoints();
-app.MapCustomerEndpoints();
 app.MapCancellationTimeoutsEndpoints();
+app.MapObservabilityTracingEndpoints();
+app.MapCustomerEndpoints();
 app.MapBlockingEndpoints();
-app.MapPaymentEndpoints();
 app.MapShippingEndpoints();
 app.MapInventoryEndpoints();
 app.MapExportEndpoints();

@@ -33,4 +33,46 @@ public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFacto
         improved.RootElement.GetProperty("businessOperationCompleted").GetBoolean().Should().BeTrue();
         improved.RootElement.GetProperty("auditFailureIsolated").GetBoolean().Should().BeTrue();
     }
+
+    /// <summary>/// consistent business results
+    /// while providing different levels of observability context.
+    /// </summary>
+    /// <remarks>
+    /// The improved endpoint includes additional identifiers in the response when validation fails,
+    /// which allows easier correlation with logs.
+    /// </remarks>
+    /// <returns>A task representing the asynchronous test operation.</returns>
+    [Fact]
+    public async Task Observability_problem_and_improved_endpoints_return_expected_payloads() {
+        using var client = factory.CreateClient();
+
+        var request = new {
+            PaymentId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            CustomerId = 42,
+            Amount = -5m
+        };
+
+        using var problem = await JsonTestClient.PostJsonDocumentAsync(
+            client,
+            "/03-observability-tracing/problem",
+            request,
+            HttpStatusCode.BadRequest);
+
+        using var improved = await JsonTestClient.PostJsonDocumentAsync(
+            client,
+            "/03-observability-tracing/improved",
+            request,
+            HttpStatusCode.BadRequest);
+
+        problem.RootElement.GetProperty("error").GetString()
+            .Should()
+            .Be("Invalid payment");
+
+        improved.RootElement.GetProperty("error").GetString()
+            .Should()
+            .Be("Invalid payment amount");
+
+        improved.RootElement.TryGetProperty("paymentId", out _).Should().BeTrue();
+        improved.RootElement.TryGetProperty("customerId", out _).Should().BeTrue();
+    }
 }
