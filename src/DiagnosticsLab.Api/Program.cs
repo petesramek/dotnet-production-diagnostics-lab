@@ -46,10 +46,9 @@ app.MapSlowDataAccessEndpoints();
 app.MapCancellationTimeoutsEndpoints();
 app.MapObservabilityTracingEndpoints();
 app.MapExternalDependencyReliabilityEndpoints();
+app.MapNPlusOneQueryEndpoints();
 
 
-app.MapCustomerEndpoints();
-app.MapBlockingEndpoints();
 app.MapInventoryEndpoints();
 app.MapExportEndpoints();
 app.MapConfigurationEndpoints();
