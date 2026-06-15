@@ -50,8 +50,8 @@ app.MapNPlusOneQueryEndpoints();
 app.MapBlockingRequestHandlingEndpoints();
 app.MapUnboundedRetriesEndpoints();
 app.MapLargeResponseEndpoints();
+app.MapInvalidConfigurationEndpoints();
 
-app.MapConfigurationEndpoints();
 app.MapStartupEndpoints();
 app.MapAuditEndpoints();
 app.MapUploadEndpoints();

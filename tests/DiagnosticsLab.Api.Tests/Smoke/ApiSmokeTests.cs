@@ -42,7 +42,8 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     [InlineData("/07-unbounded-retries/improved?sku=ABC")]
     [InlineData("/08-large-response/problem?rows=10")]
     [InlineData("/08-large-response/improved?rows=10")]
-    [InlineData("/api/config/improved")]
+    //[InlineData("/09-invalid-configuration/problem")]
+    [InlineData("/09-invalid-configuration/improved")]
     public async Task Improved_get_endpoints_return_success(string requestUri)
     {
         using var client = factory.CreateClient();

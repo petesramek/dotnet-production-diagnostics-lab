@@ -27,17 +27,38 @@ public sealed class ConfigurationValidationTests
     }
 
     /// <summary>
-    /// Verifies that the improved configuration endpoint returns configuration validated at startup.
+    /// Verifies that the problem endpoint uses unvalidated configuration
+    /// while the improved endpoint uses validated configuration.
     /// </summary>
+    /// <remarks>
+    /// The improved endpoint relies on configuration validated at startup,
+    /// ensuring invalid configuration is not used at runtime.
+    /// </remarks>
     /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Improved_configuration_endpoint_returns_validated_configuration()
-    {
+    public async Task Invalid_configuration_problem_and_improved_endpoints_return_expected_flags() {
         using var factory = new DiagnosticsLabWebApplicationFactory();
+        
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/api/config/improved");
+        using var problem = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/09-invalid-configuration/problem");
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        using var improved = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/09-invalid-configuration/improved");
+
+        problem.RootElement
+            .GetProperty("validated")
+            .GetBoolean()
+            .Should()
+            .BeFalse();
+
+        improved.RootElement
+            .GetProperty("validated")
+            .GetBoolean()
+            .Should()
+            .BeTrue();
     }
 }
