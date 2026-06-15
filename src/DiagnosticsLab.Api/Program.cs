@@ -27,6 +27,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddScoped<FakeShippingClient>();
 builder.Services.AddScoped<FakeInventoryClient>();
 builder.Services.AddSingleton<FakeStartupDependency>();
@@ -60,6 +62,7 @@ app.MapRequestBodyMemoryPressureEndpoints();
 app.MapSocketExhaustionEndpoints();
 app.MapThreadPoolStarvationEndpoints();
 app.MapLohFragmentationEndpoints();
+app.MapCacheStampedeEndpoints();
 
 app.MapHealthChecks("/health/live");
 app.MapHealthChecks("/health/ready");

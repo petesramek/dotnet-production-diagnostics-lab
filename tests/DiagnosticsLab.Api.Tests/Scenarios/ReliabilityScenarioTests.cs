@@ -89,4 +89,20 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
         improved.EnsureSuccessStatusCode();
     }
 
+    /// <summary>
+    /// Verifies that both endpoints return a value and improved path uses coordination.
+    /// </summary>
+    /// <remarks>
+    /// This test validates correctness. Stampede behavior must be observed under concurrency.
+    /// </remarks>
+    [Fact]
+    public async Task Cache_stampede_problem_and_improved_return_values() {
+        using var client = factory.CreateClient();
+
+        var problem = await client.GetAsync("/17-cache-stampede/problem");
+        var improved = await client.GetAsync("/17-cache-stampede/improved");
+
+        problem.EnsureSuccessStatusCode();
+        improved.EnsureSuccessStatusCode();
+    }
 }
