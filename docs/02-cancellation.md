@@ -1,17 +1,42 @@
-﻿# Scenario 2: Missing cancellation
+## Scenario 2: Missing cancellation & timeouts
 
-## Problem
+### Problem
 
-`GET /api/reports/slow` simulates a long-running operation without cancellation support.
+GET /02-cancellation-timeouts/problem
 
-When clients disconnect or requests time out, work may continue unnecessarily.
+Simulates a long-running asynchronous operation that does NOT use CancellationToken.
 
-## Improved version
+Even if the client disconnects or the request is cancelled, the operation continues running.
 
-`GET /api/reports/cancellable` accepts and passes a `CancellationToken` to the long-running operation.
+This leads to:
+- unnecessary work being performed
+- wasted CPU time
+- reduced throughput under load
 
-## What to observe
+---
 
-- Cancel the request from a client.
-- Compare whether the operation can stop early.
-- Check logs around request start and completion.
+### Improved version
+
+GET /02-cancellation-timeouts/improved
+
+Uses and propagates CancellationToken into the asynchronous operation.
+
+If the request is cancelled:
+- the operation stops immediately
+- no additional work is performed
+- resources are released earlier
+
+---
+
+### Key issue
+
+The problem is ignoring CancellationToken in asynchronous operations.
+
+---
+
+### What to observe
+
+- Cancel the request from the client (or use a short timeout)
+- Problem endpoint continues executing
+- Improved endpoint stops immediately
+- Compare logs for request start and completion behavior

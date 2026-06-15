@@ -1,22 +1,18 @@
-﻿namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Endpoints;
 
 /// <summary>
 /// Maps endpoints for missing and improved cancellation scenarios.
 /// </summary>
-public static class ReportsEndpoints
-{
+public static class CancellationTimeoutsEndpoints {
     /// <summary>
-    /// Adds report diagnostics endpoints to the endpoint route builder.
+    /// Adds cancellation diagnostics endpoints to the endpoint route builder.
     /// </summary>
-    /// <param name="endpoints">The endpoint route builder.</param>
-    /// <returns>The endpoint route builder.</returns>
-    public static IEndpointRouteBuilder MapReportEndpoints(this IEndpointRouteBuilder endpoints)
-    {
-        var group = endpoints.MapGroup("/api/reports");
+    public static IEndpointRouteBuilder MapCancellationTimeoutsEndpoints(this IEndpointRouteBuilder endpoints) {
+        var group = endpoints.MapGroup("/02-cancellation-timeouts");
 
-        group.MapGet("/slow", async (ILoggerFactory loggerFactory) =>
-        {
+        group.MapGet("/problem", async (ILoggerFactory loggerFactory) => {
             var logger = loggerFactory.CreateLogger("Reports.Slow");
+
             logger.LogInformation("Starting slow report without cancellation support");
 
             await Task.Delay(TimeSpan.FromSeconds(5));
@@ -24,9 +20,9 @@ public static class ReportsEndpoints
             return Results.Ok(new { Status = "Completed", CancellationAware = false });
         });
 
-        group.MapGet("/cancellable", async (ILoggerFactory loggerFactory, CancellationToken cancellationToken) =>
-        {
+        group.MapGet("/improved", async (ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
             var logger = loggerFactory.CreateLogger("Reports.Cancellable");
+
             logger.LogInformation("Starting cancellable report");
 
             await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);

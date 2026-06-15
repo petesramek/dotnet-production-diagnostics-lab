@@ -44,7 +44,7 @@ app.MapGet("/", () => Results.Ok(new
 
 app.MapSlowDataAccessEndpoints();
 app.MapCustomerEndpoints();
-app.MapReportEndpoints();
+app.MapCancellationTimeoutsEndpoints();
 app.MapBlockingEndpoints();
 app.MapPaymentEndpoints();
 app.MapShippingEndpoints();
