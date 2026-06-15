@@ -1,20 +1,40 @@
-﻿# Scenario 13: Request body memory pressure
+## Scenario 13: Request body memory pressure
 
-## Problem
+### Problem
 
-`POST /api/uploads/problem` reads the entire request body into memory.
+POST /13-request-body-memory-pressure/problem
 
-That is simple, but it can create memory pressure when uploads are large or many uploads happen concurrently.
+Reads the entire request body into memory before processing it.
 
-## Improved version
+This causes:
+- high memory usage for large uploads
+- increased GC pressure
+- scalability issues under concurrent load
 
-`POST /api/uploads/improved` processes the request body incrementally and enforces a maximum size.
+---
 
-The endpoint calculates a SHA-256 hash while reading chunks, without buffering the entire body in memory.
+### Improved version
 
-## What to observe
+POST /13-request-body-memory-pressure/improved
 
-- Send a small request body to both endpoints.
-- The problem endpoint reports `streamed: false`.
-- The improved endpoint reports `streamed: true` and returns a SHA-256 hash.
-- Try a request body larger than the configured limit and observe the controlled rejection.
+Processes the request body incrementally.
+
+The implementation:
+- streams data in chunks
+- enforces a maximum size limit
+- computes a SHA-256 hash without buffering the full body
+
+---
+
+### Key issue
+
+The problem is buffering large request bodies instead of streaming them.
+
+---
+
+### What to observe
+
+- Problem endpoint loads full body into memory
+- Improved endpoint processes data incrementally
+- Large uploads are rejected safely in improved endpoint
+- Memory usage remains stable with streaming

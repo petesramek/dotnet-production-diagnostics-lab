@@ -63,7 +63,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
         using var client = factory.CreateClient();
         using var content = new StringContent("small upload body");
 
-        var response = await client.PostAsync("/api/uploads/improved", content);
+        var response = await client.PostAsync("/13-request-body-memory-pressure/improved", content);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }

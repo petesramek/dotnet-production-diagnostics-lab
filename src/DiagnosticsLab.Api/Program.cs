@@ -53,8 +53,7 @@ app.MapLargeResponseEndpoints();
 app.MapInvalidConfigurationEndpoints();
 app.MapSilentStartupFailureEndpoints();
 app.MapLoggingFailureEndpoints();
-
-app.MapUploadEndpoints();
+app.MapRequestBodyMemoryPressureEndpoints();
 
 app.MapHealthChecks("/health/live");
 app.MapHealthChecks("/health/ready");
