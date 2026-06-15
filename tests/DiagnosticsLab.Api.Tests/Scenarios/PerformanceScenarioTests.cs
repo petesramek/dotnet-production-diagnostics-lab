@@ -1,7 +1,6 @@
 using DiagnosticsLab.Api.Tests.Infrastructure;
 using FluentAssertions;
 using System.Net;
-using System.Reflection.Metadata;
 using System.Text;
 using Xunit;
 
@@ -11,36 +10,37 @@ namespace DiagnosticsLab.Api.Tests.Scenarios;
 /// Contains behavior tests for performance-related diagnostics scenarios.
 /// </summary>
 /// <param name="factory">The test application factory.</param>
-public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
-{
+public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory> {
     /// <summary>
-    /// Verifies that the improved endpoint uses non-blocking asynchronous waiting
-    /// while the problem endpoint blocks the request thread.
+    /// Verifies that the problem endpoint reports blocking behavior.
     /// </summary>
-    /// <remarks>
-    /// The problem endpoint uses Thread.Sleep, which blocks the ThreadPool thread.
-    /// The improved endpoint uses Task.Delay, which yields and allows better scalability.
-    /// </remarks>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Blocking_problem_and_improved_endpoints_report_correct_behavior() {
+    public async Task BlockingRequestHandling_Problem_Return_Blocking_True() {
         using var client = factory.CreateClient();
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
             "/06-blocking-request-handling/problem?delayMs=100");
 
-        using var improved = await JsonTestClient.GetJsonDocumentAsync(
-            client,
-            "/06-blocking-request-handling/improved?delayMs=1");
-
         problem.RootElement
             .GetProperty("blocking")
             .GetBoolean()
             .Should()
             .BeTrue();
+    }
 
-        improved.RootElement
+    /// <summary>
+    /// Verifies that the mitigation endpoint reports blocking behavior as false.
+    /// </summary>
+    [Fact]
+    public async Task BlockingRequestHandling_Mitigation_Return_Blocking_False() {
+        using var client = factory.CreateClient();
+
+        using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/06-blocking-request-handling/mitigation?delayMs=1");
+
+        mitigation.RootElement
             .GetProperty("blocking")
             .GetBoolean()
             .Should()
@@ -48,123 +48,178 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     }
 
     /// <summary>
-    /// Verifies that both problem and improved endpoints return identical logical
-    /// export data for a small dataset.
+    /// Verifies that the problem endpoint returns row identifiers.
     /// </summary>
-    /// <remarks>
-    /// The problem endpoint buffers the entire response in memory,
-    /// while the improved endpoint streams results incrementally.
-    /// </remarks>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Large_response_problem_and_improved_endpoints_return_same_row_ids() {
+    public async Task LargeResponse_Problem_Return_Row_Id() {
         using var client = factory.CreateClient();
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
             client,
             "/08-large-response/problem?rows=25");
 
-        var improved = await JsonTestClient.GetJsonArrayAsync(
-            client,
-            "/08-large-response/improved?rows=25");
-
         JsonAssertions.GetIds(problem)
             .Should()
-            .Equal(JsonAssertions.GetIds(improved));
+            .NotBeEmpty();
     }
 
-
     /// <summary>
-    /// Verifies that the problem endpoint ignores cancellation while the improved endpoint reports cancellation-aware behavior.
+    /// Verifies that the mitigation endpoint returns the same row identifiers as the problem endpoint.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Cancellation_problem_and_improved_return_expected_flags() {
+    public async Task LargeResponse_Mitigation_Return_Row_Id() {
         using var client = factory.CreateClient();
 
-        using var problem = await JsonTestClient.GetJsonDocumentAsync(client, "/02-cancellation-timeouts/problem");
-        using var improved = await JsonTestClient.GetJsonDocumentAsync(client, "/02-cancellation-timeouts/improved");
+        var problem = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/08-large-response/problem?rows=25");
 
-        problem.RootElement.GetProperty("cancellationAware").GetBoolean().Should().BeFalse();
-        improved.RootElement.GetProperty("cancellationAware").GetBoolean().Should().BeTrue();
+        var mitigation = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/08-large-response/mitigation?rows=25");
+
+        JsonAssertions.GetIds(mitigation)
+            .Should()
+            .Equal(JsonAssertions.GetIds(problem));
     }
 
     /// <summary>
-    /// Verifies that the improved upload endpoint streams a small request body and returns a hash.
+    /// Verifies that the problem endpoint reports cancellation-aware behavior as false.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Upload_improved_endpoint_streams_body_and_returns_hash() {
+    public async Task CancellationTimeouts_Problem_Return_CancellationAware_False() {
+        using var client = factory.CreateClient();
+
+        using var problem = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/02-cancellation-timeouts/problem");
+
+        problem.RootElement.GetProperty("cancellationAware").GetBoolean().Should().BeFalse();
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint reports cancellation-aware behavior as true.
+    /// </summary>
+    [Fact]
+    public async Task CancellationTimeouts_Mitigation_Return_CancellationAware_True() {
+        using var client = factory.CreateClient();
+
+        using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/02-cancellation-timeouts/mitigation");
+
+        mitigation.RootElement.GetProperty("cancellationAware").GetBoolean().Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint streams body and returns a hash.
+    /// </summary>
+    [Fact]
+    public async Task RequestBodyMemoryPressure_Mitigation_Return_Streamed_True() {
         using var client = factory.CreateClient();
         using var content = new StringContent("small upload body", Encoding.UTF8, "text/plain");
 
-        using var document = await JsonTestClient.PostJsonDocumentAsync(client, "/13-request-body-memory-pressure/improved", content);
+        using var document = await JsonTestClient.PostJsonDocumentAsync(
+            client,
+            "/13-request-body-memory-pressure/mitigation",
+            content);
 
         document.RootElement.GetProperty("streamed").GetBoolean().Should().BeTrue();
         document.RootElement.GetProperty("limited").GetBoolean().Should().BeTrue();
         document.RootElement.GetProperty("sha256").GetString().Should().NotBeNullOrWhiteSpace();
     }
 
-    /// <summary>
-    /// Verifies that the improved upload endpoint rejects bodies larger than the configured limit.
+    ///summary>
+    /// Verifies that the problem endpoint buffers the request body in memory.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Upload_improved_endpoint_rejects_body_larger_than_limit() {
+    public async Task RequestBodyMemoryPressure_Problem_Return_Streamed_False() {
         using var client = factory.CreateClient();
+        using var content = new StringContent("small upload body", Encoding.UTF8, "text/plain");
+
+        using var document = await JsonTestClient.PostJsonDocumentAsync(
+        client,
+        "/13-request-body-memory-pressure/problem",
+        content);
+
+        document.RootElement.GetProperty("streamed").GetBoolean().Should().BeFalse();
+        document.RootElement.GetProperty("limited").GetBoolean().Should().BeFalse();
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint rejects bodies larger than the limit.
+    /// </summary>
+    [Fact]
+    public async Task RequestBodyMemoryPressure_Mitigation_Reject_When_Body_Larger_Than_Limit() {
+        using var client = factory.CreateClient();
+
         var largeBody = new string('x', (5 * 1024 * 1024) + 1);
         using var content = new StringContent(largeBody, Encoding.UTF8, "text/plain");
 
-        var response = await client.PostAsync("/13-request-body-memory-pressure/improved", content);
+        var response = await client.PostAsync("/13-request-body-memory-pressure/mitigation", content);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     /// <summary>
-    /// Verifies that the problem endpoint blocks while the improved endpoint uses async.
+    /// Verifies that the problem endpoint reports blocking as true.
     /// </summary>
-    /// <remarks>
-    /// This test validates behavior difference, not full starvation.
-    /// Starvation must be observed under load.
-    /// </remarks>
     [Fact]
-    public async Task Threadpool_starvation_problem_and_improved_report_blocking_state() {
+    public async Task ThreadPoolStarvation_Problem_Return_Blocking_True() {
         using var client = factory.CreateClient();
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
             "/15-threadpool-starvation/problem?delayMs=50");
 
-        using var improved = await JsonTestClient.GetJsonDocumentAsync(
-            client,
-            "/15-threadpool-starvation/improved?delayMs=50");
-
         problem.RootElement.GetProperty("blocking").GetBoolean().Should().BeTrue();
-        improved.RootElement.GetProperty("blocking").GetBoolean().Should().BeFalse();
     }
 
     /// <summary>
-    /// Verifies that both endpoints process large JSON payloads correctly.
+    /// Verifies that the mitigation endpoint reports blocking as false.
     /// </summary>
-    /// <remarks>
-    /// This test validates functional correctness.
-    /// LOH fragmentation must be observed using runtime diagnostics.
-    /// </remarks>
     [Fact]
-    public async Task Loh_fragmentation_problem_and_improved_process_large_payload() {
+    public async Task ThreadPoolStarvation_Mitigation_Return_Blocking_False() {
+        using var client = factory.CreateClient();
+
+        using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/15-threadpool-starvation/mitigation?delayMs=50");
+
+        mitigation.RootElement.GetProperty("blocking").GetBoolean().Should().BeFalse();
+    }
+
+    /// <summary>
+    /// Verifies that the problem endpoint processes a generated large payload successfully.
+    /// </summary>
+    [Fact]
+    public async Task LohFragmentation_Problem_Process_Large_Payload() {
         using var client = factory.CreateClient();
 
         var payloadResponse = await client.GetAsync("/16-loh-fragmentation/generate");
         payloadResponse.EnsureSuccessStatusCode();
 
         var json = await payloadResponse.Content.ReadAsStringAsync();
-
-        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var problem = await client.PostAsync("/16-loh-fragmentation/problem", content);
-        var improved = await client.PostAsync("/16-loh-fragmentation/improved", content);
-
         problem.EnsureSuccessStatusCode();
-        improved.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint processes a generated large payload successfully.
+    /// </summary>
+    [Fact]
+    public async Task LohFragmentation_Mitigation_Process_Large_Payload() {
+        using var client = factory.CreateClient();
+
+        var payloadResponse = await client.GetAsync("/16-loh-fragmentation/generate");
+        payloadResponse.EnsureSuccessStatusCode();
+
+        var json = await payloadResponse.Content.ReadAsStringAsync();
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var mitigation = await client.PostAsync("/16-loh-fragmentation/mitigation", content);
+        mitigation.EnsureSuccessStatusCode();
     }
 }

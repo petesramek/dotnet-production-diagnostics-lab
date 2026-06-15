@@ -12,109 +12,151 @@ namespace DiagnosticsLab.Api.Tests.Scenarios;
 /// <param name="factory">The test application factory.</param>
 public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
 {
+
     /// <summary>
-    /// Verifies that the resilient shipping endpoint returns a gateway timeout for the slow simulated dependency.
+    /// Verifies that the problem endpoint succeeds for a normal dependency call.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Shipping_resilient_endpoint_returns_gateway_timeout_for_slow_dependency()
-    {
+    public async Task ExternalDependencyReliability_Problem_Return_Success_For_Normal_Dependency() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/04-external-dependency-reliability/improved?country=SLOW");
+        var response = await client.GetAsync("/04-external-dependency-reliability/problem?country=CZ");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint returns gateway timeout for a slow dependency.
+    /// </summary>
+    [Fact]
+    public async Task ExternalDependencyReliability_Mitigation_Return_GatewayTimeout_For_Slow_Dependency() {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/04-external-dependency-reliability/mitigation?country=SLOW");
 
         response.StatusCode.Should().Be(HttpStatusCode.GatewayTimeout);
     }
 
     /// <summary>
-    /// Verifies that the improved inventory endpoint uses fewer attempts than the problematic endpoint for a failed SKU.
+    /// Verifies that the problem endpoint returns a failed result for a failing SKU.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Inventory_improved_endpoint_uses_fewer_attempts_than_problem_endpoint_for_failed_sku()
-    {
+    public async Task UnboundedRetries_Problem_Return_ServiceUnavailable_For_Failed_Sku() {
         using var client = factory.CreateClient();
 
-        using var problem = await JsonTestClient.GetJsonDocumentAsync(client, "/07-unbounded-retries/problem?sku=FAIL", HttpStatusCode.ServiceUnavailable);
-        using var improved = await JsonTestClient.GetJsonDocumentAsync(client, "/07-unbounded-retries/improved?sku=FAIL", HttpStatusCode.ServiceUnavailable);
+        using var problem = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/07-unbounded-retries/problem?sku=FAIL",
+            HttpStatusCode.ServiceUnavailable);
 
-        var problemAttempts = problem.RootElement.GetProperty("attempts").GetInt32();
-        var improvedAttempts = improved.RootElement.GetProperty("attempts").GetInt32();
-
-        improvedAttempts.Should().BeLessThan(problemAttempts);
-        improved.RootElement.GetProperty("resilient").GetBoolean().Should().BeTrue();
+        problem.RootElement.GetProperty("attempts").GetInt32().Should().BeGreaterThan(0);
+        problem.RootElement.GetProperty("resilient").GetBoolean().Should().BeFalse();
     }
 
     /// <summary>
-    /// Verifies that the problem endpoint hides startup dependency failure
-    /// while the improved endpoint surfaces it correctly.
+    /// Verifies that the mitigation endpoint uses fewer attempts for a failing SKU.
     /// </summary>
-    /// <remarks>
-    /// The problem endpoint swallows the exception and returns success,
-    /// leaving the system in a broken state.
-    /// The improved endpoint exposes the failure using HTTP 503.
-    /// </remarks>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Silent_startup_failure_problem_and_improved_behave_correctly() {
+    public async Task UnboundedRetries_Mitigation_Return_Fewer_Attempts_For_Failed_Sku() {
+        using var client = factory.CreateClient();
+
+        using var problem = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/07-unbounded-retries/problem?sku=FAIL",
+            HttpStatusCode.ServiceUnavailable);
+
+        using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/07-unbounded-retries/mitigation?sku=FAIL",
+            HttpStatusCode.ServiceUnavailable);
+
+        var problemAttempts = problem.RootElement.GetProperty("attempts").GetInt32();
+        var mitigationAttempts = mitigation.RootElement.GetProperty("attempts").GetInt32();
+
+        mitigationAttempts.Should().BeLessThan(problemAttempts);
+        mitigation.RootElement.GetProperty("resilient").GetBoolean().Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Verifies that the problem endpoint hides startup failure.
+    /// </summary>
+    [Fact]
+    public async Task SilentStartupFailure_Problem_Return_FailureVisible_False() {
         using var client = factory.CreateClient();
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
             "/11-silent-startup-failure/problem");
 
-        var improved = await client.GetAsync(
-            "/11-silent-startup-failure/improved");
-
         problem.RootElement.GetProperty("initialized").GetBoolean().Should().BeFalse();
         problem.RootElement.GetProperty("failureVisible").GetBoolean().Should().BeFalse();
-
-        improved.StatusCode.Should().Be(System.Net.HttpStatusCode.ServiceUnavailable);
     }
 
     /// <summary>
-    /// Verifies that both problem and improved endpoints execute successfully.
+    /// Verifies that the mitigation endpoint surfaces startup failure.
     /// </summary>
-    /// <remarks>
-    /// This test does not validate socket exhaustion itself, which requires load and OS inspection.
-    /// It ensures endpoints are functional and reachable.
-    /// </remarks>
     [Fact]
-    public async Task Socket_exhaustion_problem_and_improved_endpoints_return_success() {
+    public async Task SilentStartupFailure_Mitigation_Return_ServiceUnavailable() {
         using var client = factory.CreateClient();
 
-        var problem = await client.GetAsync("/14-socket-exhaustion/problem");
-        var improved = await client.GetAsync("/14-socket-exhaustion/improved");
+        var response = await client.GetAsync("/11-silent-startup-failure/mitigation");
 
-        problem.EnsureSuccessStatusCode();
-        improved.EnsureSuccessStatusCode();
+        response.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
     }
 
     /// <summary>
-    /// Verifies that both endpoints return a value and improved path uses coordination.
+    /// Verifies that the problem endpoint returns success.
     /// </summary>
-    /// <remarks>
-    /// This test validates correctness. Stampede behavior must be observed under concurrency.
-    /// </remarks>
     [Fact]
-    public async Task Cache_stampede_problem_and_improved_return_values() {
+    public async Task SocketExhaustion_Problem_Return_Success() {
         using var client = factory.CreateClient();
 
-        var problem = await client.GetAsync("/17-cache-stampede/problem");
-        var improved = await client.GetAsync("/17-cache-stampede/improved");
+        var response = await client.GetAsync("/14-socket-exhaustion/problem");
 
-        problem.EnsureSuccessStatusCode();
-        improved.EnsureSuccessStatusCode();
+        response.EnsureSuccessStatusCode();
     }
 
     /// <summary>
-    /// Verifies that both endpoints deserialize payload correctly.
+    /// Verifies that the mitigation endpoint returns success.
     /// </summary>
-    /// <remarks>
-    /// Functional test only. AOT behavior must be validated using native publish.
-    /// </remarks>
     [Fact]
-    public async Task Native_aot_problem_and_improved_deserialize_payload() {
+    public async Task SocketExhaustion_Mitigation_Return_Success() {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/14-socket-exhaustion/mitigation");
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Verifies that the problem endpoint returns a value.
+    /// </summary>
+    [Fact]
+    public async Task CacheStampede_Problem_Return_Value() {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/17-cache-stampede/problem");
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint returns a value.
+    /// </summary>
+    [Fact]
+    public async Task CacheStampede_Mitigation_Return_Value() {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/17-cache-stampede/mitigation");
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Verifies that the problem endpoint deserializes payload successfully.
+    /// </summary>
+    [Fact]
+    public async Task NativeAot_Problem_Deserialize_Payload() {
         using var client = factory.CreateClient();
 
         var payload = new {
@@ -122,10 +164,25 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
             Age = 30
         };
 
-        var problem = await client.PostAsJsonAsync("/18-native-aot/problem", payload);
-        var improved = await client.PostAsJsonAsync("/18-native-aot/improved", payload);
+        var response = await client.PostAsJsonAsync("/18-native-aot/problem", payload);
 
-        problem.EnsureSuccessStatusCode();
-        improved.EnsureSuccessStatusCode();
+        response.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint deserializes payload successfully.
+    /// </summary>
+    [Fact]
+    public async Task NativeAot_Mitigation_Deserialize_Payload() {
+        using var client = factory.CreateClient();
+
+        var payload = new {
+            Name = "Pete",
+            Age = 30
+        };
+
+        var response = await client.PostAsJsonAsync("/18-native-aot/mitigation", payload);
+
+        response.EnsureSuccessStatusCode();
     }
 }

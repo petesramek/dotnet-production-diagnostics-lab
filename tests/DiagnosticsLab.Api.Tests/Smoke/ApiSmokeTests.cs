@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using DiagnosticsLab.Api.Tests.Infrastructure;
 using FluentAssertions;
 using Xunit;
@@ -6,18 +7,16 @@ using Xunit;
 namespace DiagnosticsLab.Api.Tests.Smoke;
 
 /// <summary>
-/// Contains smoke tests that verify the diagnostics lab starts and exposes its main improved endpoints.
+/// Contains smoke tests that verify the diagnostics lab starts
+/// and exposes representative endpoints.
 /// </summary>
 /// <param name="factory">The test application factory.</param>
-public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
-{
+public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory> {
     /// <summary>
-    /// Verifies that the root endpoint returns a successful response.
+    /// Verifies that the root endpoint returns success.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Root_returns_success()
-    {
+    public async Task Root_Return_Success() {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/");
@@ -26,69 +25,177 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     }
 
     /// <summary>
-    /// Verifies that representative improved endpoints return successful responses.
+    /// Verifies that representative GET endpoints return the expected status code.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Theory]
-    [InlineData("/01-slow-data-access/orders/improved?customerId=42")]
-    [InlineData("/01-slow-data-access/orders/problem?customerId=42")]
-    [InlineData("/02-cancellation-timeouts/problem")]
-    [InlineData("/02-cancellation-timeouts/improved")]
-    [InlineData("/05-n-plus-1-data-access/problem?take=10")]
-    [InlineData("/05-n-plus-1-data-access/improved?take=10")]
-    [InlineData("/06-blocking-request-handling/problem?delayMs=100")]
-    [InlineData("/06-blocking-request-handling/improved?delayMs=1")]
-    [InlineData("/07-unbounded-retries/problem?sku=ABC")]
-    [InlineData("/07-unbounded-retries/improved?sku=ABC")]
-    [InlineData("/08-large-response/problem?rows=10")]
-    [InlineData("/08-large-response/improved?rows=10")]
-    //[InlineData("/09-invalid-configuration/problem")]
-    [InlineData("/09-invalid-configuration/improved")]
-    public async Task Improved_get_endpoints_return_success(string requestUri)
-    {
+    [InlineData("/01-slow-data-access/problem?customerId=42", HttpStatusCode.OK)]
+    [InlineData("/01-slow-data-access/mitigation?customerId=42", HttpStatusCode.OK)]
+    [InlineData("/02-cancellation-timeouts/problem", HttpStatusCode.OK)]
+    [InlineData("/02-cancellation-timeouts/mitigation", HttpStatusCode.OK)]
+    [InlineData("/04-external-dependency-reliability/problem?country=CZ", HttpStatusCode.OK)]
+    [InlineData("/04-external-dependency-reliability/mitigation?country=CZ", HttpStatusCode.OK)]
+    [InlineData("/05-n-plus-1-data-access/problem?take=10", HttpStatusCode.OK)]
+    [InlineData("/05-n-plus-1-data-access/mitigation?take=10", HttpStatusCode.OK)]
+    [InlineData("/06-blocking-request-handling/problem?delayMs=100", HttpStatusCode.OK)]
+    [InlineData("/06-blocking-request-handling/mitigation?delayMs=1", HttpStatusCode.OK)]
+    [InlineData("/07-unbounded-retries/problem?sku=ABC", HttpStatusCode.OK)]
+    [InlineData("/07-unbounded-retries/mitigation?sku=ABC", HttpStatusCode.OK)]
+    [InlineData("/08-large-response/problem?rows=10", HttpStatusCode.OK)]
+    [InlineData("/08-large-response/mitigation?rows=10", HttpStatusCode.OK)]
+    [InlineData("/09-invalid-configuration/problem", HttpStatusCode.OK)]
+    [InlineData("/09-invalid-configuration/mitigation", HttpStatusCode.OK)]
+    [InlineData("/11-silent-startup-failure/problem", HttpStatusCode.OK)]
+    [InlineData("/11-silent-startup-failure/mitigation", HttpStatusCode.ServiceUnavailable)]
+    [InlineData("/14-socket-exhaustion/problem", HttpStatusCode.OK)]
+    [InlineData("/14-socket-exhaustion/mitigation", HttpStatusCode.OK)]
+    [InlineData("/15-threadpool-starvation/problem?delayMs=10", HttpStatusCode.OK)]
+    [InlineData("/15-threadpool-starvation/mitigation?delayMs=10", HttpStatusCode.OK)]
+    [InlineData("/16-loh-fragmentation/generate", HttpStatusCode.OK)]
+    [InlineData("/17-cache-stampede/problem", HttpStatusCode.OK)]
+    [InlineData("/17-cache-stampede/mitigation", HttpStatusCode.OK)]
+    public async Task Smoke_Get_Endpoint_Return_Expected_StatusCode(string requestUri, HttpStatusCode expectedStatusCode) {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync(requestUri);
 
+        response.StatusCode.Should().Be(expectedStatusCode);
+    }
+
+    /// <summary>
+    /// Verifies that the problem observability endpoint returns bad request for invalid payment data.
+    /// </summary>
+    [Fact]
+    public async Task ObservabilityTracing_Problem_Return_BadRequest() {
+        using var client = factory.CreateClient();
+
+        var request = new {
+            PaymentId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            CustomerId = 42,
+            Amount = -5m
+        };
+
+        var response = await client.PostAsJsonAsync("/03-observability-tracing/problem", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation observability endpoint returns bad request for invalid payment data.
+    /// </summary>
+    [Fact]
+    public async Task ObservabilityTracing_Mitigation_Return_BadRequest() {
+        using var client = factory.CreateClient();
+
+        var request = new {
+            PaymentId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            CustomerId = 42,
+            Amount = -5m
+        };
+
+        var response = await client.PostAsJsonAsync("/03-observability-tracing/mitigation", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    /// <summary>
+    /// Verifies that the problem logging endpoint fails when audit sink throws.
+    /// </summary>
+    [Fact]
+    public async Task LoggingFailure_Problem_Return_InternalServerError() {
+        using var client = factory.CreateClient();
+
+        var request = new {
+            OperationId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            AuditShouldFail = true
+        };
+
+        var response = await client.PostAsJsonAsync("/12-logging-failure/problem", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation logging endpoint succeeds when audit sink throws.
+    /// </summary>
+    [Fact]
+    public async Task LoggingFailure_Mitigation_Return_Success() {
+        using var client = factory.CreateClient();
+
+        var request = new {
+            OperationId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            AuditShouldFail = true
+        };
+
+        var response = await client.PostAsJsonAsync("/12-logging-failure/mitigation", request);
+
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     /// <summary>
-    /// Verifies that the improved upload endpoint returns a successful response for a small upload.
+    /// Verifies that the problem upload endpoint returns success for a small request body.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Improved_upload_endpoint_returns_success_for_small_body()
-    {
+    public async Task RequestBodyMemoryPressure_Problem_Return_Success_For_Small_Body() {
         using var client = factory.CreateClient();
         using var content = new StringContent("small upload body");
 
-        var response = await client.PostAsync("/13-request-body-memory-pressure/improved", content);
+        var response = await client.PostAsync("/13-request-body-memory-pressure/problem", content);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     /// <summary>
-    /// Verifies that the improved startup endpoint makes initialization failure visible.
+    /// Verifies that the mitigation upload endpoint returns success for a small request body.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Improved_startup_endpoint_returns_service_unavailable()
-    {
+    public async Task RequestBodyMemoryPressure_Mitigation_Return_Success_For_Small_Body() {
         using var client = factory.CreateClient();
+        using var content = new StringContent("small upload body");
 
-        var response = await client.GetAsync("/11-silent-startup-failure/improved");
+        var response = await client.PostAsync("/13-request-body-memory-pressure/mitigation", content);
 
-        response.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     /// <summary>
-    /// Verifies that the liveness and readiness health endpoints return successful responses.
+    /// Verifies that the problem native AOT endpoint accepts a valid payload.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Health_endpoints_return_success()
-    {
+    public async Task NativeAot_Problem_Return_Success() {
+        using var client = factory.CreateClient();
+
+        var payload = new {
+            Name = "Pete",
+            Age = 30
+        };
+
+        var response = await client.PostAsJsonAsync("/18-native-aot/problem", payload);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation native AOT endpoint accepts a valid payload.
+    /// </summary>
+    [Fact]
+    public async Task NativeAot_Mitigation_Return_Success() {
+        using var client = factory.CreateClient();
+
+        var payload = new {
+            Name = "Pete",
+            Age = 30
+        };
+
+        var response = await client.PostAsJsonAsync("/18-native-aot/mitigation", payload);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    /// <summary>
+    /// Verifies that the liveness and readiness health endpoints return success.
+    /// </summary>
+    [Fact]
+    public async Task Health_Endpoints_Return_Success() {
         using var client = factory.CreateClient();
 
         var live = await client.GetAsync("/health/live");

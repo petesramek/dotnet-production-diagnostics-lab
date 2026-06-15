@@ -8,19 +8,81 @@ namespace DiagnosticsLab.Api.Tests.Scenarios;
 /// Contains behavior tests for data access diagnostics scenarios.
 /// </summary>
 /// <param name="factory">The test application factory.</param>
-public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
-{
+public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory> {
     /// <summary>
-    /// Verifies that the slow and improved orders endpoints return the same logical order identifiers.
+    /// Verifies that the problem endpoint returns order identifiers for the requested customer.
     /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Orders_problem_and_improved_endpoints_return_same_order_ids() {
+    public async Task SlowDataAccess_Problem_Return_OrderId() {
         using var client = factory.CreateClient();
 
-        var problem = await JsonTestClient.GetJsonArrayAsync(client, "/01-slow-data-access/orders/problem?customerId=42");
-        var improved = await JsonTestClient.GetJsonArrayAsync(client, "/01-slow-data-access/orders/improved?customerId=42");
+        var problem = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/01-slow-data-access/problem?customerId=42");
 
-        JsonAssertions.GetIds(problem).Should().Equal(JsonAssertions.GetIds(improved));
+        JsonAssertions.GetIds(problem)
+            .Should()
+            .NotBeEmpty();
+
+        problem.EnumerateArray()
+            .Select(item => item.GetProperty("customerId").GetInt32())
+            .Should()
+            .OnlyContain(customerId => customerId == 42);
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint returns the same logical order identifiers as the problem endpoint.
+    /// </summary>
+    [Fact]
+    public async Task SlowDataAccess_Mitigation_Return_OrderId() {
+        using var client = factory.CreateClient();
+
+        var problem = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/01-slow-data-access/problem?customerId=42");
+
+        var mitigation = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/01-slow-data-access/mitigation?customerId=42");
+
+        JsonAssertions.GetIds(mitigation)
+            .Should()
+            .Equal(JsonAssertions.GetIds(problem));
+    }
+
+    /// <summary>
+    /// Verifies that the problem endpoint returns customer summaries.
+    /// </summary>
+    [Fact]
+    public async Task NPlusOneQuery_Problem_Return_CustomerSummary() {
+        using var client = factory.CreateClient();
+
+        var problem = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/05-n-plus-1-data-access/problem?take=10");
+
+        JsonAssertions.NormalizeCustomerSummaries(problem)
+            .Should()
+            .NotBeEmpty();
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint returns the same customer summaries as the problem endpoint.
+    /// </summary>
+    [Fact]
+    public async Task NPlusOneQuery_Mitigation_Return_CustomerSummary() {
+        using var client = factory.CreateClient();
+
+        var problem = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/05-n-plus-1-data-access/problem?take=10");
+
+        var mitigation = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/05-n-plus-1-data-access/mitigation?take=10");
+
+        JsonAssertions.NormalizeCustomerSummaries(mitigation)
+            .Should()
+            .Equal(JsonAssertions.NormalizeCustomerSummaries(problem));
     }
 }

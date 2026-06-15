@@ -10,81 +10,91 @@ namespace DiagnosticsLab.Api.Tests.Scenarios;
 /// Contains behavior tests for observability and logging failure scenarios.
 /// </summary>
 /// <param name="factory">The test application factory.</param>
-public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
-{
-    /// <summary>
-    /// Verifies that logging failures do not break the business operation
-    /// in the improved endpoint, while the problem endpoint fails.
-    /// </summary>
-    /// <remarks>
-    /// The problem endpoint propagates the logging failure.
-    /// The improved endpoint isolates it and still completes the operation.
-    /// </remarks>
-    /// <returns>A task representing the asynchronous test operation.</returns>
-    [Fact]
-    public async Task Logging_failure_problem_and_improved_behave_correctly() {
-        using var client = factory.CreateClient();
+public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory> {
 
+    /// <summary>
+    /// Verifies that the problem endpoint fails when the audit sink throws.
+    /// </summary>
+    [Fact]
+    public async Task LoggingFailure_Problem_Throws_When_Audit_Fails() {
+        using var client = factory.CreateClient();
         var request = new {
             OperationId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             AuditShouldFail = true
         };
 
-        var problem = await client.PostAsJsonAsync(
+        var response = await client.PostAsJsonAsync(
             "/12-logging-failure/problem",
             request);
 
-        using var improved = await JsonTestClient.PostJsonDocumentAsync(
-            client,
-            "/12-logging-failure/improved",
-            request);
-
-        problem.StatusCode.Should().Be(System.Net.HttpStatusCode.InternalServerError);
-
-        improved.RootElement.GetProperty("businessOperationCompleted").GetBoolean().Should().BeTrue();
-        improved.RootElement.GetProperty("auditFailureIsolated").GetBoolean().Should().BeTrue();
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
     }
 
-
-    /// <summary>/// consistent business results
-    /// while providing different levels of observability context.
+    /// <summary>
+    /// Verifies that the mitigation endpoint continues when the audit sink throws.
     /// </summary>
-    /// <remarks>
-    /// The improved endpoint includes additional identifiers in the response when validation fails,
-    /// which allows easier correlation with logs.
-    /// </remarks>
-    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Observability_problem_and_improved_endpoints_return_expected_payloads() {
+    public async Task LoggingFailure_Mitigation_Continue_When_Audit_Fails() {
         using var client = factory.CreateClient();
+        var request = new {
+            OperationId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            AuditShouldFail = true
+        };
 
+        using var response = await JsonTestClient.PostJsonDocumentAsync(
+            client,
+            "/12-logging-failure/mitigation",
+            request);
+
+        response.RootElement.GetProperty("businessOperationCompleted").GetBoolean().Should().BeTrue();
+        response.RootElement.GetProperty("auditFailureIsolated").GetBoolean().Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Verifies that the problem endpoint returns the basic validation error payload.
+    /// </summary>
+    [Fact]
+    public async Task Observability_Problem_Return_Error_Payload() {
+        using var client = factory.CreateClient();
         var request = new {
             PaymentId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             CustomerId = 42,
             Amount = -5m
         };
 
-        using var problem = await JsonTestClient.PostJsonDocumentAsync(
+        using var response = await JsonTestClient.PostJsonDocumentAsync(
             client,
             "/03-observability-tracing/problem",
             request,
             HttpStatusCode.BadRequest);
 
-        using var improved = await JsonTestClient.PostJsonDocumentAsync(
+        response.RootElement
+            .GetProperty("error")
+            .GetString()
+            .Should()
+            .Be("Invalid payment");
+    }
+
+    /// <summary>
+    /// Verifies that the mitigation endpoint returns the contextual validation payload.
+    /// </summary>
+    [Fact]
+    public async Task Observability_Mitigation_Return_Contextual_Payload() {
+        using var client = factory.CreateClient();
+        var request = new {
+            PaymentId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            CustomerId = 42,
+            Amount = -5m
+        };
+
+        using var response = await JsonTestClient.PostJsonDocumentAsync(
             client,
-            "/03-observability-tracing/improved",
+            "/03-observability-tracing/mitigation",
             request,
             HttpStatusCode.BadRequest);
 
-        problem.RootElement.GetProperty("error").GetString()
-            .Should()
-            .Be("Invalid payment");
-
-        improved.RootElement.GetProperty("error").GetString()
-            .Should()
-            .Be("Invalid payment amount");
-
-        improved.RootElement.TryGetProperty("paymentId", out _).Should().BeTrue();
-        improved.RootElement.TryGetProperty("customerId", out _).Should().BeTrue();
+        response.RootElement.GetProperty("error").GetString().Should().Be("Invalid payment amount");
+        response.RootElement.TryGetProperty("paymentId", out _).Should().BeTrue();
+        response.RootElement.TryGetProperty("customerId", out _).Should().BeTrue();
     }
 }
