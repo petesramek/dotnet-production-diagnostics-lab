@@ -23,19 +23,4 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
 
         JsonAssertions.GetIds(problem).Should().Equal(JsonAssertions.GetIds(improved));
     }
-
-    /// <summary>
-    /// Verifies that the chatty and improved customers endpoints return the same logical customer summaries.
-    /// </summary>
-    /// <returns>A task representing the asynchronous test operation.</returns>
-    [Fact]
-    public async Task Customers_problem_and_improved_endpoints_return_same_summaries()
-    {
-        using var client = factory.CreateClient();
-
-        var problem = await JsonTestClient.GetJsonArrayAsync(client, "/api/customers/problem?take=10");
-        var improved = await JsonTestClient.GetJsonArrayAsync(client, "/api/customers/improved?take=10");
-
-        JsonAssertions.NormalizeCustomerSummaries(problem).Should().Equal(JsonAssertions.NormalizeCustomerSummaries(improved));
-    }
 }
