@@ -15,14 +15,13 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
     /// </summary>
     /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Orders_problem_and_improved_endpoints_return_same_order_ids()
-    {
+    public async Task Orders_problem_and_improved_endpoints_return_same_order_ids() {
         using var client = factory.CreateClient();
 
-        var slow = await JsonTestClient.GetJsonArrayAsync(client, "/api/orders/slow?customerId=42");
-        var improved = await JsonTestClient.GetJsonArrayAsync(client, "/api/orders/improved?customerId=42");
+        var problem = await JsonTestClient.GetJsonArrayAsync(client, "/01-slow-data-access/orders/problem?customerId=42");
+        var improved = await JsonTestClient.GetJsonArrayAsync(client, "/01-slow-data-access/orders/improved?customerId=42");
 
-        JsonAssertions.GetIds(slow).Should().Equal(JsonAssertions.GetIds(improved));
+        JsonAssertions.GetIds(problem).Should().Equal(JsonAssertions.GetIds(improved));
     }
 
     /// <summary>

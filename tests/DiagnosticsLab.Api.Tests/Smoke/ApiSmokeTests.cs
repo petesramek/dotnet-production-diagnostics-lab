@@ -30,7 +30,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// </summary>
     /// <returns>A task representing the asynchronous test operation.</returns>
     [Theory]
-    [InlineData("/api/orders/improved?customerId=42")]
+    [InlineData("/01-slow-data-access/orders/improved?customerId=42")]
     [InlineData("/api/customers/improved?take=10")]
     [InlineData("/api/blocking/improved?delayMs=1")]
     [InlineData("/api/inventory/improved?sku=ABC")]

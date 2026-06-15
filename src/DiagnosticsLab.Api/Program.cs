@@ -1,4 +1,4 @@
-﻿using DiagnosticsLab.Api.Configuration;
+using DiagnosticsLab.Api.Configuration;
 using DiagnosticsLab.Api.Data;
 using DiagnosticsLab.Api.Endpoints;
 using DiagnosticsLab.Api.Services;
@@ -42,7 +42,7 @@ app.MapGet("/", () => Results.Ok(new
     Description = "Small ASP.NET Core lab for production-style diagnostics scenarios."
 }));
 
-app.MapOrderEndpoints();
+app.MapSlowDataAccessEndpoints();
 app.MapCustomerEndpoints();
 app.MapReportEndpoints();
 app.MapBlockingEndpoints();

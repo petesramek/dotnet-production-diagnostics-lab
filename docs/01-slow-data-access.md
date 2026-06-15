@@ -1,17 +1,34 @@
-﻿# Scenario 1: Slow data access
+## Scenario 1: Slow data access
 
-## Problem
+### Problem
 
-`GET /api/orders/slow` loads all orders into memory and only then filters by customer.
+GET /01-slow-data-access/orders/problem
 
-This is a common production issue: the endpoint may work with small data sets, but becomes slower and more memory-heavy as data grows.
+Loads all orders into memory using ToListAsync and only then filters.
 
-## Improved version
+This causes:
+- unnecessary database data transfer
+- increased memory usage
+- slower performance as data grows
 
-`GET /api/orders/improved` filters in the database, uses `AsNoTracking`, projects only the required fields, limits the result set, and accepts a cancellation token.
+---
 
-## What to observe
+### Improved version
 
-- Compare logs between both endpoints.
-- Compare behavior as the seed data grows.
-- Look at where filtering happens: in memory vs. in the database query.
+GET /01-slow-data-access/orders/improved
+
+Executes filtering in the database using Where, applies AsNoTracking, projects required fields, and limits results before materialization.
+
+---
+
+### Key issue
+
+The main problem is filtering after data is materialized, preventing the database from executing the query efficiently.
+
+---
+
+### What to observe
+
+- Both endpoints return the same data
+- Problem endpoint becomes slower as dataset grows
+- Filtering location differs: in-memory vs database
