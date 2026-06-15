@@ -49,8 +49,8 @@ app.MapExternalDependencyReliabilityEndpoints();
 app.MapNPlusOneQueryEndpoints();
 app.MapBlockingRequestHandlingEndpoints();
 app.MapUnboundedRetriesEndpoints();
+app.MapLargeResponseEndpoints();
 
-app.MapExportEndpoints();
 app.MapConfigurationEndpoints();
 app.MapStartupEndpoints();
 app.MapAuditEndpoints();

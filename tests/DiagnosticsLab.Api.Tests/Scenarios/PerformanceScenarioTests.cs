@@ -46,18 +46,29 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     }
 
     /// <summary>
-    /// Verifies that the problem and improved export endpoints return the same row identifiers for a small export.
+    /// Verifies that both problem and improved endpoints return identical logical
+    /// export data for a small dataset.
     /// </summary>
+    /// <remarks>
+    /// The problem endpoint buffers the entire response in memory,
+    /// while the improved endpoint streams results incrementally.
+    /// </remarks>
     /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Export_problem_and_improved_endpoints_return_same_row_ids_for_small_export()
-    {
+    public async Task Large_response_problem_and_improved_endpoints_return_same_row_ids() {
         using var client = factory.CreateClient();
 
-        var problem = await JsonTestClient.GetJsonArrayAsync(client, "/api/exports/problem?rows=25");
-        var improved = await JsonTestClient.GetJsonArrayAsync(client, "/api/exports/improved?rows=25");
+        var problem = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/08-large-response/problem?rows=25");
 
-        JsonAssertions.GetIds(problem).Should().Equal(JsonAssertions.GetIds(improved));
+        var improved = await JsonTestClient.GetJsonArrayAsync(
+            client,
+            "/08-large-response/improved?rows=25");
+
+        JsonAssertions.GetIds(problem)
+            .Should()
+            .Equal(JsonAssertions.GetIds(improved));
     }
 
 

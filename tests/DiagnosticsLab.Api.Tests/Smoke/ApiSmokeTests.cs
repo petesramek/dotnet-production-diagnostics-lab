@@ -40,7 +40,8 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     [InlineData("/06-blocking-request-handling/improved?delayMs=1")]
     [InlineData("/07-unbounded-retries/problem?sku=ABC")]
     [InlineData("/07-unbounded-retries/improved?sku=ABC")]
-    [InlineData("/api/exports/improved?rows=10")]
+    [InlineData("/08-large-response/problem?rows=10")]
+    [InlineData("/08-large-response/improved?rows=10")]
     [InlineData("/api/config/improved")]
     public async Task Improved_get_endpoints_return_success(string requestUri)
     {
