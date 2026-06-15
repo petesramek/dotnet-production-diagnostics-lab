@@ -142,4 +142,29 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
         problem.RootElement.GetProperty("blocking").GetBoolean().Should().BeTrue();
         improved.RootElement.GetProperty("blocking").GetBoolean().Should().BeFalse();
     }
+
+    /// <summary>
+    /// Verifies that both endpoints process large JSON payloads correctly.
+    /// </summary>
+    /// <remarks>
+    /// This test validates functional correctness.
+    /// LOH fragmentation must be observed using runtime diagnostics.
+    /// </remarks>
+    [Fact]
+    public async Task Loh_fragmentation_problem_and_improved_process_large_payload() {
+        using var client = factory.CreateClient();
+
+        var payloadResponse = await client.GetAsync("/16-loh-fragmentation/generate");
+        payloadResponse.EnsureSuccessStatusCode();
+
+        var json = await payloadResponse.Content.ReadAsStringAsync();
+
+        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+        var problem = await client.PostAsync("/16-loh-fragmentation/problem", content);
+        var improved = await client.PostAsync("/16-loh-fragmentation/improved", content);
+
+        problem.EnsureSuccessStatusCode();
+        improved.EnsureSuccessStatusCode();
+    }
 }
