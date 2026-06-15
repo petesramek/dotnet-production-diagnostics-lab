@@ -70,4 +70,23 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
 
         improved.StatusCode.Should().Be(System.Net.HttpStatusCode.ServiceUnavailable);
     }
+
+    /// <summary>
+    /// Verifies that both problem and improved endpoints execute successfully.
+    /// </summary>
+    /// <remarks>
+    /// This test does not validate socket exhaustion itself, which requires load and OS inspection.
+    /// It ensures endpoints are functional and reachable.
+    /// </remarks>
+    [Fact]
+    public async Task Socket_exhaustion_problem_and_improved_endpoints_return_success() {
+        using var client = factory.CreateClient();
+
+        var problem = await client.GetAsync("/14-socket-exhaustion/problem");
+        var improved = await client.GetAsync("/14-socket-exhaustion/improved");
+
+        problem.EnsureSuccessStatusCode();
+        improved.EnsureSuccessStatusCode();
+    }
+
 }

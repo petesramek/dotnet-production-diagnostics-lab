@@ -24,6 +24,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString);
 });
 
+builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<FakeShippingClient>();
 builder.Services.AddScoped<FakeInventoryClient>();
 builder.Services.AddSingleton<FakeStartupDependency>();
@@ -54,6 +57,7 @@ app.MapInvalidConfigurationEndpoints();
 app.MapSilentStartupFailureEndpoints();
 app.MapLoggingFailureEndpoints();
 app.MapRequestBodyMemoryPressureEndpoints();
+app.MapSocketExhaustionEndpoints();
 
 app.MapHealthChecks("/health/live");
 app.MapHealthChecks("/health/ready");
