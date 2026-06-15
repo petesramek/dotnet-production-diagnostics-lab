@@ -15,10 +15,14 @@ internal static class JsonTestClient
     /// </summary>
     /// <param name="client">The HTTP client.</param>
     /// <param name="requestUri">The request URI.</param>
+    /// <param name="expectedStatusCode">The expected HTTP status code.</param>
     /// <returns>The cloned JSON array root element.</returns>
-    public static async Task<JsonElement> GetJsonArrayAsync(HttpClient client, string requestUri)
+    public static async Task<JsonElement> GetJsonArrayAsync(
+        HttpClient client,
+        string requestUri,
+        HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
     {
-        using var document = await GetJsonDocumentAsync(client, requestUri);
+        using var document = await GetJsonDocumentAsync(client, requestUri, expectedStatusCode);
         return document.RootElement.Clone();
     }
 
@@ -47,11 +51,16 @@ internal static class JsonTestClient
     /// <param name="client">The HTTP client.</param>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="value">The value to send as JSON.</param>
+    /// <param name="expectedStatusCode">The expected HTTP status code.</param>
     /// <returns>The parsed JSON document.</returns>
-    public static async Task<JsonDocument> PostJsonDocumentAsync(HttpClient client, string requestUri, object value)
+    public static async Task<JsonDocument> PostJsonDocumentAsync(
+        HttpClient client,
+        string requestUri,
+        object value,
+        HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
     {
         var response = await client.PostAsJsonAsync(requestUri, value);
-        response.EnsureSuccessStatusCode();
+        response.StatusCode.Should().Be(expectedStatusCode);
 
         var stream = await response.Content.ReadAsStreamAsync();
         return await JsonDocument.ParseAsync(stream);
@@ -63,11 +72,16 @@ internal static class JsonTestClient
     /// <param name="client">The HTTP client.</param>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="content">The HTTP content.</param>
+    /// <param name="expectedStatusCode">The expected HTTP status code.</param>
     /// <returns>The parsed JSON document.</returns>
-    public static async Task<JsonDocument> PostJsonDocumentAsync(HttpClient client, string requestUri, HttpContent content)
+    public static async Task<JsonDocument> PostJsonDocumentAsync(
+        HttpClient client,
+        string requestUri,
+        HttpContent content,
+        HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
     {
         var response = await client.PostAsync(requestUri, content);
-        response.EnsureSuccessStatusCode();
+        response.StatusCode.Should().Be(expectedStatusCode);
 
         var stream = await response.Content.ReadAsStreamAsync();
         return await JsonDocument.ParseAsync(stream);
