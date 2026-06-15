@@ -13,26 +13,38 @@ namespace DiagnosticsLab.Api.Tests.Scenarios;
 public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
 {
     /// <summary>
-    /// Verifies that non-critical audit sink failures are isolated by the improved endpoint.
+    /// Verifies that logging failures do not break the business operation
+    /// in the improved endpoint, while the problem endpoint fails.
     /// </summary>
+    /// <remarks>
+    /// The problem endpoint propagates the logging failure.
+    /// The improved endpoint isolates it and still completes the operation.
+    /// </remarks>
     /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Audit_improved_endpoint_isolates_non_critical_audit_failure()
-    {
+    public async Task Logging_failure_problem_and_improved_behave_correctly() {
         using var client = factory.CreateClient();
-        var request = new
-        {
+
+        var request = new {
             OperationId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             AuditShouldFail = true
         };
 
-        var problem = await client.PostAsJsonAsync("/api/audit/problem", request);
-        using var improved = await JsonTestClient.PostJsonDocumentAsync(client, "/api/audit/improved", request);
+        var problem = await client.PostAsJsonAsync(
+            "/12-logging-failure/problem",
+            request);
 
-        problem.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        using var improved = await JsonTestClient.PostJsonDocumentAsync(
+            client,
+            "/12-logging-failure/improved",
+            request);
+
+        problem.StatusCode.Should().Be(System.Net.HttpStatusCode.InternalServerError);
+
         improved.RootElement.GetProperty("businessOperationCompleted").GetBoolean().Should().BeTrue();
         improved.RootElement.GetProperty("auditFailureIsolated").GetBoolean().Should().BeTrue();
     }
+
 
     /// <summary>/// consistent business results
     /// while providing different levels of observability context.

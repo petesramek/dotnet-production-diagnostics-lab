@@ -52,8 +52,8 @@ app.MapUnboundedRetriesEndpoints();
 app.MapLargeResponseEndpoints();
 app.MapInvalidConfigurationEndpoints();
 app.MapSilentStartupFailureEndpoints();
+app.MapLoggingFailureEndpoints();
 
-app.MapAuditEndpoints();
 app.MapUploadEndpoints();
 
 app.MapHealthChecks("/health/live");
