@@ -1,17 +1,34 @@
-﻿# Scenario 6: Blocking request handling
+## Scenario 6: Blocking request handling
 
-## Problem
+### Problem
 
-`GET /api/blocking/problem` blocks the request thread with `Thread.Sleep`.
+GET /06-blocking-request-handling/problem?delayMs=500
 
-Blocking request threads can reduce throughput under concurrent load and may contribute to thread pool starvation symptoms in busy ASP.NET Core applications.
+Blocks the request thread using Thread.Sleep.
 
-## Improved version
+Blocking request threads reduces throughput and can lead to thread pool starvation under load.
 
-`GET /api/blocking/improved` uses asynchronous waiting and accepts a `CancellationToken`.
+---
 
-## What to observe
+### Improved version
 
-- The problem endpoint blocks the request thread for the requested delay.
-- The improved endpoint yields while waiting.
-- Under concurrency, blocking code wastes request-processing capacity.
+GET /06-blocking-request-handling/improved?delayMs=500
+
+Performs asynchronous waiting using Task.Delay and supports CancellationToken.
+
+The request thread is released while waiting, allowing better scalability.
+
+---
+
+### Key issue
+
+Blocking the ThreadPool using synchronous operations prevents efficient request processing.
+
+---
+
+### What to observe
+
+- Problem endpoint blocks the request thread
+- Improved endpoint yields during waiting
+- Under load, blocking reduces system throughput
+- Both endpoints return the same logical result but differ in execution model

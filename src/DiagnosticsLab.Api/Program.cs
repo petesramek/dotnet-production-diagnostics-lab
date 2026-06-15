@@ -47,7 +47,7 @@ app.MapCancellationTimeoutsEndpoints();
 app.MapObservabilityTracingEndpoints();
 app.MapExternalDependencyReliabilityEndpoints();
 app.MapNPlusOneQueryEndpoints();
-
+app.MapBlockingRequestHandlingEndpoints();
 
 app.MapInventoryEndpoints();
 app.MapExportEndpoints();

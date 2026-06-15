@@ -12,19 +12,37 @@ namespace DiagnosticsLab.Api.Tests.Scenarios;
 public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory>
 {
     /// <summary>
-    /// Verifies that the improved blocking endpoint reports non-blocking behavior.
+    /// Verifies that the improved endpoint uses non-blocking asynchronous waiting
+    /// while the problem endpoint blocks the request thread.
     /// </summary>
+    /// <remarks>
+    /// The problem endpoint uses Thread.Sleep, which blocks the ThreadPool thread.
+    /// The improved endpoint uses Task.Delay, which yields and allows better scalability.
+    /// </remarks>
     /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Blocking_improved_endpoint_reports_non_blocking_behavior()
-    {
+    public async Task Blocking_problem_and_improved_endpoints_report_correct_behavior() {
         using var client = factory.CreateClient();
 
-        using var problem = await JsonTestClient.GetJsonDocumentAsync(client, "/api/blocking/problem?delayMs=100");
-        using var improved = await JsonTestClient.GetJsonDocumentAsync(client, "/api/blocking/improved?delayMs=1");
+        using var problem = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/06-blocking-request-handling/problem?delayMs=100");
 
-        problem.RootElement.GetProperty("blocking").GetBoolean().Should().BeTrue();
-        improved.RootElement.GetProperty("blocking").GetBoolean().Should().BeFalse();
+        using var improved = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/06-blocking-request-handling/improved?delayMs=1");
+
+        problem.RootElement
+            .GetProperty("blocking")
+            .GetBoolean()
+            .Should()
+            .BeTrue();
+
+        improved.RootElement
+            .GetProperty("blocking")
+            .GetBoolean()
+            .Should()
+            .BeFalse();
     }
 
     /// <summary>
