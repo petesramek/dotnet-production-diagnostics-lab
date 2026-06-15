@@ -20,7 +20,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/api/shipping/resilient?country=SLOW");
+        var response = await client.GetAsync("/04-external-dependency-reliability/improved?country=SLOW");
 
         response.StatusCode.Should().Be(HttpStatusCode.GatewayTimeout);
     }

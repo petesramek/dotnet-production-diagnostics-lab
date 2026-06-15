@@ -1,17 +1,41 @@
-﻿# Scenario 4: External dependency reliability
+## Scenario 4: External dependency reliability
 
-## Problem
+### Problem
 
-`GET /api/shipping/problem` calls a simulated external dependency without timeout control.
+GET /04-external-dependency-reliability/problem?country=SLOW
 
-A slow dependency can tie up request handling and make the application appear unstable.
+Calls an external dependency without any timeout control.
 
-## Improved version
+If the dependency is slow, the request waits indefinitely.
 
-`GET /api/shipping/resilient` uses a timeout and returns a controlled gateway timeout response when the dependency is too slow.
+This can cause:
+- slow responses
+- resource exhaustion
+- cascading failures across services
 
-## What to observe
+---
 
-- Call `/api/shipping/problem?country=SLOW`.
-- Call `/api/shipping/resilient?country=SLOW`.
-- Compare how long each request takes and how clearly failure is handled.
+### Improved version
+
+GET /04-external-dependency-reliability/improved?country=SLOW
+
+Uses a timeout and returns a controlled response when the dependency is too slow.
+
+If the dependency does not respond within the expected time:
+- the request is cancelled
+- a 504 Gateway Timeout response is returned
+
+---
+
+### Key issue
+
+The problem is unbounded waiting on external dependencies.
+
+---
+
+### What to observe
+
+- Call the endpoints with country=SLOW
+- Problem endpoint takes a long time
+- Improved endpoint fails fast with HTTP 504
+- Compare logs and response behavior
