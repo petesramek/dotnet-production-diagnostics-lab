@@ -34,8 +34,8 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     {
         using var client = factory.CreateClient();
 
-        using var problem = await JsonTestClient.GetJsonDocumentAsync(client, "/api/inventory/problem?sku=FAIL", HttpStatusCode.ServiceUnavailable);
-        using var improved = await JsonTestClient.GetJsonDocumentAsync(client, "/api/inventory/improved?sku=FAIL", HttpStatusCode.ServiceUnavailable);
+        using var problem = await JsonTestClient.GetJsonDocumentAsync(client, "/07-unbounded-retries/problem?sku=FAIL", HttpStatusCode.ServiceUnavailable);
+        using var improved = await JsonTestClient.GetJsonDocumentAsync(client, "/07-unbounded-retries/improved?sku=FAIL", HttpStatusCode.ServiceUnavailable);
 
         var problemAttempts = problem.RootElement.GetProperty("attempts").GetInt32();
         var improvedAttempts = improved.RootElement.GetProperty("attempts").GetInt32();

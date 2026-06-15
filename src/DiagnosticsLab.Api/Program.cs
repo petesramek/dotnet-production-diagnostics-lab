@@ -48,8 +48,8 @@ app.MapObservabilityTracingEndpoints();
 app.MapExternalDependencyReliabilityEndpoints();
 app.MapNPlusOneQueryEndpoints();
 app.MapBlockingRequestHandlingEndpoints();
+app.MapUnboundedRetriesEndpoints();
 
-app.MapInventoryEndpoints();
 app.MapExportEndpoints();
 app.MapConfigurationEndpoints();
 app.MapStartupEndpoints();
