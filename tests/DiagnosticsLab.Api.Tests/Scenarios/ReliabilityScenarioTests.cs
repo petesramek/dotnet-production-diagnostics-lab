@@ -45,19 +45,29 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     }
 
     /// <summary>
-    /// Verifies that the problematic startup endpoint hides initialization failure while the improved endpoint exposes it.
+    /// Verifies that the problem endpoint hides startup dependency failure
+    /// while the improved endpoint surfaces it correctly.
     /// </summary>
+    /// <remarks>
+    /// The problem endpoint swallows the exception and returns success,
+    /// leaving the system in a broken state.
+    /// The improved endpoint exposes the failure using HTTP 503.
+    /// </remarks>
     /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
-    public async Task Startup_problem_hides_failure_while_improved_endpoint_exposes_failure()
-    {
+    public async Task Silent_startup_failure_problem_and_improved_behave_correctly() {
         using var client = factory.CreateClient();
 
-        using var problem = await JsonTestClient.GetJsonDocumentAsync(client, "/api/startup/problem");
-        var improved = await client.GetAsync("/api/startup/improved");
+        using var problem = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/11-silent-startup-failure/problem");
+
+        var improved = await client.GetAsync(
+            "/11-silent-startup-failure/improved");
 
         problem.RootElement.GetProperty("initialized").GetBoolean().Should().BeFalse();
         problem.RootElement.GetProperty("failureVisible").GetBoolean().Should().BeFalse();
-        improved.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
+
+        improved.StatusCode.Should().Be(System.Net.HttpStatusCode.ServiceUnavailable);
     }
 }

@@ -51,8 +51,8 @@ app.MapBlockingRequestHandlingEndpoints();
 app.MapUnboundedRetriesEndpoints();
 app.MapLargeResponseEndpoints();
 app.MapInvalidConfigurationEndpoints();
+app.MapSilentStartupFailureEndpoints();
 
-app.MapStartupEndpoints();
 app.MapAuditEndpoints();
 app.MapUploadEndpoints();
 

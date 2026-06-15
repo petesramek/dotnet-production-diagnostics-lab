@@ -77,7 +77,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/api/startup/improved");
+        var response = await client.GetAsync("/11-silent-startup-failure/improved");
 
         response.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
     }
