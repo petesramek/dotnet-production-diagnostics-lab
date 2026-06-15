@@ -119,4 +119,27 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
+    /// <summary>
+    /// Verifies that the problem endpoint blocks while the improved endpoint uses async.
+    /// </summary>
+    /// <remarks>
+    /// This test validates behavior difference, not full starvation.
+    /// Starvation must be observed under load.
+    /// </remarks>
+    [Fact]
+    public async Task Threadpool_starvation_problem_and_improved_report_blocking_state() {
+        using var client = factory.CreateClient();
+
+        using var problem = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/15-threadpool-starvation/problem?delayMs=50");
+
+        using var improved = await JsonTestClient.GetJsonDocumentAsync(
+            client,
+            "/15-threadpool-starvation/improved?delayMs=50");
+
+        problem.RootElement.GetProperty("blocking").GetBoolean().Should().BeTrue();
+        improved.RootElement.GetProperty("blocking").GetBoolean().Should().BeFalse();
+    }
 }

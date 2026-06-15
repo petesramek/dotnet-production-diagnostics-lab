@@ -58,6 +58,7 @@ app.MapSilentStartupFailureEndpoints();
 app.MapLoggingFailureEndpoints();
 app.MapRequestBodyMemoryPressureEndpoints();
 app.MapSocketExhaustionEndpoints();
+app.MapThreadPoolStarvationEndpoints();
 
 app.MapHealthChecks("/health/live");
 app.MapHealthChecks("/health/ready");
