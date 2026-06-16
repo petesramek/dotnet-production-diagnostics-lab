@@ -64,4 +64,6 @@ wrk -t4 -c20 -d30s "http://localhost:5000/04-external-dependency-reliability/mit
 - Scenario 14: Socket Exhaustion
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Use the IHttpClientFactory - .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory)
+- [Build resilient HTTP apps: key development patterns - .NET](https://learn.microsoft.com/en-us/dotnet/core/resilience/http-resilience)
+- [HttpClient guidelines for .NET](https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines)

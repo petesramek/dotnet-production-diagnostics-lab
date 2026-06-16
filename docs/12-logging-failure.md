@@ -53,5 +53,6 @@ Use these tools to observe the behavior:
 - Scenario 03: Observability and Tracing
 - Scenario 11: Startup Failure Handling
 
-## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+## External references## Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-10.0)
+- [Logging in C# and .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/logging/overview)
+- [LoggerExtensions.BeginScope API](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.logging.loggerextensions.beginscope?view=net-11.0-pp)

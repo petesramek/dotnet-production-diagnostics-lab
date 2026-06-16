@@ -65,4 +65,6 @@ wrk -t4 -c50 http://localhost:5000/17-cache-stampede/mitigation
 - Scenario 14: Socket Exhaustion
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Cache in-memory in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-10.0)
+- [Overview of caching in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/overview?view=aspnetcore-10.0)
+- [Caching in .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/caching)

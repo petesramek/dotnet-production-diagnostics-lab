@@ -60,4 +60,6 @@ wrk -t4 -c20 -d30s "http://localhost:5000/05-n-plus-1-data-access/mitigation?tak
 - Scenario 08: Large Response Buffering vs Streaming
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Efficient Querying - EF Core](https://learn.microsoft.com/en-us/ef/core/performance/efficient-querying)
+- [Performance Diagnosis - EF Core](https://learn.microsoft.com/en-us/ef/core/performance/performance-diagnosis)
+- [Single vs. Split Queries - EF Core](https://learn.microsoft.com/en-us/ef/core/querying/single-split-queries)

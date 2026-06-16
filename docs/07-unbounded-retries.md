@@ -65,5 +65,6 @@ wrk -t4 -c20 -d30s "http://localhost:5000/07-unbounded-retries/mitigation?sku=FA
 - Scenario 04: External Dependency Reliability
 - Scenario 14: Socket Exhaustion
 
-## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Introduction to resilient app development - .NET](https://learn.microsoft.com/en-us/dotnet/core/resilience/)
+- [Build resilient HTTP apps: key development patterns - .NET](https://learn.microsoft.com/en-us/dotnet/core/resilience/http-resilience)
+- [Recommendations for handling transient faults](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/handle-transient-faults)

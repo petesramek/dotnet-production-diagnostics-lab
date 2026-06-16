@@ -63,4 +63,6 @@ curl --max-time 1 "http://localhost:5000/02-cancellation-timeouts/mitigation"
 - Scenario 06: Blocking Request Handling
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Cancellation in Managed Threads - .NET](https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads)
+- [Task cancellation - .NET](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation)
+- [Cancel async tasks after a period of time - C#](https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/cancel-async-tasks-after-a-period-of-time)

@@ -64,5 +64,6 @@ Use these tools to validate the behavior:
 - Scenario 09: Configuration Validation
 - Scenario 16: LOH Fragmentation
 
-## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+## External references## External.com/en-us/dotnet/core/deploying/native-aot/)
+- [ASP.NET Core support for Native AOT](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/native-aot?view=aspnetcore-10.0)
+- [How to use source generation in System.Text.Json](https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/source-generation)

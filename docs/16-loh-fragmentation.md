@@ -71,4 +71,6 @@ wrk -t4 -c20 -d30s -s post-json.lua http://localhost:5000/16-loh-fragmentation/m
 - Scenario 13: Request Body Memory Pressure
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Large object heap (LOH) on Windows - .NET](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/large-object-heap)
+- [Garbage collection and performance - .NET](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/performance)
+- [Perf insights for high LOH fragmentation](https://learn.microsoft.com/en-us/visualstudio/profiling/perf-insights-high-loh-fragmentation?view=visualstudio)

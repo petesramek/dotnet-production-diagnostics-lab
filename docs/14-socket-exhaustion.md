@@ -63,4 +63,6 @@ Then inspect sockets on the host while the load is running.
 - Scenario 07: Retry Storms
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Use the IHttpClientFactory - .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory)
+- [HttpClient guidelines for .NET](https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines)
+- [HTTP requests with IHttpClientFactory - ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-10.0)

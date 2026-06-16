@@ -63,4 +63,6 @@ wrk -t4 -c20 -d30s "http://localhost:5000/01-slow-data-access/orders/mitigation?
 - Scenario 08: Large Response Allocation / Streaming
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Efficient Querying - EF Core](https://learn.microsoft.com/en-us/ef/core/performance/efficient-querying)
+- [Tracking vs. No-Tracking Queries - EF Core](https://learn.microsoft.com/en-us/ef/core/querying/tracking)
+- [Performance Diagnosis - EF Core](https://learn.microsoft.com/en-us/ef/core/performance/performance-diagnosis)

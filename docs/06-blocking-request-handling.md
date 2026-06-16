@@ -60,4 +60,5 @@ wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-handling/mitigatio
 - Scenario 15: ThreadPool Starvation
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [ASP.NET Core Best Practices](https://learn.microsoft.com/en-us/aspnet/asynchronous-programming/async-scenarios)- [ASP.NET Core Best Practices](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/best-practices?view=aspnetcore-10.0)
+- [Task.Delay Method](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.delay?view=net-10.0)

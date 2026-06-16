@@ -55,4 +55,6 @@ This scenario is primarily about failure visibility and lifecycle correctness.
 - Scenario 10: Health Checks
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Background tasks with hosted services in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-10.0)
+- [Unhandled exceptions from a BackgroundService](https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/hosting-exception-handling)
+- [Worker services in .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/workers)

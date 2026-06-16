@@ -61,4 +61,6 @@ wrk -t4 -c20 -d30s "http://localhost:5000/08-large-response/mitigation?rows=5000
 - Scenario 16: LOH Fragmentation
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Controller action return types in ASP.NET Core web API](https://learn.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-10.0)
+- [System.Text.Json IAsyncEnumerable serialization](https://learn.microsoft.com/en-us/dotnet/core/compatibility/serialization/6.0/iasyncenumerable-serialization)
+- [MVC no longer buffers IAsyncEnumerable types when using System.Text.Json](https://learn.microsoft.com/en-us/aspnet/core/breaking-changes/6/iasyncenumerable-not-buffered-by-mvc?view=aspnetcore-10.0)

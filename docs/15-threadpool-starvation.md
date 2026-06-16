@@ -61,4 +61,6 @@ wrk -t4 -c50 -d30s "http://localhost:5000/15-threadpool-starvation/mitigation?de
 - Scenario 02: Missing Cancellation and Timeout Handling
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Debug ThreadPool starvation - .NET](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/debug-threadpool-starvation)
+- [ASP.NET Core Best Practices](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/best-practices?view=aspnetcore-10.0)
+- [dotnet-counters diagnostic tool](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-counters)

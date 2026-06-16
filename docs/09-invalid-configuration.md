@@ -60,4 +60,6 @@ This scenario is mostly about failure timing and operational visibility, not per
 - Scenario 11: Startup Failure Handling
 
 ## External references
-External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
+- [Options pattern in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-10.0)
+- [ValidateOnStart API reference](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.dependencyinjection.optionsbuilderextensions.validateonstart?view=net-11.0-pp)
+- [Options pattern in .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/options)
