@@ -13,12 +13,12 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
     /// Verifies that the problem endpoint returns order identifiers for the requested customer.
     /// </summary>
     [Fact]
-    public async Task SlowDataAccess_Problem_Return_OrderId() {
+    public async Task ExcessiveDataMaterialization_Problem_Returns_OrderId() {
         using var client = factory.CreateClient();
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/01-slow-data-access/problem?customerId=42");
+            "/01-excessive-data-materialization/problem?customerId=42");
 
         JsonAssertions.GetIds(problem)
             .Should()
@@ -34,16 +34,16 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
     /// Verifies that the mitigation endpoint returns the same logical order identifiers as the problem endpoint.
     /// </summary>
     [Fact]
-    public async Task SlowDataAccess_Mitigation_Return_OrderId() {
+    public async Task ExcessiveDataMaterialization_Mitigation_Returns_OrderId() {
         using var client = factory.CreateClient();
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/01-slow-data-access/problem?customerId=42");
+            "/01-excessive-data-materialization/problem?customerId=42");
 
         var mitigation = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/01-slow-data-access/mitigation?customerId=42");
+            "/01-excessive-data-materialization/mitigation?customerId=42");
 
         JsonAssertions.GetIds(mitigation)
             .Should()

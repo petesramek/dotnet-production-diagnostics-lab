@@ -19,7 +19,7 @@ Use this file mainly for:
 - Scenario 17 — cache stampede
 
 Optional:
-- Scenario 01 — slow data access
+- Scenario 01 — Excessive Data Materialization
 - Scenario 05 — N + 1 query problem
 
 ## 1. Install .NET diagnostics tools

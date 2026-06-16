@@ -56,8 +56,8 @@ app.MapGet("/", () => Results.Ok(new {
     Description = "Small ASP.NET Core lab for production-style diagnostics scenarios."
 }));
 
-// Scenario 01: Slow data access
-app.MapSlowDataAccessEndpoints();
+// Scenario 01: Excessive Data Materialization
+app.MapExcessiveDataMaterializationEndpoints();
 
 // Scenario 02: Missing cancellation / timeouts
 app.MapCancellationTimeoutsEndpoints();

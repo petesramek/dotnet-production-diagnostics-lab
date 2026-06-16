@@ -78,7 +78,7 @@ wrk -t4 -c20 -d30s "http://localhost:5000/08-large-response/mitigation?rows=5000
 
 ## Related scenarios
 
-- [Scenario 01: Slow Data Access](01-slow-data-access.md)
+- [Scenario 01: Excessive Data Materialization](01-excessive-data-materialization.md)
 - [Scenario 16: LOH Fragmentation](16-loh-fragmentation.md)
 
 ## External references

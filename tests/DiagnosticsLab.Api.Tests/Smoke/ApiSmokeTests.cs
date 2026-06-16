@@ -28,8 +28,8 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that representative GET endpoints return the expected status code.
     /// </summary>
     [Theory]
-    [InlineData("/01-slow-data-access/problem?customerId=42", HttpStatusCode.OK)]
-    [InlineData("/01-slow-data-access/mitigation?customerId=42", HttpStatusCode.OK)]
+    [InlineData("/01-excessive-data-materialization/problem?customerId=42", HttpStatusCode.OK)]
+    [InlineData("/01-excessive-data-materialization/mitigation?customerId=42", HttpStatusCode.OK)]
     [InlineData("/02-cancellation-timeouts/problem", HttpStatusCode.OK)]
     [InlineData("/02-cancellation-timeouts/mitigation", HttpStatusCode.OK)]
     [InlineData("/04-external-dependency-reliability/problem?country=CZ", HttpStatusCode.OK)]

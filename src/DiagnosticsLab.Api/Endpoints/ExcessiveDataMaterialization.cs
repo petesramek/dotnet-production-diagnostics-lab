@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 namespace DiagnosticsLab.Api.Endpoints;
 
 /// <summary>
-/// Maps endpoints for slow data access scenarios.
+/// Maps endpoints for Excessive Data Materialization scenarios.
 /// </summary>
-public static class SlowDataAccessEndpoints {
-    private const string Route = "/01-slow-data-access";
+public static class ExcessiveDataMaterializationEndpoints {
+    private const string Route = "/01-excessive-data-materialization";
 
-    public static IEndpointRouteBuilder MapSlowDataAccessEndpoints(this IEndpointRouteBuilder endpoints) {
+    public static IEndpointRouteBuilder MapExcessiveDataMaterializationEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
 
         // Problem:
@@ -20,7 +20,7 @@ public static class SlowDataAccessEndpoints {
             AppDbContext db,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) => {
-                var logger = loggerFactory.CreateLogger("SlowDataAccess.Problem");
+                var logger = loggerFactory.CreateLogger("ExcessiveDataMaterialization.Problem");
 
                 logger.LogWarning("Loading all orders before filtering for customer {CustomerId}", customerId);
 
@@ -62,7 +62,7 @@ public static class SlowDataAccessEndpoints {
             AppDbContext db,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) => {
-                var logger = loggerFactory.CreateLogger("SlowDataAccess.Mitigation");
+                var logger = loggerFactory.CreateLogger("ExcessiveDataMaterialization.Mitigation");
 
                 logger.LogInformation("Filtering orders in database for customer {CustomerId}", customerId);
 
