@@ -1,34 +1,63 @@
-## Scenario 6: Blocking request handling
+# Scenario 06: Blocking Request Handling
 
-### Problem
+## Goal
+Show the difference between blocking a request thread and using asynchronous waiting that releases the thread back to the runtime.
 
-GET /06-blocking-request-handling/problem?delayMs=500
+## Why this matters
+When request handling blocks a thread with synchronous waiting, fewer threads remain available to process incoming work. Under load, this reduces throughput and can contribute to thread-pool starvation.
 
-Blocks the request thread using Thread.Sleep.
+## Problem
+**Endpoint**: `GET /06-blocking-request-handling/problem?delayMs=500`
 
-Blocking request threads reduces throughput and can lead to thread pool starvation under load.
+The problem endpoint blocks the current request thread using `Thread.Sleep`. This means:
+- the thread does no useful work while waiting
+- the runtime cannot reuse that thread for other requests
+- throughput falls under concurrent load
 
----
+## Mitigation
+**Endpoint**: `GET /06-blocking-request-handling/mitigation?delayMs=500`
 
-### Improved version
+The mitigation endpoint uses asynchronous waiting with `Task.Delay(...)`. This means:
+- the request thread is released while waiting
+- other requests can use the thread pool more efficiently
+- the application scales better under load
 
-GET /06-blocking-request-handling/improved?delayMs=500
+## Simulation notes
+This scenario uses `Thread.Sleep(...)` versus `Task.Delay(...)` to make the difference visible. In a real system, the same problem appears with synchronous I/O, blocking waits, or sync-over-async patterns in request processing.
 
-Performs asynchronous waiting using Task.Delay and supports CancellationToken.
+## How to try it
+```bash
+curl "http://localhost:5000/06-blocking-request-handling/problem?delayMs=500"
+curl "http://localhost:5000/06-blocking-request-handling/mitigation?delayMs=500"
+```
 
-The request thread is released while waiting, allowing better scalability.
+Then repeat under load.
 
----
+## What to observe
+- Both endpoints return the same logical response shape.
+- The problem endpoint reports blocking behavior.
+- The mitigation endpoint reports non-blocking behavior.
+- Under load, blocking reduces throughput and increases latency.
 
-### Key issue
+## Diagnostic tools
+Use these tools to observe the behavior:
+- `wrk` or another load generator → generate concurrent requests
+- `dotnet-counters` → watch thread-pool activity, queue length, and runtime counters
+- application logs → confirm blocking vs non-blocking path execution
 
-Blocking the ThreadPool using synchronous operations prevents efficient request processing.
+Example:
+```bash
+wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-handling/problem?delayMs=500"
+wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-handling/mitigation?delayMs=500"
+```
 
----
+## Source files
+- Endpoint: `src/ProductionDiagnosticsLab.Api/Endpoints/BlockingRequestHandlingEndpoints.cs`
+- Tests: `tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs`
 
-### What to observe
+## Related scenarios
+- Scenario 02: Missing Cancellation and Timeout Handling
+- Scenario 15: ThreadPool Starvation
 
-- Problem endpoint blocks the request thread
-- Improved endpoint yields during waiting
-- Under load, blocking reduces system throughput
-- Both endpoints return the same logical result but differ in execution model
+## External references
+External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.

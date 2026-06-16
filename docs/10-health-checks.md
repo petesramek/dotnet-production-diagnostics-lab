@@ -1,42 +1,55 @@
-## Scenario 10: Missing health checks
+# Scenario 10: Health Checks
 
-### Problem
+## Goal
+Show why applications should expose standard health endpoints that infrastructure can use for liveness and readiness decisions.
 
-The application does not expose meaningful health check endpoints.
+## Why this matters
+If an application does not expose reliable health probes, load balancers, orchestrators, and hosting platforms cannot tell whether the process is alive or whether the application is actually ready to handle traffic. This leads to bad routing decisions, slow failure detection, and unhealthy instances receiving requests.
 
-Without proper health checks:
-- orchestration systems cannot determine if the application is healthy
-- dead or unhealthy instances may continue receiving traffic
-- failures are harder to detect and isolate
+## Problem
+This scenario describes the anti-pattern of running an application without meaningful health probes. In that state:
+- infrastructure cannot distinguish a healthy instance from a broken one
+- unhealthy instances may continue receiving traffic
+- operational failures are harder to detect automatically
 
-A common anti-pattern is relying on ad-hoc endpoints or assuming the application is healthy if it is running.
+A common mistake is assuming that “the process is running” means “the application is ready”.
 
----
+## Mitigation
+The lab exposes two standard health endpoints:
+- **Liveness**: `GET /health/live`
+- **Readiness**: `GET /health/ready`
 
-### Improved version
+These endpoints integrate with ASP.NET Core health checks and give infrastructure reliable signals for traffic management and restart decisions.
 
-The application exposes standardized health check endpoints:
+## Simulation notes
+Unlike the other scenarios, this one is middleware/infrastructure based rather than implemented through a dedicated scenario endpoint class. The value of this scenario is operational visibility and orchestration correctness, not application business logic.
 
-- /health/live → liveness probe (is the process alive)
-- /health/ready → readiness probe (is the application ready to serve traffic)
+## How to try it
+```bash
+curl "http://localhost:5000/health/live"
+curl "http://localhost:5000/health/ready"
+```
 
-These endpoints integrate with ASP.NET Core health checks infrastructure.
+## What to observe
+- `/health/live` answers whether the process is alive.
+- `/health/ready` answers whether the application is ready to serve traffic.
+- These endpoints provide a standard contract for orchestrators, load balancers, and deployment platforms.
 
----
+## Diagnostic tools
+Use these tools to validate the behavior:
+- `curl` → verify probe responses manually
+- container orchestration platform probes → validate liveness/readiness integration
+- application logs → confirm startup and readiness transitions if present
 
-### Key issue
+This scenario is less about performance counters and more about reliable platform signaling.
 
-The problem is not providing health endpoints that infrastructure can rely on.
+## Source files
+- Host setup: `src/ProductionDiagnosticsLab.Api/Program.cs`
+- Tests: `tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs`
 
-Without them:
-- load balancers and orchestrators cannot make correct routing decisions
-- failures remain hidden
+## Related scenarios
+- Scenario 09: Configuration Validation
+- Scenario 11: Startup Failure Handling
 
----
-
-### What to observe
-
-- /health/live always returns process-level status
-- /health/ready reflects application readiness
-- These endpoints enable proper container orchestration behavior
-``
+## External references
+External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.

@@ -1,39 +1,63 @@
-## Scenario 5: N+1 Queries
+# Scenario 05: N+1 / Chatty Data Access
 
-### Problem
+## Goal
+Demonstrate how loop-driven data access creates many unnecessary database round-trips and why set-based queries scale better.
 
-GET /05-n-plus-1-data-access/problem?take=25
+## Why this matters
+An API can return correct results and still be inefficient if it repeatedly queries the database inside a loop. As the number of parent entities grows, the number of database round-trips grows too, which increases latency and reduces scalability.
 
-Loads customers and then executes additional queries per customer to compute order aggregates.
+## Problem
+**Endpoint**: `GET /05-n-plus-1-data-access/problem?take=25`
 
-This results in:
-- N+1 database queries
-- increasing number of database roundtrips as the number of customers grows
-- degraded performance and scalability
+The problem endpoint first loads customers and then performs additional queries for each customer to compute aggregates. This means:
+- one initial query for the customer list
+- additional queries per customer for counts and totals
+- database round-trips increase with the number of customers
 
----
+## Mitigation
+**Endpoint**: `GET /05-n-plus-1-data-access/mitigation?take=25`
 
-### Improved version
+The mitigation endpoint computes the required customer data in a single set-based query. This means:
+- customer data and aggregates are fetched together
+- the number of database round-trips stays low
+- the operation scales more predictably
 
-GET /05-n-plus-1-data-access/improved?take=25
+## Simulation notes
+This scenario uses a small relational dataset, but it represents a very common production anti-pattern: issuing queries inside a loop instead of pushing aggregation into the database engine.
 
-Fetches customers and their order aggregates in a single query using projection.
+## How to try it
+```bash
+curl "http://localhost:5000/05-n-plus-1-data-access/problem?take=25"
+curl "http://localhost:5000/05-n-plus-1-data-access/mitigation?take=25"
+```
 
-This keeps the operation set-based and avoids unnecessary database roundtrips.
+Try increasing `take` to make the difference more visible.
 
----
+## What to observe
+- Both endpoints should return the same logical customer summaries.
+- The problem endpoint performs repeated database calls.
+- The mitigation endpoint executes a single set-based query.
+- The performance gap grows as `take` increases.
 
-### Key issue
+## Diagnostic tools
+Use these tools to observe the behavior:
+- database query logging → confirm repeated queries vs single query
+- `wrk` or another load generator → amplify the difference under concurrent load
+- `dotnet-counters` → watch allocation rate and runtime churn under repeated requests
 
-The problem is executing database queries inside a loop.
+Example:
+```bash
+wrk -t4 -c20 -d30s "http://localhost:5000/05-n-plus-1-data-access/problem?take=100"
+wrk -t4 -c20 -d30s "http://localhost:5000/05-n-plus-1-data-access/mitigation?take=100"
+```
 
-Each additional customer introduces more database calls, which does not scale with larger datasets.
+## Source files
+- Endpoint: `src/ProductionDiagnosticsLab.Api/Endpoints/NPlusOneQueryEndpoints.cs`
+- Tests: `tests/ProductionDiagnosticsLab.Tests/Scenarios/DataAccessScenarioTests.cs`
 
----
+## Related scenarios
+- Scenario 01: Slow Data Access
+- Scenario 08: Large Response Buffering vs Streaming
 
-### What to observe
-
-- Problem endpoint performs repeated queries per customer
-- Improved endpoint executes a single set-based query
-- Both endpoints return the same logical result
-- Performance difference increases as the dataset grows
+## External references
+External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.

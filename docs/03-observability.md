@@ -1,42 +1,63 @@
-## Scenario 3: Weak observability & tracing
+# Scenario 03: Weak Observability and Tracing
 
-### Problem
+## Goal
+Show the difference between vague logging and structured, contextual logging that supports real troubleshooting.
 
-POST /03-observability-tracing/problem
+## Why this matters
+An endpoint can be functionally correct and still be operationally hard to debug. If logs do not include identifiers and structured fields, failures are harder to correlate with user actions, requests, and domain events.
 
-Processes a payment but logs only vague messages without context.
+## Problem
+**Endpoint**: `POST /03-observability-tracing/problem`
 
-Logs do not include identifiers such as PaymentId or CustomerId, making it
-difficult to trace issues in production.
+The problem endpoint processes a payment but emits generic logs without useful context. This means:
+- logs do not identify the payment or customer
+- failures are harder to correlate to specific requests
+- troubleshooting becomes slow and unreliable
 
----
+## Mitigation
+**Endpoint**: `POST /03-observability-tracing/mitigation`
 
-### Improved version
+The mitigation endpoint uses structured logging and logging scope/context. Logs include fields such as:
+- `PaymentId`
+- `CustomerId`
+- `Amount`
 
-POST /03-observability-tracing/improved
+This makes the operation traceable and easier to investigate.
 
-Uses structured logging and logging scopes with contextual information.
+## Simulation notes
+This scenario does not simulate performance; it simulates operational visibility. The difference is not mainly in the HTTP response, but in how much context appears in logs and how easy it is to correlate events.
 
-Logs include:
-- PaymentId
-- CustomerId
-- Amount
+## How to try it
+Use invalid input to force the validation path in both endpoints:
 
-This enables easier correlation and debugging.
+```bash
+curl -X POST "http://localhost:5000/03-observability-tracing/problem"   -H "Content-Type: application/json"   -d '{"paymentId":"00000000-0000-0000-0000-000000000001","customerId":42,"amount":-5}'
 
----
+curl -X POST "http://localhost:5000/03-observability-tracing/mitigation"   -H "Content-Type: application/json"   -d '{"paymentId":"00000000-0000-0000-0000-000000000001","customerId":42,"amount":-5}'
+```
 
-### Key issue
+## What to observe
+- The problem endpoint returns a basic validation error payload.
+- The mitigation endpoint returns a validation payload with additional identifiers.
+- The most important difference is in the logs:
+  - problem → generic message
+  - mitigation → structured fields and contextual identifiers
 
-The problem is missing contextual information in logs.
+## Diagnostic tools
+Use these tools to observe the difference:
+- application console logs
+- centralized logging system if available
+- request correlation or tracing tooling if wired into the app
 
-Without structured logging, production debugging becomes slow and unreliable.
+The key observation for this scenario is log quality, not raw performance.
 
----
+## Source files
+- Endpoint: `src/ProductionDiagnosticsLab.Api/Endpoints/ObservabilityTracingEndpoints.cs`
+- Tests: `tests/ProductionDiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs`
 
-### What to observe
+## Related scenarios
+- Scenario 12: Logging Failure Isolation
+- Scenario 10: Health Checks
 
-- Compare log output between endpoints
-- Problem endpoint produces generic logs
-- Improved endpoint includes structured data and identifiers
-- Failed requests can be correlated with specific inputs
+## External references
+External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.

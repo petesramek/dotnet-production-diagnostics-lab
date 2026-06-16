@@ -1,57 +1,68 @@
-## Scenario 17: Cache stampede
+# Scenario 17: Cache Stampede
 
-### Problem
+## Goal
+Show why concurrent cache misses need coordination and how a single-flight style mitigation prevents duplicate expensive work.
 
-GET /17-cache-stampede/problem
+## Why this matters
+When a hot cache key expires, many requests can miss at the same time. If every request recomputes the same value, latency increases, backends receive unnecessary pressure, and the application can cause a self-inflicted spike.
 
-Multiple concurrent requests hit an empty cache key.
+## Problem
+**Endpoint**: `GET /17-cache-stampede/problem`
 
-All requests recompute the value:
-- duplicate expensive work
-- increased latency
-- downstream system overload
+The problem endpoint recomputes a missing cache value without coordination. This means:
+- multiple callers can compute the same value at once
+- duplicate expensive work is performed
+- downstream systems receive avoidable load
+- latency spikes when a hot cache entry expires
 
----
+## Mitigation
+**Endpoint**: `GET /17-cache-stampede/mitigation`
 
-### Improved version
+The mitigation endpoint coordinates recomputation with `SemaphoreSlim`. This means:
+- only one caller computes the missing value
+- other callers wait and reuse the result
+- backend pressure stays lower
+- behavior is more stable under concurrency
 
-GET /17-cache-stampede/improved
+## Simulation notes
+This scenario uses an in-memory cache and a simulated expensive operation. In a real system, the expensive work would typically be a database query, remote API call, or another costly computation behind a cache entry.
 
-Uses coordination (SemaphoreSlim) to ensure only one request computes the value.
+## How to try it
+Warm and call the endpoints repeatedly:
 
-Other requests:
-- wait for computation
-- reuse cached result
+```bash
+curl "http://localhost:5000/17-cache-stampede/problem"
+curl "http://localhost:5000/17-cache-stampede/mitigation"
+```
 
----
+Then use concurrent load to make the difference visible.
 
-### Key issue
+## What to observe
+- Both endpoints return a cached value.
+- The problem endpoint reports `coordinated = false`.
+- The mitigation endpoint reports `coordinated = true`.
+- Under concurrent load, the problem path performs duplicate recomputation while the mitigation path performs only one recompute.
 
-The problem is lack of coordination when cache entries expire.
+## Diagnostic tools
+Use these tools to observe the difference:
+- application logs → confirm duplicate recomputation vs single recomputation
+- `wrk` or another load generator → create concurrent misses on the same cache key
+- `dotnet-counters` → observe runtime pressure if you want to correlate stampede behavior with allocation or throughput changes
 
----
-
-### What to observe
-
-Run concurrent load:
-
+Example:
+```bash
 wrk -t4 -c50 http://localhost:5000/17-cache-stampede/problem
+wrk -t4 -c50 http://localhost:5000/17-cache-stampede/mitigation
+```
 
-Observe logs:
-- many "recomputing value"
+## Source files
+- Endpoint: `src/ProductionDiagnosticsLab.Api/Endpoints/CacheStampedeEndpoints.cs`
+- Tests: `tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs`
+- Smoke tests: `tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs`
 
-Then run:
+## Related scenarios
+- Scenario 07: Retry Storms
+- Scenario 14: Socket Exhaustion
 
-wrk -t4 -c50 http://localhost:5000/17-cache-stampede/improved
-
-Observe:
-- only one recomputation
-- stable behavior
-
----
-
-### Diagnostic signals
-
-- log duplication vs single computation
-- latency spikes in problem version
-- stable latency in improved version
+## External references
+External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.

@@ -1,61 +1,74 @@
-## Scenario 16: LOH fragmentation
+# Scenario 16: LOH Fragmentation
 
-### Problem
+## Goal
+Show why buffering large JSON payloads creates Large Object Heap (LOH) pressure and why streaming deserialization is safer for memory-intensive workloads.
 
-POST /16-loh-fragmentation/problem
+## Why this matters
+Objects larger than roughly 85 KB are allocated on the Large Object Heap. Repeated allocation of large buffers increases GC pressure, can contribute to fragmentation, and makes memory behavior less predictable under load.
 
-Reads the entire JSON payload into memory before deserialization.
+## Problem
+**Endpoint**: `POST /16-loh-fragmentation/problem`
 
-This causes:
-- large object allocations (> 85 KB)
-- LOH (Large Object Heap) usage
-- memory fragmentation
-- increased Gen 2 GC pressure
+The problem endpoint buffers the full request body into memory before deserialization. This means:
+- large intermediate buffers are allocated
+- LOH usage increases
+- Gen 2 collections become more expensive under sustained load
+- memory fragmentation risk grows over time
 
----
+## Mitigation
+**Endpoint**: `POST /16-loh-fragmentation/mitigation`
 
-### Improved version
+The mitigation endpoint deserializes directly from the request stream. This means:
+- large intermediate buffers are avoided
+- LOH allocations are reduced
+- memory usage stays more stable under load
+- JSON processing becomes more efficient for large payloads
 
-POST /16-loh-fragmentation/improved
+## Simulation notes
+This scenario uses a generated large JSON payload so the memory behavior is reproducible in the lab. The same pattern occurs in production when APIs receive large JSON documents, imports, or bulk request payloads.
 
-Streams JSON directly from the request body using System.Text.Json.
+## How to try it
+First generate a large payload:
 
-This:
-- avoids large intermediate buffers
-- reduces LOH allocations
-- improves memory efficiency
+```bash
+curl "http://localhost:5000/16-loh-fragmentation/generate" -o payload.json
+```
 
----
+Then post it to both endpoints:
 
-### Key issue
+```bash
+curl -X POST "http://localhost:5000/16-loh-fragmentation/problem"   -H "Content-Type: application/json"   --data-binary @payload.json
 
-The problem is allocating large buffers when processing JSON instead of streaming.
+curl -X POST "http://localhost:5000/16-loh-fragmentation/mitigation"   -H "Content-Type: application/json"   --data-binary @payload.json
+```
 
----
+## What to observe
+- Both endpoints should process the payload successfully.
+- The problem endpoint reports `streamed = false` and `lohAllocation = true`.
+- The mitigation endpoint reports `streamed = true` and `lohAllocation = false`.
+- Under repeated load, the problem path should show stronger memory pressure.
 
-### What to observe
+## Diagnostic tools
+Use these tools to observe the difference:
+- `dotnet-counters` → watch GC heap size, LOH size, allocation rate, and Gen 2 collections
+- `wrk` or repeated `curl` calls → sustain load long enough to make the memory pattern visible
+- `dotnet-gcdump` or `dotnet-trace` → deeper inspection if you need allocation evidence
 
-Run load:
+Example:
+```bash
+dotnet-counters monitor --process-id <pid> System.Runtime
+wrk -t4 -c20 -d30s -s post-json.lua http://localhost:5000/16-loh-fragmentation/problem
+wrk -t4 -c20 -d30s -s post-json.lua http://localhost:5000/16-loh-fragmentation/mitigation
+```
 
-wrk -t4 -c20 -d30s http://localhost:5000/16-loh-fragmentation/problem
+## Source files
+- Endpoint: `src/ProductionDiagnosticsLab.Api/Endpoints/LohFragmentationEndpoints.cs`
+- Tests: `tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs`
+- Smoke tests: `tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs`
 
-Then monitor:
+## Related scenarios
+- Scenario 08: Large Response Buffering vs Streaming
+- Scenario 13: Request Body Memory Pressure
 
-dotnet-counters monitor System.Runtime
-
-Look for:
-- GC Heap Size
-- LOH Size
-- Gen 2 GC Count
-
-Repeat for improved endpoint.
-
----
-
-### Important note
-
-LOH fragmentation cannot be reliably observed in integration tests.
-
-It requires:
-- sustained load
-- runtime diagnostics tools
+## External references
+External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.

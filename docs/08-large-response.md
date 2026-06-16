@@ -1,38 +1,64 @@
-## Scenario 8: Large response allocation / streaming
+# Scenario 08: Large Response Buffering vs Streaming
 
-### Problem
+## Goal
+Show why buffering an entire response in memory is more expensive than producing the response incrementally.
 
-GET /08-large-response/problem?rows=1000
+## Why this matters
+When an API builds a large result set in memory before returning it, memory usage rises, garbage collection pressure increases, and scalability drops. Streaming keeps memory usage more stable because data is produced gradually instead of all at once.
 
-Builds the full export dataset in memory before returning the response.
+## Problem
+**Endpoint**: `GET /08-large-response/problem?rows=1000`
 
-This causes:
-- high memory usage
-- increased GC pressure
-- reduced scalability under load
+The problem endpoint materializes the full result set before sending the response. This means:
+- a large in-memory collection is allocated up front
+- more memory is retained until serialization completes
+- garbage collection pressure increases as the dataset grows
 
----
+## Mitigation
+**Endpoint**: `GET /08-large-response/mitigation?rows=1000`
 
-### Improved version
+The mitigation endpoint streams the response using `IAsyncEnumerable`. This means:
+- data is produced incrementally
+- the full result set is not buffered in memory first
+- memory usage remains lower and more stable
 
-GET /08-large-response/improved?rows=1000
+## Simulation notes
+This scenario uses generated rows to keep the behavior deterministic. In a real system, the same tradeoff appears when returning large database exports, feeds, or report payloads.
 
-Streams results using IAsyncEnumerable<T>.
+## How to try it
+```bash
+curl "http://localhost:5000/08-large-response/problem?rows=1000"
+curl "http://localhost:5000/08-large-response/mitigation?rows=1000"
+```
 
-Data is produced incrementally without allocating the full response in memory.
+Increase `rows` to make the difference more visible.
 
----
+## What to observe
+- Both endpoints should return the same logical data.
+- The problem endpoint allocates the full list before returning it.
+- The mitigation endpoint streams results incrementally.
+- Memory pressure becomes more visible as response size grows.
 
-### Key issue
+## Diagnostic tools
+Use these tools to observe the difference:
+- `dotnet-counters` → watch allocation rate, GC collections, and heap growth
+- `wrk` or another load generator → amplify the effect under repeated requests
+- application logs if you want to correlate request size and response behavior
 
-The problem is allocating large in-memory collections instead of streaming the response.
+Example:
+```bash
+dotnet-counters monitor --process-id <pid> System.Runtime
+wrk -t4 -c20 -d30s "http://localhost:5000/08-large-response/problem?rows=5000"
+wrk -t4 -c20 -d30s "http://localhost:5000/08-large-response/mitigation?rows=5000"
+```
 
----
+## Source files
+- Endpoint: `src/ProductionDiagnosticsLab.Api/Endpoints/LargeResponseEndpoints.cs`
+- Tests: `tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs`
 
-### What to observe
+## Related scenarios
+- Scenario 01: Slow Data Access
+- Scenario 16: LOH Fragmentation
 
-- Both endpoints return identical data
-- Problem endpoint allocates full list
-- Improved endpoint streams data
-- Differences become visible with larger datasets
-``
+## External references
+External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.

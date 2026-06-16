@@ -1,42 +1,66 @@
-## Scenario 2: Missing cancellation & timeouts
+# Scenario 02: Missing Cancellation and Timeout Handling
 
-### Problem
+## Goal
+Demonstrate why asynchronous operations must receive and honor `CancellationToken` when request processing is cancelled.
 
-GET /02-cancellation-timeouts/problem
+## Why this matters
+If a request is aborted but the server continues executing database calls, HTTP calls, or other asynchronous work, the system wastes resources on work whose result is no longer needed. Under load, this reduces throughput and increases pressure on dependent systems.
 
-Simulates a long-running asynchronous operation that does NOT use CancellationToken.
+## Problem
+**Endpoint**: `GET /02-cancellation-timeouts/problem`
 
-Even if the client disconnects or the request is cancelled, the operation continues running.
+The problem endpoint starts asynchronous work without passing `CancellationToken`. This means:
+- the operation keeps running even if the client disconnects
+- server resources stay busy longer than necessary
+- unnecessary work is performed under load
 
-This leads to:
-- unnecessary work being performed
-- wasted CPU time
-- reduced throughput under load
+## Mitigation
+**Endpoint**: `GET /02-cancellation-timeouts/mitigation`
 
----
-
-### Improved version
-
-GET /02-cancellation-timeouts/improved
-
-Uses and propagates CancellationToken into the asynchronous operation.
-
-If the request is cancelled:
-- the operation stops immediately
-- no additional work is performed
+The mitigation endpoint propagates `CancellationToken` into the asynchronous operation. This means:
+- the operation can stop immediately when the request is cancelled
+- remaining work is skipped
 - resources are released earlier
 
----
+## Simulation notes
+This scenario uses `Task.Delay(...)` to simulate asynchronous work. In a real system, the same rule applies to operations such as:
+- `dbContext.Entities.ToListAsync(cancellationToken)`
+- `httpClient.SendAsync(request, cancellationToken)`
+- streamed I/O or other cancellable async APIs
 
-### Key issue
+## How to try it
+```bash
+curl "http://localhost:5000/02-cancellation-timeouts/problem"
+curl "http://localhost:5000/02-cancellation-timeouts/mitigation"
+```
 
-The problem is ignoring CancellationToken in asynchronous operations.
+To observe the difference clearly, call the endpoint with a client timeout or cancel the request before it completes.
 
----
+## What to observe
+- The problem endpoint continues without cancellation support.
+- The mitigation endpoint is cancellation-aware.
+- Logs should make the behavior difference visible.
+- Under load, missing cancellation wastes capacity.
 
-### What to observe
+## Diagnostic tools
+Use these tools to observe the behavior:
+- application logs → confirm request started vs cancelled work
+- `dotnet-counters` → watch active work, allocation rate, and thread-pool behavior under load
+- `curl --max-time` or an HTTP client timeout → trigger earlier cancellation
 
-- Cancel the request from the client (or use a short timeout)
-- Problem endpoint continues executing
-- Improved endpoint stops immediately
-- Compare logs for request start and completion behavior
+Example:
+```bash
+curl --max-time 1 "http://localhost:5000/02-cancellation-timeouts/problem"
+curl --max-time 1 "http://localhost:5000/02-cancellation-timeouts/mitigation"
+```
+
+## Source files
+- Endpoint: `src/ProductionDiagnosticsLab.Api/Endpoints/CancellationTimeoutsEndpoints.cs`
+- Tests: `tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs`
+
+## Related scenarios
+- Scenario 04: External Dependency Reliability
+- Scenario 06: Blocking Request Handling
+
+## External references
+External references are intentionally not added in this pass because they should be validated against trusted current sources before linking.
