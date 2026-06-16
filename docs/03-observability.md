@@ -1,12 +1,15 @@
 # Scenario 03: Weak Observability and Tracing
 
 ## Goal
+
 Show the difference between vague logging and structured, contextual logging that supports real troubleshooting.
 
 ## Why this matters
+
 An endpoint can be functionally correct and still be operationally hard to debug. If logs do not include identifiers and structured fields, failures are harder to correlate with user actions, requests, and domain events.
 
 ## Problem
+
 **Endpoint**: `POST /03-observability-tracing/problem`
 
 The problem endpoint processes a payment but emits generic logs without useful context. This means:
@@ -15,6 +18,7 @@ The problem endpoint processes a payment but emits generic logs without useful c
 - troubleshooting becomes slow and unreliable
 
 ## Mitigation
+
 **Endpoint**: `POST /03-observability-tracing/mitigation`
 
 The mitigation endpoint uses structured logging and logging scope/context. Logs include fields such as:
@@ -25,9 +29,11 @@ The mitigation endpoint uses structured logging and logging scope/context. Logs 
 This makes the operation traceable and easier to investigate.
 
 ## Simulation notes
+
 This scenario does not simulate performance; it simulates operational visibility. The difference is not mainly in the HTTP response, but in how much context appears in logs and how easy it is to correlate events.
 
 ## How to try it
+
 Use invalid input to force the validation path in both endpoints:
 
 ```bash
@@ -37,6 +43,7 @@ curl -X POST "http://localhost:5000/03-observability-tracing/mitigation"   -H "C
 ```
 
 ## What to observe
+
 - The problem endpoint returns a basic validation error payload.
 - The mitigation endpoint returns a validation payload with additional identifiers.
 - The most important difference is in the logs:
@@ -44,6 +51,7 @@ curl -X POST "http://localhost:5000/03-observability-tracing/mitigation"   -H "C
   - mitigation → structured fields and contextual identifiers
 
 ## Diagnostic tools
+
 Use these tools to observe the difference:
 - application console logs
 - centralized logging system if available
@@ -52,14 +60,17 @@ Use these tools to observe the difference:
 The key observation for this scenario is log quality, not raw performance.
 
 ## Source files
-- Endpoint: `src/ProductionDiagnosticsLab.Api/Endpoints/ObservabilityTracingEndpoints.cs`
-- Tests: `tests/ProductionDiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs`
+
+- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/ObservabilityTracingEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/ObservabilityTracingEndpoints.cs)
+- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs)
 
 ## Related scenarios
-- Scenario 12: Logging Failure Isolation
-- Scenario 10: Health Checks
+
+- [Scenario 10: Health Checks](10-health-checks.md)
+- [Scenario 12: Logging Failure Isolation](12-logging-failure.md)
 
 ## External references
+
 - [Logging in .NET and ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-10.0)
 - [Logging in C# and .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/logging/overview)
 - [Use OpenTelemetry with OTLP and the standalone Aspire Dashboard](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-otlp-example)

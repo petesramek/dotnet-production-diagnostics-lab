@@ -1,12 +1,15 @@
 # Scenario 07: Retry Storms
 
 ## Goal
+
 Show how immediate retries against a failing dependency amplify pressure and make an outage worse.
 
 ## Why this matters
+
 Retries are useful only when they are controlled. If every request retries immediately, a dependency that is already failing receives even more traffic. This can increase latency, prolong outages, and trigger cascading failures in the rest of the system.
 
 ## Problem
+
 **Endpoint**: `GET /07-unbounded-retries/problem?sku=FAIL`
 
 The problem endpoint retries immediately when the inventory provider fails. This means:
@@ -15,6 +18,7 @@ The problem endpoint retries immediately when the inventory provider fails. This
 - many callers can synchronize into a retry storm
 
 ## Mitigation
+
 **Endpoint**: `GET /07-unbounded-retries/mitigation?sku=FAIL`
 
 The mitigation endpoint uses controlled retry behavior. This means:
@@ -27,6 +31,7 @@ The mitigation endpoint uses controlled retry behavior. This means:
 This scenario uses a fake inventory client to simulate a failing external dependency. The behavior represents outbound calls to a remote API or service. The important difference is not the fake client itself, but the retry policy around it.
 
 ## How to try it
+
 ```bash
 curl "http://localhost:5000/07-unbounded-retries/problem?sku=FAIL"
 curl "http://localhost:5000/07-unbounded-retries/mitigation?sku=FAIL"
@@ -46,6 +51,7 @@ curl "http://localhost:5000/07-unbounded-retries/mitigation?sku=ABC"
 - Logs should show the difference in retry count and timing.
 
 ## Tools to use
+
 Use external tooling to amplify retry behavior and observe pressure.
 
 Suggested tools:
@@ -53,27 +59,34 @@ Suggested tools:
 - logs
 - optional `dotnet-counters`
 
-See [tools README](../tools/README.md).
+See [tools README](tools/README.md).
 
 ## Diagnostic tools
+
 Use these tools to observe the retry behavior:
 - application logs → confirm retry count and timing
 - `wrk` or another load generator → show how retries amplify load
 - `dotnet-counters` → observe runtime pressure under repeated failing requests
 
 Example:
+
 ```bash
 wrk -t4 -c20 -d30s "http://localhost:5000/07-unbounded-retries/problem?sku=FAIL"
 wrk -t4 -c20 -d30s "http://localhost:5000/07-unbounded-retries/mitigation?sku=FAIL"
 ```
 
 ## Source files
-- Endpoint: `src/ProductionDiagnosticsLab.Api/Endpoints/UnboundedRetriesEndpoints.cs`
-- Tests: `tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs`
+
+- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/UnboundedRetriesEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/UnboundedRetriesEndpoints.cs)
+- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
 
 ## Related scenarios
-- Scenario 04: External Dependency Reliability
-- Scenario 14: Socket Exhaustion
+
+- [Scenario 04: External Dependency Reliability](04-external-dependencies.md)
+- [Scenario 14: Socket Exhaustion](14-socket-exhaustion.md)
+
+## External references
+
 - [Introduction to resilient app development - .NET](https://learn.microsoft.com/en-us/dotnet/core/resilience/)
 - [Build resilient HTTP apps: key development patterns - .NET](https://learn.microsoft.com/en-us/dotnet/core/resilience/http-resilience)
 - [Recommendations for handling transient faults](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/handle-transient-faults)
