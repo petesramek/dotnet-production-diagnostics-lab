@@ -72,8 +72,8 @@ wrk -t4 -c20 -d30s "http://localhost:5000/05-n-plus-1-data-access/mitigation?tak
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/NPlusOneQueryEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/NPlusOneQueryEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/DataAccessScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/DataAccessScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/NPlusOneQueryEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/NPlusOneQueryEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/DataAccessScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/DataAccessScenarioTests.cs)
 
 ## Related scenarios
 

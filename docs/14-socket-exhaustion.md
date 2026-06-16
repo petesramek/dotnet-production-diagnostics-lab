@@ -75,9 +75,9 @@ Then inspect sockets on the host while the load is running.
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/SocketExhaustionEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/SocketExhaustionEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
-- Smoke tests: [../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/SocketExhaustionEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/SocketExhaustionEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
+- Smoke tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 

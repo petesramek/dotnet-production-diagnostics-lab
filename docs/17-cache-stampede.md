@@ -76,9 +76,9 @@ wrk -t4 -c50 http://localhost:5000/17-cache-stampede/mitigation
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/CacheStampedeEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/CacheStampedeEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
-- Smoke tests: [../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/CacheStampedeEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/CacheStampedeEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
+- Smoke tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 

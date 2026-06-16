@@ -61,8 +61,8 @@ This scenario is mostly about failure timing and operational visibility, not per
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/InvalidConfigurationEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/InvalidConfigurationEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ConfigurationTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ConfigurationTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/InvalidConfigurationEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/InvalidConfigurationEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ConfigurationTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ConfigurationTests.cs)
 
 ## Related scenarios
 

@@ -61,8 +61,8 @@ The key observation for this scenario is log quality, not raw performance.
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/ObservabilityTracingEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/ObservabilityTracingEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/ObservabilityTracingEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/ObservabilityTracingEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs)
 
 ## Related scenarios
 

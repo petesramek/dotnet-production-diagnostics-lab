@@ -53,8 +53,8 @@ This scenario is less about performance counters and more about reliable platfor
 
 ## Source files
 
-- Host setup: [../src/ProductionDiagnosticsLab.Api/Program.cs](../src/ProductionDiagnosticsLab.Api/Program.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
+- Host setup: [../src/DiagnosticsLab.Api/Program.cs](../src/DiagnosticsLab.Api/Program.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 

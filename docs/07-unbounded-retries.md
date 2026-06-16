@@ -77,8 +77,8 @@ wrk -t4 -c20 -d30s "http://localhost:5000/07-unbounded-retries/mitigation?sku=FA
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/UnboundedRetriesEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/UnboundedRetriesEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/UnboundedRetriesEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/UnboundedRetriesEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
 
 ## Related scenarios
 

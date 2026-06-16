@@ -64,10 +64,10 @@ Use these tools to validate the behavior:
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/NativeAotEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/NativeAotEndpoints.cs)
-- JSON context: [../src/ProductionDiagnosticsLab.Api/NativeAotJsonContext.cs](../src/ProductionDiagnosticsLab.Api/NativeAotJsonContext.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
-- Smoke tests: [../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/NativeAotEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/NativeAotEndpoints.cs)
+- JSON context: [../src/DiagnosticsLab.Api/NativeAotJsonContext.cs](../src/DiagnosticsLab.Api/NativeAotJsonContext.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
+- Smoke tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 

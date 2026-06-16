@@ -75,8 +75,8 @@ wrk -t4 -c20 -d30s "http://localhost:5000/04-external-dependency-reliability/mit
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/ExternalDependencyReliabilityEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/ExternalDependencyReliabilityEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/ExternalDependencyReliabilityEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/ExternalDependencyReliabilityEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
 
 ## Related scenarios
 

@@ -56,8 +56,8 @@ This scenario is primarily about failure visibility and lifecycle correctness.
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/SilentStartupFailureEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/SilentStartupFailureEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/SilentStartupFailureEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/SilentStartupFailureEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
 
 ## Related scenarios
 

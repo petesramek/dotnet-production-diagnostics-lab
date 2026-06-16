@@ -83,9 +83,9 @@ wrk -t4 -c20 -d30s -s post-json.lua http://localhost:5000/16-loh-fragmentation/m
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/LohFragmentationEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/LohFragmentationEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
-- Smoke tests: [../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/ProductionDiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/LohFragmentationEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/LohFragmentationEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
+- Smoke tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 

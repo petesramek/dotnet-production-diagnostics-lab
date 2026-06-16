@@ -73,8 +73,8 @@ wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-handling/mitigatio
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/BlockingRequestHandlingEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/BlockingRequestHandlingEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/BlockingRequestHandlingEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/BlockingRequestHandlingEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
 
 ## Related scenarios
 

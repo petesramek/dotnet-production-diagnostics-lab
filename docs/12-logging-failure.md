@@ -55,8 +55,8 @@ Use these tools to observe the behavior:
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/LoggingFailureEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/LoggingFailureEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/LoggingFailureEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/LoggingFailureEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs)
 
 ## Related scenarios
 

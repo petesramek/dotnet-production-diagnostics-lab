@@ -65,8 +65,8 @@ curl --max-time 1 "http://localhost:5000/02-cancellation-timeouts/mitigation"
 
 ## Source files
 
-- Endpoint: [../src/ProductionDiagnosticsLab.Api/Endpoints/CancellationTimeoutsEndpoints.cs](../src/ProductionDiagnosticsLab.Api/Endpoints/CancellationTimeoutsEndpoints.cs)
-- Tests: [../tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/ProductionDiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/CancellationTimeoutsEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/CancellationTimeoutsEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
 
 ## Related scenarios
 
