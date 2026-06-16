@@ -1,4 +1,4 @@
-# Scenario 04: External Dependency Reliability
+# Scenario 04: Missing Dependency Timeouts
 
 ## Goal
 
@@ -10,7 +10,7 @@ External dependencies can be slow, overloaded, or temporarily unavailable. If an
 
 ## Problem
 
-**Endpoint**: `GET /04-external-dependency-reliability/problem?country=SLOW`
+**Endpoint**: `GET /04-missing-dependency-timeouts/problem?country=SLOW`
 
 The problem endpoint calls an external dependency without timeout control. This means:
 - the request can wait indefinitely for a slow upstream service
@@ -19,7 +19,7 @@ The problem endpoint calls an external dependency without timeout control. This 
 
 ## Mitigation
 
-**Endpoint**: `GET /04-external-dependency-reliability/mitigation?country=SLOW`
+**Endpoint**: `GET /04-missing-dependency-timeouts/mitigation?country=SLOW`
 
 The mitigation endpoint applies timeout and cancellation. This means:
 - the application stops waiting after a defined limit
@@ -35,11 +35,11 @@ This scenario uses a fake shipping client to simulate an external system. The ap
 Use a normal country value and a slow value:
 
 ```bash
-curl "http://localhost:5000/04-external-dependency-reliability/problem?country=CZ"
-curl "http://localhost:5000/04-external-dependency-reliability/problem?country=SLOW"
+curl "http://localhost:5000/04-missing-dependency-timeouts/problem?country=CZ"
+curl "http://localhost:5000/04-missing-dependency-timeouts/problem?country=SLOW"
 
-curl "http://localhost:5000/04-external-dependency-reliability/mitigation?country=CZ"
-curl "http://localhost:5000/04-external-dependency-reliability/mitigation?country=SLOW"
+curl "http://localhost:5000/04-missing-dependency-timeouts/mitigation?country=CZ"
+curl "http://localhost:5000/04-missing-dependency-timeouts/mitigation?country=SLOW"
 ```
 
 ## What to observe
@@ -69,13 +69,13 @@ Use these tools to observe the behavior:
 Example:
 
 ```bash
-wrk -t4 -c20 -d30s "http://localhost:5000/04-external-dependency-reliability/problem?country=SLOW"
-wrk -t4 -c20 -d30s "http://localhost:5000/04-external-dependency-reliability/mitigation?country=SLOW"
+wrk -t4 -c20 -d30s "http://localhost:5000/04-missing-dependency-timeouts/problem?country=SLOW"
+wrk -t4 -c20 -d30s "http://localhost:5000/04-missing-dependency-timeouts/mitigation?country=SLOW"
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/ExternalDependencyReliabilityEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/ExternalDependencyReliabilityEndpoints.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/MissingDependencyTimeoutsEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/MissingDependencyTimeoutsEndpoints.cs)
 - Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
 
 ## Related scenarios

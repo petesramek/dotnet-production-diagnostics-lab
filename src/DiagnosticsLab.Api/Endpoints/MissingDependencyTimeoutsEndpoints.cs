@@ -3,18 +3,18 @@ using DiagnosticsLab.Api.Services;
 namespace DiagnosticsLab.Api.Endpoints;
 
 /// <summary>
-/// Maps endpoints for external dependency reliability scenarios.
+/// Maps endpoints for Missing Dependency Timeouts scenarios.
 /// </summary>
-public static class ExternalDependencyReliabilityEndpoints {
-    private const string Route = "/04-external-dependency-reliability";
+public static class MissingDependencyTimeoutsEndpoints {
+    private const string Route = "/04-missing-dependency-timeouts";
 
-    public static IEndpointRouteBuilder MapExternalDependencyReliabilityEndpoints(this IEndpointRouteBuilder endpoints) {
+    public static IEndpointRouteBuilder MapMissingDependencyTimeoutsEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
 
         // Problem:
         // External dependency is called without timeout and may block indefinitely.
         group.MapGet("/problem", async (string country, FakeShippingClient client, ILoggerFactory loggerFactory) => {
-            var logger = loggerFactory.CreateLogger("ExternalDependencyReliability.Problem");
+            var logger = loggerFactory.CreateLogger("MissingDependencyTimeouts.Problem");
 
             logger.LogWarning("Calling external dependency without timeout for {Country}", country);
 
@@ -39,7 +39,7 @@ public static class ExternalDependencyReliabilityEndpoints {
             FakeShippingClient client,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) => {
-                var logger = loggerFactory.CreateLogger("ExternalDependencyReliability.Mitigation");
+                var logger = loggerFactory.CreateLogger("MissingDependencyTimeouts.Mitigation");
 
                 // Simulation:
                 // Same external dependency, but execution is bounded by timeout.

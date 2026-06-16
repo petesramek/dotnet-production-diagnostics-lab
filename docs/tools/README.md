@@ -8,7 +8,7 @@ This document exists for one purpose: **install the external tools used by selec
 Most scenarios do **not** need external tooling.
 
 Use this file mainly for:
-- Scenario 04 — external dependency reliability
+- Scenario 04 — Missing Dependency Timeouts
 - Scenario 06 — blocking request handling
 - Scenario 07 — retry storms
 - Scenario 08 — large response buffering vs streaming
@@ -178,7 +178,7 @@ ss -s
 
 ## 5. Which tool to use for which scenario
 
-- **04** external dependency reliability → load tool + `dotnet-counters`
+- **04** Missing Dependency Timeouts → load tool + `dotnet-counters`
 - **06** blocking request handling → load tool + `dotnet-counters`, optional `dotnet-trace`
 - **07** retry storms → load tool + logs, optional `dotnet-counters`
 - **08** large response buffering vs streaming → load tool + `dotnet-counters`

@@ -81,7 +81,7 @@ Then inspect sockets on the host while the load is running.
 
 ## Related scenarios
 
-- [Scenario 04: External Dependency Reliability](04-external-dependencies.md)
+- [Scenario 04: Missing Dependency Timeouts](04-external-dependencies.md)
 - [Scenario 07: Retry Storms](07-unbounded-retries.md)
 
 ## External references

@@ -17,10 +17,10 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint succeeds for a normal dependency call.
     /// </summary>
     [Fact]
-    public async Task ExternalDependencyReliability_Problem_Returns_Success_For_Normal_Dependency() {
+    public async Task MissingDependencyTimeouts_Problem_Returns_Success_For_Normal_Dependency() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/04-external-dependency-reliability/problem?country=CZ");
+        var response = await client.GetAsync("/04-missing-dependency-timeouts/problem?country=CZ");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -29,10 +29,10 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint returns gateway timeout for a slow dependency.
     /// </summary>
     [Fact]
-    public async Task ExternalDependencyReliability_Mitigation_Returns_GatewayTimeout_For_Slow_Dependency() {
+    public async Task MissingDependencyTimeouts_Mitigation_Returns_GatewayTimeout_For_Slow_Dependency() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/04-external-dependency-reliability/mitigation?country=SLOW");
+        var response = await client.GetAsync("/04-missing-dependency-timeouts/mitigation?country=SLOW");
 
         response.StatusCode.Should().Be(HttpStatusCode.GatewayTimeout);
     }

@@ -70,7 +70,7 @@ curl --max-time 1 "http://localhost:5000/02-missing-cancellation-propagation/mit
 
 ## Related scenarios
 
-- [Scenario 04: External Dependency Reliability](04-external-dependencies.md)
+- [Scenario 04: Missing Dependency Timeouts](04-external-dependencies.md)
 - [Scenario 06: Blocking Request Handling](06-blocking-request-handling.md)
 
 ## External references

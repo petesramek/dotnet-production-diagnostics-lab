@@ -46,7 +46,7 @@ The API uses SQLite and creates local seed data automatically.
 - Problem: `POST /api/payments/problem`
 - Improved: `POST /api/payments/observable`
 
-### 4. [External dependency reliability](docs/04-external-dependencies.md)
+### 4. [Missing Dependency Timeouts](docs/04-external-dependencies.md)
 
 - Problem: `GET /api/shipping/problem?country=CZ`
 - Improved: `GET /api/shipping/resilient?country=CZ`

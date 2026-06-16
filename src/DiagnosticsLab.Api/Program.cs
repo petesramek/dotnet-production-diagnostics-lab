@@ -65,8 +65,8 @@ app.MapMissingCancellationPropagationEndpoints();
 // Scenario 03: Missing Log Context
 app.MapMissingLogContextEndpoints();
 
-// Scenario 04: External dependency reliability
-app.MapExternalDependencyReliabilityEndpoints();
+// Scenario 04: Missing Dependency Timeouts
+app.MapMissingDependencyTimeoutsEndpoints();
 
 // Scenario 05: N+1 queries
 app.MapNPlusOneQueryEndpoints();
