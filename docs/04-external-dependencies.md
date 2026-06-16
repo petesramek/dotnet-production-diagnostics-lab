@@ -42,6 +42,15 @@ curl "http://localhost:5000/04-external-dependency-reliability/mitigation?countr
 - With `country=SLOW`, the mitigation endpoint fails fast with HTTP `504`.
 - Logs should clearly show the timeout boundary in the mitigation path.
 
+## Tools to use
+Use external tooling to make the slow dependency behavior visible under load.
+
+Suggested tools:
+- `dotnet-counters`
+- a load tool (`wrk` or `bombardier`)
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the behavior:
 - application logs → request start, timeout, and failure visibility
@@ -62,6 +71,7 @@ wrk -t4 -c20 -d30s "http://localhost:5000/04-external-dependency-reliability/mit
 - Scenario 02: Missing Cancellation and Timeout Handling
 - Scenario 07: Retry Storms
 - Scenario 14: Socket Exhaustion
+
 
 ## External references
 - [Use the IHttpClientFactory - .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory)

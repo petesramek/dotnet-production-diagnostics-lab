@@ -45,6 +45,16 @@ curl "http://localhost:5000/07-unbounded-retries/mitigation?sku=ABC"
 - With `sku=FAIL`, the mitigation endpoint performs fewer attempts with delays.
 - Logs should show the difference in retry count and timing.
 
+## Tools to use
+Use external tooling to amplify retry behavior and observe pressure.
+
+Suggested tools:
+- a load tool (`wrk` or `bombardier`)
+- logs
+- optional `dotnet-counters`
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the retry behavior:
 - application logs → confirm retry count and timing
@@ -64,7 +74,6 @@ wrk -t4 -c20 -d30s "http://localhost:5000/07-unbounded-retries/mitigation?sku=FA
 ## Related scenarios
 - Scenario 04: External Dependency Reliability
 - Scenario 14: Socket Exhaustion
-
 - [Introduction to resilient app development - .NET](https://learn.microsoft.com/en-us/dotnet/core/resilience/)
 - [Build resilient HTTP apps: key development patterns - .NET](https://learn.microsoft.com/en-us/dotnet/core/resilience/http-resilience)
 - [Recommendations for handling transient faults](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/handle-transient-faults)

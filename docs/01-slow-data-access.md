@@ -41,6 +41,15 @@ Try the same requests repeatedly while increasing the dataset size or running co
 - The mitigation endpoint keeps filtering in the database.
 - Under larger datasets, the problem endpoint becomes slower and allocates more memory.
 
+## Tools to use
+This scenario can usually be understood from the endpoint behavior and query shape alone.
+
+Optional if you want to measure runtime impact:
+- `dotnet-counters`
+- a load tool (`wrk` or `bombardier`)
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the difference:
 - `dotnet-counters` → watch allocation rate and GC activity

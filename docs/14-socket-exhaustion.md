@@ -39,6 +39,16 @@ Then increase load with a load generator.
 - The mitigation endpoint reports `reusedConnections = true`.
 - Under load, the problem path creates more connection churn.
 
+## Tools to use
+This scenario needs external tooling to confirm connection churn and socket state.
+
+Suggested tools:
+- a load tool (`wrk` or `bombardier`)
+- Windows `netstat` or Linux `ss`
+- optional `dotnet-counters`
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the difference:
 - `wrk` → generate concurrent requests
@@ -61,7 +71,6 @@ Then inspect sockets on the host while the load is running.
 ## Related scenarios
 - Scenario 04: External Dependency Reliability
 - Scenario 07: Retry Storms
-
 ## External references
 - [Use the IHttpClientFactory - .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory)
 - [HttpClient guidelines for .NET](https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines)

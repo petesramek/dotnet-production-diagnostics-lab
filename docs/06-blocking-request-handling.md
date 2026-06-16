@@ -39,6 +39,16 @@ Then repeat under load.
 - The mitigation endpoint reports non-blocking behavior.
 - Under load, blocking reduces throughput and increases latency.
 
+## Tools to use
+Use external tooling to make blocking and throughput differences visible.
+
+Suggested tools:
+- `dotnet-counters`
+- optional `dotnet-trace`
+- a load tool (`wrk` or `bombardier`)
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the behavior:
 - `wrk` or another load generator → generate concurrent requests

@@ -43,6 +43,15 @@ Then use concurrent load to make the difference visible.
 - The mitigation endpoint reports `coordinated = true`.
 - Under concurrent load, the problem path performs duplicate recomputation while the mitigation path performs only one recompute.
 
+## Tools to use
+Use external tooling only when you want to make concurrent cache misses visible.
+
+Suggested tools:
+- a load tool (`wrk` or `bombardier`)
+- logs
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the difference:
 - application logs → confirm duplicate recomputation vs single recomputation
@@ -63,7 +72,6 @@ wrk -t4 -c50 http://localhost:5000/17-cache-stampede/mitigation
 ## Related scenarios
 - Scenario 07: Retry Storms
 - Scenario 14: Socket Exhaustion
-
 ## External references
 - [Cache in-memory in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-10.0)
 - [Overview of caching in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/overview?view=aspnetcore-10.0)

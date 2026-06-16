@@ -42,6 +42,15 @@ Then try a larger body to observe the mitigation path rejecting oversized upload
 - The mitigation endpoint can reject large bodies safely.
 - Memory usage stays more stable when streaming is used.
 
+## Tools to use
+Use external tooling when you want to observe request-body buffering and memory pressure.
+
+Suggested tools:
+- `dotnet-counters`
+- repeated requests with `curl`, `wrk`, or `bombardier`
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the difference:
 - `dotnet-counters` → watch allocation rate and GC activity during repeated uploads
@@ -61,7 +70,6 @@ dotnet-counters monitor --process-id <pid> System.Runtime
 ## Related scenarios
 - Scenario 08: Large Response Buffering vs Streaming
 - Scenario 16: LOH Fragmentation
-
 ## External references
 - [Upload files in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-10.0)
 - [Configure options for the ASP.NET Core Kestrel web server](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/options?view=aspnetcore-10.0)

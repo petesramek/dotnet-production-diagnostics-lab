@@ -48,6 +48,16 @@ curl -X POST "http://localhost:5000/16-loh-fragmentation/mitigation"   -H "Conte
 - The mitigation endpoint reports `streamed = true` and `lohAllocation = false`.
 - Under repeated load, the problem path should show stronger memory pressure.
 
+## Tools to use
+Use external tooling to observe LOH and GC behavior under repeated large payload processing.
+
+Suggested tools:
+- `dotnet-counters`
+- optional `dotnet-gcdump`
+- a load tool (`wrk` or `bombardier`)
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the difference:
 - `dotnet-counters` → watch GC heap size, LOH size, allocation rate, and Gen 2 collections
@@ -69,7 +79,6 @@ wrk -t4 -c20 -d30s -s post-json.lua http://localhost:5000/16-loh-fragmentation/m
 ## Related scenarios
 - Scenario 08: Large Response Buffering vs Streaming
 - Scenario 13: Request Body Memory Pressure
-
 ## External references
 - [Large object heap (LOH) on Windows - .NET](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/large-object-heap)
 - [Garbage collection and performance - .NET](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/performance)

@@ -39,6 +39,15 @@ Increase `rows` to make the difference more visible.
 - The mitigation endpoint streams results incrementally.
 - Memory pressure becomes more visible as response size grows.
 
+## Tools to use
+Use external tooling to compare buffering and streaming under larger responses.
+
+Suggested tools:
+- `dotnet-counters`
+- a load tool (`wrk` or `bombardier`)
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the difference:
 - `dotnet-counters` → watch allocation rate, GC collections, and heap growth
@@ -59,7 +68,6 @@ wrk -t4 -c20 -d30s "http://localhost:5000/08-large-response/mitigation?rows=5000
 ## Related scenarios
 - Scenario 01: Slow Data Access
 - Scenario 16: LOH Fragmentation
-
 ## External references
 - [Controller action return types in ASP.NET Core web API](https://learn.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-10.0)
 - [System.Text.Json IAsyncEnumerable serialization](https://learn.microsoft.com/en-us/dotnet/core/compatibility/serialization/6.0/iasyncenumerable-serialization)

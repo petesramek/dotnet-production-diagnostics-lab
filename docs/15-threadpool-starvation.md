@@ -39,6 +39,17 @@ Then repeat under concurrent load.
 - Under load, the problem path increases latency more quickly.
 - The mitigation path keeps the server more responsive.
 
+## Tools to use
+Use external tooling to make ThreadPool starvation visible.
+
+Suggested tools:
+- `dotnet-counters`
+- optional `dotnet-trace`
+- optional `dotnet-stack`
+- a load tool (`wrk` or `bombardier`)
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the difference:
 - `wrk` → generate concurrent requests and expose queueing behavior
@@ -59,7 +70,6 @@ wrk -t4 -c50 -d30s "http://localhost:5000/15-threadpool-starvation/mitigation?de
 ## Related scenarios
 - Scenario 06: Blocking Request Handling
 - Scenario 02: Missing Cancellation and Timeout Handling
-
 ## External references
 - [Debug ThreadPool starvation - .NET](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/debug-threadpool-starvation)
 - [ASP.NET Core Best Practices](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/best-practices?view=aspnetcore-10.0)

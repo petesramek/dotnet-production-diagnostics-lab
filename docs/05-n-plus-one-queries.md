@@ -39,6 +39,15 @@ Try increasing `take` to make the difference more visible.
 - The mitigation endpoint executes a single set-based query.
 - The performance gap grows as `take` increases.
 
+## Tools to use
+This scenario can usually be understood from returned data and query logging.
+
+Optional if you want to measure runtime impact:
+- `dotnet-counters`
+- a load tool (`wrk` or `bombardier`)
+
+See [tools README](../tools/README.md).
+
 ## Diagnostic tools
 Use these tools to observe the behavior:
 - database query logging → confirm repeated queries vs single query
