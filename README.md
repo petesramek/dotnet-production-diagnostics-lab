@@ -41,7 +41,7 @@ The API uses SQLite and creates local seed data automatically.
 - Problem: `GET /api/reports/slow`
 - Improved: `GET /api/reports/cancellable`
 
-### 3. [Observability](docs/03-observability.md)
+### 3. [Observability](docs/03-missing-log-context.md)
 
 - Problem: `POST /api/payments/problem`
 - Improved: `POST /api/payments/observable`

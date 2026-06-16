@@ -3,17 +3,17 @@ namespace DiagnosticsLab.Api.Endpoints;
 /// <summary>
 /// Maps endpoints for observability and tracing scenarios.
 /// </summary>
-public static class ObservabilityTracingEndpoints {
-    private const string Route = "/03-observability-tracing";
+public static class MissingLogContextEndpoints {
+    private const string Route = "/03-missing-log-context-tracing";
 
-    public static IEndpointRouteBuilder MapObservabilityTracingEndpoints(this IEndpointRouteBuilder endpoints) {
+    public static IEndpointRouteBuilder MapMissingLogContextEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
 
         // Problem:
         // Logs lack structure and context, making it difficult to trace requests,
         // diagnose issues, and correlate events across the system.
         group.MapPost("/problem", (PaymentRequest request, ILoggerFactory loggerFactory) => {
-            var logger = loggerFactory.CreateLogger("ObservabilityTracing.Problem");
+            var logger = loggerFactory.CreateLogger("MissingLogContext.Problem");
 
             // Simulation:
             // This represents basic logging without structure or correlation.
@@ -46,7 +46,7 @@ public static class ObservabilityTracingEndpoints {
         // Use structured logging and scopes to enrich logs with contextual data,
         // making them traceable and meaningful.
         group.MapPost("/mitigation", (PaymentRequest request, ILoggerFactory loggerFactory) => {
-            var logger = loggerFactory.CreateLogger("ObservabilityTracing.Mitigation");
+            var logger = loggerFactory.CreateLogger("MissingLogContext.Mitigation");
 
             // Simulation:
             // BeginScope represents attaching contextual data to all log entries

@@ -65,7 +65,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the problem observability endpoint returns bad request for invalid payment data.
     /// </summary>
     [Fact]
-    public async Task ObservabilityTracing_Problem_Returns_BadRequest() {
+    public async Task MissingLogContext_Problem_Returns_BadRequest() {
         using var client = factory.CreateClient();
 
         var request = new {
@@ -74,7 +74,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
             Amount = -5m
         };
 
-        var response = await client.PostAsJsonAsync("/03-observability-tracing/problem", request);
+        var response = await client.PostAsJsonAsync("/03-missing-log-context-tracing/problem", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
@@ -83,7 +83,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the mitigation observability endpoint returns bad request for invalid payment data.
     /// </summary>
     [Fact]
-    public async Task ObservabilityTracing_Mitigation_Returns_BadRequest() {
+    public async Task MissingLogContext_Mitigation_Returns_BadRequest() {
         using var client = factory.CreateClient();
 
         var request = new {
@@ -92,7 +92,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
             Amount = -5m
         };
 
-        var response = await client.PostAsJsonAsync("/03-observability-tracing/mitigation", request);
+        var response = await client.PostAsJsonAsync("/03-missing-log-context-tracing/mitigation", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
