@@ -15,7 +15,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint reports blocking behavior.
     /// </summary>
     [Fact]
-    public async Task BlockingRequestHandling_Problem_Return_Blocking_True() {
+    public async Task BlockingRequestHandling_Problem_Returns_Blocking_True() {
         using var client = factory.CreateClient();
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
@@ -33,7 +33,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint reports blocking behavior as false.
     /// </summary>
     [Fact]
-    public async Task BlockingRequestHandling_Mitigation_Return_Blocking_False() {
+    public async Task BlockingRequestHandling_Mitigation_Returns_Blocking_False() {
         using var client = factory.CreateClient();
 
         using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
@@ -51,7 +51,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint returns row identifiers.
     /// </summary>
     [Fact]
-    public async Task LargeResponse_Problem_Return_Row_Id() {
+    public async Task LargeResponse_Problem_Returns_Row_Id() {
         using var client = factory.CreateClient();
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
@@ -67,7 +67,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint returns the same row identifiers as the problem endpoint.
     /// </summary>
     [Fact]
-    public async Task LargeResponse_Mitigation_Return_Row_Id() {
+    public async Task LargeResponse_Mitigation_Returns_Row_Id() {
         using var client = factory.CreateClient();
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
@@ -87,7 +87,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint reports cancellation-aware behavior as false.
     /// </summary>
     [Fact]
-    public async Task CancellationTimeouts_Problem_Return_CancellationAware_False() {
+    public async Task CancellationTimeouts_Problem_Returns_CancellationAware_False() {
         using var client = factory.CreateClient();
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
@@ -101,7 +101,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint reports cancellation-aware behavior as true.
     /// </summary>
     [Fact]
-    public async Task CancellationTimeouts_Mitigation_Return_CancellationAware_True() {
+    public async Task CancellationTimeouts_Mitigation_Returns_CancellationAware_True() {
         using var client = factory.CreateClient();
 
         using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
@@ -115,7 +115,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint streams body and returns a hash.
     /// </summary>
     [Fact]
-    public async Task RequestBodyMemoryPressure_Mitigation_Return_Streamed_True() {
+    public async Task RequestBodyMemoryPressure_Mitigation_Returns_Streamed_True() {
         using var client = factory.CreateClient();
         using var content = new StringContent("small upload body", Encoding.UTF8, "text/plain");
 
@@ -133,7 +133,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint buffers the request body in memory.
     /// </summary>
     [Fact]
-    public async Task RequestBodyMemoryPressure_Problem_Return_Streamed_False() {
+    public async Task RequestBodyMemoryPressure_Problem_Returns_Streamed_False() {
         using var client = factory.CreateClient();
         using var content = new StringContent("small upload body", Encoding.UTF8, "text/plain");
 
@@ -165,7 +165,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint reports blocking as true.
     /// </summary>
     [Fact]
-    public async Task ThreadPoolStarvation_Problem_Return_Blocking_True() {
+    public async Task ThreadPoolStarvation_Problem_Returns_Blocking_True() {
         using var client = factory.CreateClient();
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
@@ -179,7 +179,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint reports blocking as false.
     /// </summary>
     [Fact]
-    public async Task ThreadPoolStarvation_Mitigation_Return_Blocking_False() {
+    public async Task ThreadPoolStarvation_Mitigation_Returns_Blocking_False() {
         using var client = factory.CreateClient();
 
         using var mitigation = await JsonTestClient.GetJsonDocumentAsync(

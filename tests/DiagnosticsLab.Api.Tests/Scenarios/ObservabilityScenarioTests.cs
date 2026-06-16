@@ -54,7 +54,7 @@ public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFacto
     /// Verifies that the problem endpoint returns the basic validation error payload.
     /// </summary>
     [Fact]
-    public async Task Observability_Problem_Return_Error_Payload() {
+    public async Task Observability_Problem_Returns_Error_Payload() {
         using var client = factory.CreateClient();
         var request = new {
             PaymentId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
@@ -79,7 +79,7 @@ public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFacto
     /// Verifies that the mitigation endpoint returns the contextual validation payload.
     /// </summary>
     [Fact]
-    public async Task Observability_Mitigation_Return_Contextual_Payload() {
+    public async Task Observability_Mitigation_Returns_Contextual_Payload() {
         using var client = factory.CreateClient();
         var request = new {
             PaymentId = Guid.Parse("00000000-0000-0000-0000-000000000001"),

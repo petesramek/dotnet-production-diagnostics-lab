@@ -16,7 +16,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the root endpoint returns success.
     /// </summary>
     [Fact]
-    public async Task Root_Return_Success() {
+    public async Task Root_Returns_Success() {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/");
@@ -53,7 +53,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     [InlineData("/16-loh-fragmentation/generate", HttpStatusCode.OK)]
     [InlineData("/17-cache-stampede/problem", HttpStatusCode.OK)]
     [InlineData("/17-cache-stampede/mitigation", HttpStatusCode.OK)]
-    public async Task Smoke_Get_Endpoint_Return_Expected_StatusCode(string requestUri, HttpStatusCode expectedStatusCode) {
+    public async Task Smoke_Get_Endpoint_Returns_Expected_StatusCode(string requestUri, HttpStatusCode expectedStatusCode) {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync(requestUri);
@@ -65,7 +65,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the problem observability endpoint returns bad request for invalid payment data.
     /// </summary>
     [Fact]
-    public async Task ObservabilityTracing_Problem_Return_BadRequest() {
+    public async Task ObservabilityTracing_Problem_Returns_BadRequest() {
         using var client = factory.CreateClient();
 
         var request = new {
@@ -83,7 +83,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the mitigation observability endpoint returns bad request for invalid payment data.
     /// </summary>
     [Fact]
-    public async Task ObservabilityTracing_Mitigation_Return_BadRequest() {
+    public async Task ObservabilityTracing_Mitigation_Returns_BadRequest() {
         using var client = factory.CreateClient();
 
         var request = new {
@@ -101,7 +101,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the problem logging endpoint fails when audit sink throws.
     /// </summary>
     [Fact]
-    public async Task LoggingFailure_Problem_Return_InternalServerError() {
+    public async Task LoggingFailure_Problem_Returns_InternalServerError() {
         using var client = factory.CreateClient();
 
         var request = new {
@@ -118,7 +118,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the mitigation logging endpoint succeeds when audit sink throws.
     /// </summary>
     [Fact]
-    public async Task LoggingFailure_Mitigation_Return_Success() {
+    public async Task LoggingFailure_Mitigation_Returns_Success() {
         using var client = factory.CreateClient();
 
         var request = new {
@@ -135,7 +135,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the problem upload endpoint returns success for a small request body.
     /// </summary>
     [Fact]
-    public async Task RequestBodyMemoryPressure_Problem_Return_Success_For_Small_Body() {
+    public async Task RequestBodyMemoryPressure_Problem_Returns_Success_For_Small_Body() {
         using var client = factory.CreateClient();
         using var content = new StringContent("small upload body");
 
@@ -148,7 +148,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the mitigation upload endpoint returns success for a small request body.
     /// </summary>
     [Fact]
-    public async Task RequestBodyMemoryPressure_Mitigation_Return_Success_For_Small_Body() {
+    public async Task RequestBodyMemoryPressure_Mitigation_Returns_Success_For_Small_Body() {
         using var client = factory.CreateClient();
         using var content = new StringContent("small upload body");
 
@@ -161,7 +161,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the problem native AOT endpoint accepts a valid payload.
     /// </summary>
     [Fact]
-    public async Task NativeAot_Problem_Return_Success() {
+    public async Task NativeAot_Problem_Returns_Success() {
         using var client = factory.CreateClient();
 
         var payload = new {
@@ -178,7 +178,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the mitigation native AOT endpoint accepts a valid payload.
     /// </summary>
     [Fact]
-    public async Task NativeAot_Mitigation_Return_Success() {
+    public async Task NativeAot_Mitigation_Returns_Success() {
         using var client = factory.CreateClient();
 
         var payload = new {
@@ -195,7 +195,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
     /// Verifies that the liveness and readiness health endpoints return success.
     /// </summary>
     [Fact]
-    public async Task Health_Endpoints_Return_Success() {
+    public async Task Health_Endpoints_Returns_Success() {
         using var client = factory.CreateClient();
 
         var live = await client.GetAsync("/health/live");

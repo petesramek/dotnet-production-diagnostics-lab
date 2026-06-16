@@ -28,7 +28,7 @@ public sealed class ConfigurationTests {
     /// Verifies that problem endpoint returns unvalidated configuration.
     /// </summary>
     [Fact]
-    public async Task Configuration_Problem_Return_Validated_False() {
+    public async Task Configuration_Problem_Returns_Validated_False() {
         using var factory = new DiagnosticsLabWebApplicationFactory();
         using var client = factory.CreateClient();
 
@@ -47,7 +47,7 @@ public sealed class ConfigurationTests {
     /// Verifies that mitigation endpoint returns validated configuration.
     /// </summary>
     [Fact]
-    public async Task Configuration_Mitigation_Return_Validated_True() {
+    public async Task Configuration_Mitigation_Returns_Validated_True() {
         using var factory = new DiagnosticsLabWebApplicationFactory();
         using var client = factory.CreateClient();
 

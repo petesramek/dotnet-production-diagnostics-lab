@@ -17,7 +17,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint succeeds for a normal dependency call.
     /// </summary>
     [Fact]
-    public async Task ExternalDependencyReliability_Problem_Return_Success_For_Normal_Dependency() {
+    public async Task ExternalDependencyReliability_Problem_Returns_Success_For_Normal_Dependency() {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/04-external-dependency-reliability/problem?country=CZ");
@@ -29,7 +29,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint returns gateway timeout for a slow dependency.
     /// </summary>
     [Fact]
-    public async Task ExternalDependencyReliability_Mitigation_Return_GatewayTimeout_For_Slow_Dependency() {
+    public async Task ExternalDependencyReliability_Mitigation_Returns_GatewayTimeout_For_Slow_Dependency() {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/04-external-dependency-reliability/mitigation?country=SLOW");
@@ -41,7 +41,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint returns a failed result for a failing SKU.
     /// </summary>
     [Fact]
-    public async Task UnboundedRetries_Problem_Return_ServiceUnavailable_For_Failed_Sku() {
+    public async Task UnboundedRetries_Problem_Returns_ServiceUnavailable_For_Failed_Sku() {
         using var client = factory.CreateClient();
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
@@ -57,7 +57,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint uses fewer attempts for a failing SKU.
     /// </summary>
     [Fact]
-    public async Task UnboundedRetries_Mitigation_Return_Fewer_Attempts_For_Failed_Sku() {
+    public async Task UnboundedRetries_Mitigation_Returns_Fewer_Attempts_For_Failed_Sku() {
         using var client = factory.CreateClient();
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
@@ -81,7 +81,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint hides startup failure.
     /// </summary>
     [Fact]
-    public async Task SilentStartupFailure_Problem_Return_FailureVisible_False() {
+    public async Task SilentStartupFailure_Problem_Returns_FailureVisible_False() {
         using var client = factory.CreateClient();
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
@@ -96,7 +96,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint surfaces startup failure.
     /// </summary>
     [Fact]
-    public async Task SilentStartupFailure_Mitigation_Return_ServiceUnavailable() {
+    public async Task SilentStartupFailure_Mitigation_Returns_ServiceUnavailable() {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/11-silent-startup-failure/mitigation");
@@ -108,7 +108,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint returns success.
     /// </summary>
     [Fact]
-    public async Task SocketExhaustion_Problem_Return_Success() {
+    public async Task SocketExhaustion_Problem_Returns_Success() {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/14-socket-exhaustion/problem");
@@ -120,7 +120,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint returns success.
     /// </summary>
     [Fact]
-    public async Task SocketExhaustion_Mitigation_Return_Success() {
+    public async Task SocketExhaustion_Mitigation_Returns_Success() {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/14-socket-exhaustion/mitigation");
@@ -132,7 +132,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the problem endpoint returns a value.
     /// </summary>
     [Fact]
-    public async Task CacheStampede_Problem_Return_Value() {
+    public async Task CacheStampede_Problem_Returns_Value() {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/17-cache-stampede/problem");
@@ -144,7 +144,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
     /// Verifies that the mitigation endpoint returns a value.
     /// </summary>
     [Fact]
-    public async Task CacheStampede_Mitigation_Return_Value() {
+    public async Task CacheStampede_Mitigation_Returns_Value() {
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/17-cache-stampede/mitigation");

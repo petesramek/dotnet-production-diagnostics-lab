@@ -54,7 +54,7 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
     /// Verifies that the problem endpoint returns customer summaries.
     /// </summary>
     [Fact]
-    public async Task NPlusOneQuery_Problem_Return_CustomerSummary() {
+    public async Task NPlusOneQuery_Problem_Returns_CustomerSummary() {
         using var client = factory.CreateClient();
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
@@ -70,7 +70,7 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
     /// Verifies that the mitigation endpoint returns the same customer summaries as the problem endpoint.
     /// </summary>
     [Fact]
-    public async Task NPlusOneQuery_Mitigation_Return_CustomerSummary() {
+    public async Task NPlusOneQuery_Mitigation_Returns_CustomerSummary() {
         using var client = factory.CreateClient();
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
