@@ -62,8 +62,8 @@ app.MapExcessiveDataMaterializationEndpoints();
 // Scenario 02: Missing cancellation / timeouts
 app.MapMissingCancellationPropagationEndpoints();
 
-// Scenario 03: Observability & tracing
-app.MapObservabilityTracingEndpoints();
+// Scenario 03: Missing Log Context
+app.MapMissingLogContextEndpoints();
 
 // Scenario 04: External dependency reliability
 app.MapExternalDependencyReliabilityEndpoints();
