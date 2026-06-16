@@ -20,7 +20,7 @@ Use this file mainly for:
 
 Optional:
 - Scenario 01 — slow data access
-- Scenario 05 — N+1 / chatty data access
+- Scenario 05 — N + 1 query problem
 
 ## 1. Install .NET diagnostics tools
 Install these once on the machine where you run the lab:

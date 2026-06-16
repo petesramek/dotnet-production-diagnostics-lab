@@ -51,7 +51,7 @@ The API uses SQLite and creates local seed data automatically.
 - Problem: `GET /api/shipping/problem?country=CZ`
 - Improved: `GET /api/shipping/resilient?country=CZ`
 
-### 5. [N+1 / chatty data access](docs/05-chatty-data-access.md)
+### 5. [N + 1 Qery Problem](docs/05-chatty-data-access.md)
 
 - Problem: `GET /api/customers/problem?take=25`
 - Improved: `GET /api/customers/improved?take=25`

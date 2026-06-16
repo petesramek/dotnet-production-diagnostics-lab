@@ -80,7 +80,7 @@ wrk -t4 -c20 -d30s "http://localhost:5000/01-slow-data-access/mitigation?custome
 
 ## Related scenarios
 
-- [Scenario 05: N+1 / Chatty Data Access](05-n-plus-one-queries.md)
+- [Scenario 05: N + 1 Queries](05-n-plus-one-queries.md)
 - [Scenario 08: Large Response Allocation / Streaming](08-large-response.md)
 
 ## External references

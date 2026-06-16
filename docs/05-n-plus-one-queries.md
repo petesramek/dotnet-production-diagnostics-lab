@@ -1,4 +1,4 @@
-# Scenario 05: N+1 / Chatty Data Access
+# Scenario 05: N + 1 Queries
 
 ## Goal
 
