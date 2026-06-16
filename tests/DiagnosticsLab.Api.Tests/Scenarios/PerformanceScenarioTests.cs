@@ -92,7 +92,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/02-cancellation-timeouts/problem");
+            "/02-missing-cancellation-propagation/problem");
 
         problem.RootElement.GetProperty("cancellationAware").GetBoolean().Should().BeFalse();
     }
@@ -106,7 +106,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
 
         using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/02-cancellation-timeouts/mitigation");
+            "/02-missing-cancellation-propagation/mitigation");
 
         mitigation.RootElement.GetProperty("cancellationAware").GetBoolean().Should().BeTrue();
     }
@@ -129,7 +129,7 @@ public sealed class PerformanceScenarioTests(DiagnosticsLabWebApplicationFactory
         document.RootElement.GetProperty("sha256").GetString().Should().NotBeNullOrWhiteSpace();
     }
 
-    ///summary>
+    /// <summary>
     /// Verifies that the problem endpoint buffers the request body in memory.
     /// </summary>
     [Fact]

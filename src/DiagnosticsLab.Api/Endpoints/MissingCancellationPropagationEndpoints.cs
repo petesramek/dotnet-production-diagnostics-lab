@@ -3,10 +3,10 @@ namespace DiagnosticsLab.Api.Endpoints;
 /// <summary>
 /// Maps endpoints for missing cancellation and timeout handling scenarios.
 /// </summary>
-public static class CancellationTimeoutsEndpoints {
-    private const string Route = "/02-cancellation-timeouts";
+public static class MissingCancellationPropagationEndpoints {
+    private const string Route = "/02-missing-cancellation-propagation";
 
-    public static IEndpointRouteBuilder MapCancellationTimeoutsEndpoints(this IEndpointRouteBuilder endpoints) {
+    public static IEndpointRouteBuilder MapMissingCancellationPropagationEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
 
         // Problem:

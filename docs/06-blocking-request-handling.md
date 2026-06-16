@@ -78,7 +78,7 @@ wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-handling/mitigatio
 
 ## Related scenarios
 
-- [Scenario 02: Missing Cancellation and Timeout Handling](02-cancellation.md)
+- [Scenario 02: Missing Cancellation Propagation](02-missing-cancellation-propagation.md)
 - [Scenario 15: ThreadPool Starvation](15-threadpool-starvation.md)
 
 ## External references

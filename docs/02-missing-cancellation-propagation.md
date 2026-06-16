@@ -1,4 +1,4 @@
-# Scenario 02: Missing Cancellation and Timeout Handling
+# Scenario 02: Missing Cancellation Propagation
 
 ## Goal
 
@@ -10,7 +10,7 @@ If a request is aborted but the server continues executing database calls, HTTP 
 
 ## Problem
 
-**Endpoint**: `GET /02-cancellation-timeouts/problem`
+**Endpoint**: `GET /02-missing-cancellation-propagation/problem`
 
 The problem endpoint starts asynchronous work without passing `CancellationToken`. This means:
 - the operation keeps running even if the client disconnects
@@ -19,7 +19,7 @@ The problem endpoint starts asynchronous work without passing `CancellationToken
 
 ## Mitigation
 
-**Endpoint**: `GET /02-cancellation-timeouts/mitigation`
+**Endpoint**: `GET /02-missing-cancellation-propagation/mitigation`
 
 The mitigation endpoint propagates `CancellationToken` into the asynchronous operation. This means:
 - the operation can stop immediately when the request is cancelled
@@ -36,8 +36,8 @@ This scenario uses `Task.Delay(...)` to simulate asynchronous work. In a real sy
 ## How to try it
 
 ```bash
-curl "http://localhost:5000/02-cancellation-timeouts/problem"
-curl "http://localhost:5000/02-cancellation-timeouts/mitigation"
+curl "http://localhost:5000/02-missing-cancellation-propagation/problem"
+curl "http://localhost:5000/02-missing-cancellation-propagation/mitigation"
 ```
 
 To observe the difference clearly, call the endpoint with a client timeout or cancel the request before it completes.
@@ -59,13 +59,13 @@ Use these tools to observe the behavior:
 Example:
 
 ```bash
-curl --max-time 1 "http://localhost:5000/02-cancellation-timeouts/problem"
-curl --max-time 1 "http://localhost:5000/02-cancellation-timeouts/mitigation"
+curl --max-time 1 "http://localhost:5000/02-missing-cancellation-propagation/problem"
+curl --max-time 1 "http://localhost:5000/02-missing-cancellation-propagation/mitigation"
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/CancellationTimeoutsEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/CancellationTimeoutsEndpoints.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/MissingCancellationPropagationEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/MissingCancellationPropagationEndpoints.cs)
 - Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
 
 ## Related scenarios

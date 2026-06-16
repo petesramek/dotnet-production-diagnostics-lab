@@ -36,7 +36,7 @@ The API uses SQLite and creates local seed data automatically.
 - Problem: `GET /api/orders/slow?customerId=42`
 - Improved: `GET /api/orders/improved?customerId=42`
 
-### 2. [Cancellation](docs/02-cancellation.md)
+### 2. [Cancellation](docs/02-missing-cancellation-propagation.md)
 
 - Problem: `GET /api/reports/slow`
 - Improved: `GET /api/reports/cancellable`

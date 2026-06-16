@@ -60,7 +60,7 @@ app.MapGet("/", () => Results.Ok(new {
 app.MapExcessiveDataMaterializationEndpoints();
 
 // Scenario 02: Missing cancellation / timeouts
-app.MapCancellationTimeoutsEndpoints();
+app.MapMissingCancellationPropagationEndpoints();
 
 // Scenario 03: Observability & tracing
 app.MapObservabilityTracingEndpoints();
