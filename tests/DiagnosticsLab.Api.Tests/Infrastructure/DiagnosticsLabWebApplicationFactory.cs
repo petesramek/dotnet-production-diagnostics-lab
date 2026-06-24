@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace DiagnosticsLab.Api.Tests.Infrastructure;
 
@@ -48,6 +49,15 @@ public sealed class DiagnosticsLabWebApplicationFactory : WebApplicationFactory<
                 options.UseSqlite($"Data Source={_databasePath}");
             });
         });
+
+
+        builder.ConfigureLogging(logging => {
+            logging.ClearProviders();
+            logging
+                .AddDebug()
+                .SetMinimumLevel(LogLevel.Warning);
+        });
+
     }
 
     /// <inheritdoc />
