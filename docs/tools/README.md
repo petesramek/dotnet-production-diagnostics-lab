@@ -8,20 +8,18 @@ This document exists for one purpose: **install the external tools used by selec
 Most scenarios do **not** need external tooling.
 
 Use this file mainly for:
-- Scenario 04 — Missing Dependency Timeouts
-- Scenario 06 — Blocking Request Handling
-- Scenario 07 — Unbounded Retries
-- Scenario 08 — Large Response Buffering
-- Scenario 13 — Request Body Memory Pressure
-- Scenario 14 — Socket Exhaustion
-- Scenario 15 — ThreadPool starvation
-- Scenario 16 — LOH Fragmentation
-- Scenario 17 — Cache Stampede
-
+- [Scenario 04 — Missing Dependency Timeouts](../04-missing-dependency-timeouts.md)
+- [Scenario 06 — Blocking Request Thread](../06-blocking-request-thread.md)
+- [Scenario 07 — Unbounded Retries](../07-unbounded-retries.md)
+- [Scenario 08 — Large Response Buffering](../08-large-response-buffering.md)
+- [Scenario 13 — Request Body Memory Pressure](../13-request-body-memory-pressure.md)
+- [Scenario 14 — Socket Exhaustion](../14-socket-exhaustion.md)
+- [Scenario 15 - ThreadPool Starvation](../15-threadpool-starvation.md)
+- [Scenario 16 — LOH Fragmentation](../16-loh-fragmentation.md)
+- [Scenario 17 — Cache Stampede](../17-cache-stampede.md)
 Optional:
-- Scenario 01 — Excessive Data Materialization
-- Scenario 05 — 05 — N + 1 Queries
-
+- [Scenario 01 — Excessive Data Materialization](../01-excessive-data-materialization.md)
+- [Scenario 05 — N + 1 Queries](../05-n-plus-one-queries.md)
 ## 1. Install .NET diagnostics tools
 Install these once on the machine where you run the lab:
 
@@ -178,15 +176,15 @@ ss -s
 
 ## 5. Which tool to use for which scenario
 
-- **04** Missing Dependency Timeouts → load tool + `dotnet-counters`
-- **06** Blocking Request Thread → load tool + `dotnet-counters`, optional `dotnet-trace`
-- **07** Unbounded Retries → load tool + logs, optional `dotnet-counters`
-- **08** Large Response Buffering → load tool + `dotnet-counters`
-- **13** Request Body Memory Pressure → repeated requests + `dotnet-counters`
-- **14** Socket Exhaustion → load tool + `netstat` or `ss` + optional `dotnet-counters`
-- **15** ThreadPool Starvation → load tool + `dotnet-counters` + optional `dotnet-trace` / `dotnet-stack`
-- **16** LOH Fragmentation → `dotnet-counters` + optional `dotnet-gcdump` + sustained load
-- **17** Cache Stampede → load tool + logs
+- **04** [Missing Dependency Timeouts](../04-missing-dependency-timeouts.md) → load tool + `dotnet-counters`
+- **06** [Blocking Request Thread](../06-blocking-request-thread.md) → load tool + `dotnet-counters`, optional `dotnet-trace`
+- **07** [Unbounded Retries](../07-unbounded-retries.md) → load tool + logs, optional `dotnet-counters`
+- **08** [Large Response Buffering](../08-large-response-buffering.md) → load tool + `dotnet-counters`
+- **13** [Request Body Memory Pressure](../13-request-body-memory-pressure.md) → repeated requests + `dotnet-counters`
+- **14** [Socket Exhaustion](../14-socket-exhaustion.md) → load tool + `netstat` or `ss` + optional `dotnet-counters`
+- **15** [ThreadPool Starvation](../15-threadpool-starvation.md) → load tool + `dotnet-counters` + optional `dotnet-trace` / `dotnet-stack`
+- **16** [LOH Fragmentation](../16-loh-fragmentation.md) → `dotnet-counters` + optional `dotnet-gcdump` + sustained load
+- **17** [Cache Stampede](../17-cache-stampede.md) → load tool + logs
 
 ## 6. Official references
 - .NET diagnostics tools overview: https://learn.microsoft.com/en-us/dotnet/core/diagnostics/tools-overview
