@@ -81,7 +81,7 @@ wrk -t4 -c20 -d30s "http://localhost:5000/01-excessive-data-materialization/miti
 ## Related scenarios
 
 - [Scenario 05: N + 1 Queries](05-n-plus-one-queries.md)
-- [Scenario 08: Large Response Allocation / Streaming](08-large-response.md)
+- [Scenario 08: Large Response Buffering](08-large-response-buffering.md)
 
 ## External references
 

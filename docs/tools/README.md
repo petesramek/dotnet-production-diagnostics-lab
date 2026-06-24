@@ -9,9 +9,9 @@ Most scenarios do **not** need external tooling.
 
 Use this file mainly for:
 - Scenario 04 — Missing Dependency Timeouts
-- Scenario 06 — blocking request handling
-- Scenario 07 — retry storms
-- Scenario 08 — large response buffering vs streaming
+- Scenario 06 — Blocking Request Handling
+- Scenario 07 — Unbounded Retries
+- Scenario 08 — Large Response Buffering
 - Scenario 13 — request body memory pressure
 - Scenario 14 — socket exhaustion
 - Scenario 15 — ThreadPool starvation

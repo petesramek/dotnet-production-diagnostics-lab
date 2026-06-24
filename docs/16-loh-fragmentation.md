@@ -89,7 +89,7 @@ wrk -t4 -c20 -d30s -s post-json.lua http://localhost:5000/16-loh-fragmentation/m
 
 ## Related scenarios
 
-- [Scenario 08: Large Response Buffering vs Streaming](08-large-response.md)
+- [Scenario 08: Large Response Buffering vs Streaming](08-large-response-buffering.md)
 - [Scenario 13: Request Body Memory Pressure](13-request-body-memory-pressure.md)
 
 ## External references

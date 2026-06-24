@@ -66,7 +66,7 @@ The API uses SQLite and creates local seed data automatically.
 - Problem: `GET /api/inventory/problem?sku=FAIL`
 - Improved: `GET /api/inventory/improved?sku=FAIL`
 
-### 8. [Large response allocation / streaming](docs/08-large-response-streaming.md)
+### 8. [Large Response Buffering](docs/08-large-response-streaming.md)
 
 - Problem: `GET /api/exports/problem?rows=1000`
 - Improved: `GET /api/exports/improved?rows=1000`

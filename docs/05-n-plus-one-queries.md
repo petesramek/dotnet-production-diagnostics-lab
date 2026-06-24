@@ -78,7 +78,7 @@ wrk -t4 -c20 -d30s "http://localhost:5000/05-n-plus-1-data-access/mitigation?tak
 ## Related scenarios
 
 - [Scenario 01: Excessive Data Materialization](01-excessive-data-materialization.md)
-- [Scenario 08: Large Response Buffering vs Streaming](08-large-response.md)
+- [Scenario 08: Large Response Buffering vs Streaming](08-large-response-buffering.md)
 
 ## External references
 

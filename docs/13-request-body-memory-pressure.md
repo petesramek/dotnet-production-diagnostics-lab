@@ -80,7 +80,7 @@ dotnet-counters monitor --process-id <pid> System.Runtime
 
 ## Related scenarios
 
-- [Scenario 08: Large Response Buffering vs Streaming](08-large-response.md)
+- [Scenario 08: Large Response Buffering vs Streaming](08-large-response-buffering.md)
 - [Scenario 16: LOH Fragmentation](16-loh-fragmentation.md)
 
 ## External references

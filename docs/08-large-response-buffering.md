@@ -1,4 +1,4 @@
-# Scenario 08: Large Response Buffering vs Streaming
+# Scenario 08: Large Response Buffering
 
 ## Goal
 
