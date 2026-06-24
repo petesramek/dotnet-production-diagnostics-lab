@@ -14,6 +14,7 @@ namespace DiagnosticsLab.Api.Tests.Infrastructure;
 public sealed class DiagnosticsLabWebApplicationFactory : WebApplicationFactory<Program> {
     private readonly Dictionary<string, string?> _configuration = new(StringComparer.OrdinalIgnoreCase);
     private readonly string _databasePath = Path.Combine(Path.GetTempPath(), $"diagnostics-lab-tests-{Guid.NewGuid():N}.db");
+    private int _disposed;
 
     /// <summary>
     /// Adds or replaces a configuration value for the test host.
@@ -43,7 +44,6 @@ public sealed class DiagnosticsLabWebApplicationFactory : WebApplicationFactory<
 
         builder.ConfigureServices(services => {
             services.RemoveAll<DbContextOptions<AppDbContext>>();
-
             services.AddDbContext<AppDbContext>(options => {
                 options.UseSqlite($"Data Source={_databasePath}");
             });
@@ -52,8 +52,31 @@ public sealed class DiagnosticsLabWebApplicationFactory : WebApplicationFactory<
 
     /// <inheritdoc />
     public override async ValueTask DisposeAsync() {
-        await base.DisposeAsync();
+        if (Interlocked.Exchange(ref _disposed, 1) != 0) {
+            return;
+        }
 
+        try {
+            await base.DisposeAsync();
+        } finally {
+            CleanupDatabaseFiles();
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing) {
+        if (Interlocked.Exchange(ref _disposed, 1) != 0) {
+            return;
+        }
+
+        try {
+            base.Dispose(disposing);
+        } finally {
+            CleanupDatabaseFiles();
+        }
+    }
+
+    private void CleanupDatabaseFiles() {
         TryDeleteDatabaseFile(_databasePath);
         TryDeleteDatabaseFile($"{_databasePath}-shm");
         TryDeleteDatabaseFile($"{_databasePath}-wal");
