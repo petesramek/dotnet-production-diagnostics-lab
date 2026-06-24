@@ -10,7 +10,7 @@ When request handling blocks a thread with synchronous waiting, fewer threads re
 
 ## Problem
 
-**Endpoint**: `GET /06-blocking-request-handling/problem?delayMs=500`
+**Endpoint**: `GET /06-blocking-request-thread/problem?delayMs=500`
 
 The problem endpoint blocks the current request thread using `Thread.Sleep`. This means:
 - the thread does no useful work while waiting
@@ -19,7 +19,7 @@ The problem endpoint blocks the current request thread using `Thread.Sleep`. Thi
 
 ## Mitigation
 
-**Endpoint**: `GET /06-blocking-request-handling/mitigation?delayMs=500`
+**Endpoint**: `GET /06-blocking-request-thread/mitigation?delayMs=500`
 
 The mitigation endpoint uses asynchronous waiting with `Task.Delay(...)`. This means:
 - the request thread is released while waiting
@@ -33,8 +33,8 @@ This scenario uses `Thread.Sleep(...)` versus `Task.Delay(...)` to make the diff
 ## How to try it
 
 ```bash
-curl "http://localhost:5000/06-blocking-request-handling/problem?delayMs=500"
-curl "http://localhost:5000/06-blocking-request-handling/mitigation?delayMs=500"
+curl "http://localhost:5000/06-blocking-request-thread/problem?delayMs=500"
+curl "http://localhost:5000/06-blocking-request-thread/mitigation?delayMs=500"
 ```
 
 Then repeat under load.
@@ -67,13 +67,13 @@ Use these tools to observe the behavior:
 Example:
 
 ```bash
-wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-handling/problem?delayMs=500"
-wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-handling/mitigation?delayMs=500"
+wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-thread/problem?delayMs=500"
+wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-thread/mitigation?delayMs=500"
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/BlockingRequestHandlingEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/BlockingRequestHandlingEndpoints.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/BlockingRequestThreadEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/BlockingRequestThreadEndpoints.cs)
 - Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
 
 ## Related scenarios

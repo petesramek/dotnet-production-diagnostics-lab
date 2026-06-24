@@ -10,7 +10,7 @@ Native AOT trims unused metadata aggressively. Code that relies on runtime refle
 
 ## Problem
 
-**Endpoint**: `POST /18-native-aot/problem`
+**Endpoint**: `POST /18-native-aot-serialization-failure/problem`
 
 The problem endpoint uses reflection-based JSON serialization. This means:
 - required metadata may be trimmed at publish time
@@ -19,7 +19,7 @@ The problem endpoint uses reflection-based JSON serialization. This means:
 
 ## Mitigation
 
-**Endpoint**: `POST /18-native-aot/mitigation`
+**Endpoint**: `POST /18-native-aot-serialization-failure/mitigation`
 
 The mitigation endpoint uses `System.Text.Json` source generation. This means:
 - serialization metadata is generated at compile time
@@ -35,9 +35,9 @@ In regular development builds both endpoints may appear to work. The real differ
 Run the endpoints normally first:
 
 ```bash
-curl -X POST "http://localhost:5000/18-native-aot/problem"   -H "Content-Type: application/json"   -d '{"name":"Pete","age":30}'
+curl -X POST "http://localhost:5000/18-native-aot-serialization-failure/problem"   -H "Content-Type: application/json"   -d '{"name":"Pete","age":30}'
 
-curl -X POST "http://localhost:5000/18-native-aot/mitigation"   -H "Content-Type: application/json"   -d '{"name":"Pete","age":30}'
+curl -X POST "http://localhost:5000/18-native-aot-serialization-failure/mitigation"   -H "Content-Type: application/json"   -d '{"name":"Pete","age":30}'
 ```
 
 Then publish with Native AOT:
@@ -64,7 +64,7 @@ Use these tools to validate the behavior:
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/NativeAotEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/NativeAotEndpoints.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/NativeAotSerializationFailureEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/NativeAotSerializationFailureEndpoints.cs)
 - JSON context: [../src/DiagnosticsLab.Api/NativeAotJsonContext.cs](../src/DiagnosticsLab.Api/NativeAotJsonContext.cs)
 - Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
 - Smoke tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)

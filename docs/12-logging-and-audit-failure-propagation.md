@@ -10,7 +10,7 @@ Logging, auditing, and telemetry are important, but they are often side effects 
 
 ## Problem
 
-**Endpoint**: `POST /12-logging-failure/problem`
+**Endpoint**: `POST /12-logging-and-audit-failure-propagation/problem`
 
 The problem endpoint allows a logging or audit sink failure to propagate. This means:
 - the request fails because a non-critical component failed
@@ -19,7 +19,7 @@ The problem endpoint allows a logging or audit sink failure to propagate. This m
 
 ## Mitigation
 
-**Endpoint**: `POST /12-logging-failure/mitigation`
+**Endpoint**: `POST /12-logging-and-audit-failure-propagation/mitigation`
 
 The mitigation endpoint isolates the logging or audit failure. This means:
 - the side-effect failure is captured and handled locally
@@ -35,9 +35,9 @@ This scenario uses a fake audit sink to simulate a secondary dependency such as 
 Use a request payload that forces the audit sink to fail:
 
 ```bash
-curl -X POST "http://localhost:5000/12-logging-failure/problem"   -H "Content-Type: application/json"   -d '{"operationId":"00000000-0000-0000-0000-000000000001","auditShouldFail":true}'
+curl -X POST "http://localhost:5000/12-logging-and-audit-failure-propagation/problem"   -H "Content-Type: application/json"   -d '{"operationId":"00000000-0000-0000-0000-000000000001","auditShouldFail":true}'
 
-curl -X POST "http://localhost:5000/12-logging-failure/mitigation"   -H "Content-Type: application/json"   -d '{"operationId":"00000000-0000-0000-0000-000000000001","auditShouldFail":true}'
+curl -X POST "http://localhost:5000/12-logging-and-audit-failure-propagation/mitigation"   -H "Content-Type: application/json"   -d '{"operationId":"00000000-0000-0000-0000-000000000001","auditShouldFail":true}'
 ```
 
 ## What to observe
@@ -55,7 +55,7 @@ Use these tools to observe the behavior:
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/LoggingFailureEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/LoggingFailureEndpoints.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/LoggingAndAuditFailurePropagationEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/LoggingAndAuditFailurePropagationEndpoints.cs)
 - Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs)
 
 ## Related scenarios
