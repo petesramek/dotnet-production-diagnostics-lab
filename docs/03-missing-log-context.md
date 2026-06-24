@@ -47,8 +47,8 @@ curl -X POST "http://localhost:5000/03-missing-log-context/mitigation"   -H "Con
 - The problem endpoint returns a basic validation error payload.
 - The mitigation endpoint returns a validation payload with additional identifiers.
 - The most important difference is in the logs:
-  - problem → generic message
-  - mitigation → structured fields and contextual identifiers
+  - Problem path → generic message without useful identifiers.
+  - Mitigation path → structured fields and contextual identifiers.
 
 ## Diagnostic tools
 
@@ -67,7 +67,7 @@ The key observation for this scenario is log quality, not raw performance.
 ## Related scenarios
 
 - [Scenario 10: Missing Health Probes](10-missing-health-probes.md)
-- [Scenario 12: Logging Failure Isolation](12-logging-and-audit-failure-propagation.md)
+- [Scenario 12: Logging and Audit Failure Propagation](12-logging-and-audit-failure-propagation.md)
 
 ## External references
 

@@ -6,9 +6,9 @@ namespace DiagnosticsLab.Api.Endpoints;
 /// Maps endpoints for logging failure scenarios.
 /// </summary>
 public static class LoggingFailureEndpoints {
-    private const string Route = "/12-logging-failure";
+    private const string Route = "/12-logging-and-audit-failure-propagation";
 
-    public static IEndpointRouteBuilder MapLoggingFailureEndpoints(this IEndpointRouteBuilder endpoints) {
+    public static IEndpointRouteBuilder MapLoggingAndAuditFailurePropagationEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
 
         // Problem:

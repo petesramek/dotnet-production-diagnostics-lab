@@ -109,7 +109,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
             AuditShouldFail = true
         };
 
-        var response = await client.PostAsJsonAsync("/12-logging-failure/problem", request);
+        var response = await client.PostAsJsonAsync("/12-logging-and-audit-failure-propagation/problem", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
     }
@@ -126,7 +126,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
             AuditShouldFail = true
         };
 
-        var response = await client.PostAsJsonAsync("/12-logging-failure/mitigation", request);
+        var response = await client.PostAsJsonAsync("/12-logging-and-audit-failure-propagation/mitigation", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -169,7 +169,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
             Age = 30
         };
 
-        var response = await client.PostAsJsonAsync("/18-native-aot/problem", payload);
+        var response = await client.PostAsJsonAsync("/18-native-aot-serialization-failure/problem", payload);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -186,7 +186,7 @@ public sealed class ApiSmokeTests(DiagnosticsLabWebApplicationFactory factory) :
             Age = 30
         };
 
-        var response = await client.PostAsJsonAsync("/18-native-aot/mitigation", payload);
+        var response = await client.PostAsJsonAsync("/18-native-aot-serialization-failure/mitigation", payload);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }

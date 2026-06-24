@@ -4,10 +4,10 @@ using System.Text.Json;
 /// <summary>
 /// Maps endpoints for Native AOT serialization scenarios.
 /// </summary>
-public static class NativeAotEndpoints {
-    private const string Route = "/18-native-aot";
+public static class NativeAotSerializationFailureEndpoints {
+    private const string Route = "/18-native-aot-serialization-failure";
 
-    public static IEndpointRouteBuilder MapNativeAotEndpoints(this IEndpointRouteBuilder endpoints) {
+    public static IEndpointRouteBuilder MapNativeAotSerializationFailureEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
 
         // Problem:

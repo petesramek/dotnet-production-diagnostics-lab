@@ -6,6 +6,6 @@ namespace DiagnosticsLab.Api;
 /// <summary>
 /// Provides source-generated JSON serialization metadata for Native AOT scenarios.
 /// </summary>
-[JsonSerializable(typeof(NativeAotEndpoints.SimplePayload))]
+[JsonSerializable(typeof(NativeAotSerializationFailureEndpoints.SimplePayload))]
 public partial class NativeAotJsonContext : JsonSerializerContext {
 }

@@ -12,15 +12,15 @@ Use this file mainly for:
 - Scenario 06 — Blocking Request Handling
 - Scenario 07 — Unbounded Retries
 - Scenario 08 — Large Response Buffering
-- Scenario 13 — request body memory pressure
-- Scenario 14 — socket exhaustion
+- Scenario 13 — Request Body Memory Pressure
+- Scenario 14 — Socket Exhaustion
 - Scenario 15 — ThreadPool starvation
-- Scenario 16 — LOH fragmentation
-- Scenario 17 — cache stampede
+- Scenario 16 — LOH Fragmentation
+- Scenario 17 — Cache Stampede
 
 Optional:
 - Scenario 01 — Excessive Data Materialization
-- Scenario 05 — N + 1 query problem
+- Scenario 05 — 05 — N + 1 Queries
 
 ## 1. Install .NET diagnostics tools
 Install these once on the machine where you run the lab:
@@ -179,14 +179,14 @@ ss -s
 ## 5. Which tool to use for which scenario
 
 - **04** Missing Dependency Timeouts → load tool + `dotnet-counters`
-- **06** blocking request handling → load tool + `dotnet-counters`, optional `dotnet-trace`
-- **07** retry storms → load tool + logs, optional `dotnet-counters`
-- **08** large response buffering vs streaming → load tool + `dotnet-counters`
-- **13** request body memory pressure → repeated requests + `dotnet-counters`
-- **14** socket exhaustion → load tool + `netstat` or `ss` + optional `dotnet-counters`
-- **15** ThreadPool starvation → load tool + `dotnet-counters` + optional `dotnet-trace` / `dotnet-stack`
-- **16** LOH fragmentation → `dotnet-counters` + optional `dotnet-gcdump` + sustained load
-- **17** cache stampede → load tool + logs
+- **06** Blocking Request Thread → load tool + `dotnet-counters`, optional `dotnet-trace`
+- **07** Unbounded Retries → load tool + logs, optional `dotnet-counters`
+- **08** Large Response Buffering → load tool + `dotnet-counters`
+- **13** Request Body Memory Pressure → repeated requests + `dotnet-counters`
+- **14** Socket Exhaustion → load tool + `netstat` or `ss` + optional `dotnet-counters`
+- **15** ThreadPool Starvation → load tool + `dotnet-counters` + optional `dotnet-trace` / `dotnet-stack`
+- **16** LOH Fragmentation → `dotnet-counters` + optional `dotnet-gcdump` + sustained load
+- **17** Cache Stampede → load tool + logs
 
 ## 6. Official references
 - .NET diagnostics tools overview: https://learn.microsoft.com/en-us/dotnet/core/diagnostics/tools-overview

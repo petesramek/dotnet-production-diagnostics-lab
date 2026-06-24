@@ -164,7 +164,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
             Age = 30
         };
 
-        var response = await client.PostAsJsonAsync("/18-native-aot/problem", payload);
+        var response = await client.PostAsJsonAsync("/18-native-aot-serialization-failure/problem", payload);
 
         response.EnsureSuccessStatusCode();
     }
@@ -181,7 +181,7 @@ public sealed class ReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory
             Age = 30
         };
 
-        var response = await client.PostAsJsonAsync("/18-native-aot/mitigation", payload);
+        var response = await client.PostAsJsonAsync("/18-native-aot-serialization-failure/mitigation", payload);
 
         response.EnsureSuccessStatusCode();
     }

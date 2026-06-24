@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-// Scenario 09: Configuration validation
+// Scenario 09: Invalid Configuration
 builder.Services
     .AddOptions<ExternalServicesOptions>()
     .Bind(builder.Configuration.GetSection(ExternalServicesOptions.SectionName))
@@ -34,7 +34,7 @@ builder.Services.AddScoped<FakeInventoryClient>();
 // Scenario 11: Startup failure simulation
 builder.Services.AddSingleton<FakeStartupDependency>();
 
-// Scenario 12: Logging failure simulation
+// Scenario 12: Logging and Audit Failure Propagation
 builder.Services.AddSingleton<FakeAuditSink>();
 
 // Scenario 14: HttpClient usage
@@ -46,7 +46,7 @@ builder.Services.AddHttpContextAccessor();
 // Scenario 17: Cache behavior
 builder.Services.AddMemoryCache();
 
-// Scenario 10: Health checks
+// Scenario 10: Missing Health Probes
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy("Application is running."));
 
@@ -93,24 +93,24 @@ app.MapNPlusOneQueryEndpoints();
 // Scenario 06: Blocking request handling
 app.MapBlockingRequestHandlingEndpoints();
 
-// Scenario 07: Retry storms
+// Scenario 07: Unbounded Retries
 app.MapUnboundedRetriesEndpoints();
 
-// Scenario 08: Large response buffering vs streaming
+// Scenario 08: Large Response Buffering
 app.MapLargeResponseEndpoints();
 
-// Scenario 09: Configuration validation
+// Scenario 09: Invalid Configuration
 app.MapInvalidConfigurationEndpoints();
 
-// Scenario 10: Health checks
+// Scenario 10: Missing Health Probes
 app.MapHealthChecks("/health/live");
 app.MapHealthChecks("/health/ready");
 
-// Scenario 11: Startup failure handling
+// Scenario 11: Silent Startup Failure
 app.MapSilentStartupFailureEndpoints();
 
-// Scenario 12: Logging failure isolation
-app.MapLoggingFailureEndpoints();
+// Scenario 12: Logging and Audit Failure Propagation
+app.MapLoggingAndAuditFailurePropagationEndpoints();
 
 // Scenario 13: Request body memory pressure
 app.MapRequestBodyMemoryPressureEndpoints();
@@ -128,7 +128,7 @@ app.MapLohFragmentationEndpoints();
 app.MapCacheStampedeEndpoints();
 
 // Scenario 18: Native AOT
-app.MapNativeAotEndpoints();
+app.MapNativeAotSerializationFailureEndpoints();
 
 app.Run();
 
