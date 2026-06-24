@@ -88,7 +88,7 @@ wrk -t4 -c20 -d15s "http://localhost:5000/19-repeated-dependency-failures/mitiga
 
 ### Related scenarios
 - [Scenario 04: Missing Dependency Timeouts](04-missing-dependency-timeouts.md)
-- [Scenario 07: Retry Storms](07-unbounded-retries.md)
+- [Scenario 07: Unbounded Retries](07-unbounded-retries.md)
 
 ### External references
 - [Build resilient HTTP apps: Key development patterns - .NET](https://learn.microsoft.com/en-us/dotnet/core/resilience/http-resilience)

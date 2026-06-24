@@ -82,7 +82,7 @@ Then inspect sockets on the host while the load is running.
 ## Related scenarios
 
 - [Scenario 04: Missing Dependency Timeouts](04-external-dependencies.md)
-- [Scenario 07: Retry Storms](07-unbounded-retries.md)
+- [Scenario 07: Unbounded Retries](07-unbounded-retries.md)
 
 ## External references
 

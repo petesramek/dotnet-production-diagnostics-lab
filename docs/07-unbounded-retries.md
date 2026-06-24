@@ -1,4 +1,4 @@
-# Scenario 07: Retry Storms
+# Scenario 07: Unbounded Retries
 
 ## Goal
 

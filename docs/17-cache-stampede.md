@@ -82,7 +82,7 @@ wrk -t4 -c50 http://localhost:5000/17-cache-stampede/mitigation
 
 ## Related scenarios
 
-- [Scenario 07: Retry Storms](07-unbounded-retries.md)
+- [Scenario 07: Unbounded Retries](07-unbounded-retries.md)
 - [Scenario 14: Socket Exhaustion](14-socket-exhaustion.md)
 
 ## External references

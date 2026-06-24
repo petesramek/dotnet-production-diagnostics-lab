@@ -81,7 +81,7 @@ wrk -t4 -c20 -d30s "http://localhost:5000/04-missing-dependency-timeouts/mitigat
 ## Related scenarios
 
 - [Scenario 02: Missing Cancellation Propagation](02-missing-cancellation-propagation.md)
-- [Scenario 07: Retry Storms](07-unbounded-retries.md)
+- [Scenario 07: Unbounded Retries](07-unbounded-retries.md)
 - [Scenario 14: Socket Exhaustion](14-socket-exhaustion.md)
 
 ## External references
