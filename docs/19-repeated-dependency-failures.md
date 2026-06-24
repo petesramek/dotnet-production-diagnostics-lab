@@ -10,7 +10,7 @@ When a dependency keeps failing, continuing to call it on every request wastes r
 
 ### Problem
   
-**Endpoint**: GET /19-repeated-dependency-failures/problem?mode=FAIL  
+**Endpoint**: `GET /19-repeated-dependency-failures/problem?mode=FAIL`
 The problem endpoint calls the dependency on every request without circuit-breaker protection. This means:
 - every failing request still reaches the dependency
 - repeated failures continue to consume request and dependency capacity
@@ -18,7 +18,7 @@ The problem endpoint calls the dependency on every request without circuit-break
 
 ### Mitigation
   
-**Endpoint**: GET /19-repeated-dependency-failures/mitigation?mode=FAIL  
+**Endpoint**: `GET /19-repeated-dependency-failures/mitigation?mode=FAIL`
 The mitigation endpoint uses circuit-breaker behavior on the dependency client. This means:
 - initial failures are still observed normally
 - after the failure threshold is crossed, later requests stop calling the dependency temporarily
