@@ -4,6 +4,9 @@ using DiagnosticsLab.Api.Endpoints;
 using DiagnosticsLab.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
+using static DiagnosticsLab.Api.Endpoints.RepeatedDependencyFailuresEndpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +49,22 @@ builder.Services.AddMemoryCache();
 // Scenario 10: Health checks
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy("Application is running."));
+
+// Scenario 19: Repoeated Dependency Failures
+builder.Services.AddTransient<SimulatedDependencyHandler>();
+builder.Services.AddHttpClient(ProblemClientName)
+    .ConfigurePrimaryHttpMessageHandler<SimulatedDependencyHandler>();
+
+builder.Services.AddHttpClient(MitigationClientName)
+    .ConfigurePrimaryHttpMessageHandler<SimulatedDependencyHandler>()
+    .AddResilienceHandler("circuit-breaker", static builder => {
+        builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions {
+            FailureRatio = 1.0,
+            MinimumThroughput = 3,
+            SamplingDuration = TimeSpan.FromMinutes(1),
+            BreakDuration = TimeSpan.FromSeconds(10)
+        });
+    });
 
 var app = builder.Build();
 
