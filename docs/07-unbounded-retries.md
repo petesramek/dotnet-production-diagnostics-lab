@@ -82,7 +82,7 @@ wrk -t4 -c20 -d30s "http://localhost:5000/07-unbounded-retries/mitigation?sku=FA
 
 ## Related scenarios
 
-- [Scenario 04: Missing Dependency Timeouts](04-external-dependencies.md)
+- [Scenario 04: Missing Dependency Timeouts](04-missing-dependency-timeouts.md)
 - [Scenario 14: Socket Exhaustion](14-socket-exhaustion.md)
 
 ## External references
