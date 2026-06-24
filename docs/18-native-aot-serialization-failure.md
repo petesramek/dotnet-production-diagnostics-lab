@@ -1,4 +1,4 @@
-# Scenario 18: Native AOT Serialization
+# Scenario 18: Native AOT Serialization Failure
 
 ## Goal
 
@@ -71,7 +71,7 @@ Use these tools to validate the behavior:
 
 ## Related scenarios
 
-- [Scenario 09: Configuration Validation](09-invalid-configuration.md)
+- [Scenario 09: Invalid Configuration](09-invalid-configuration.md)
 - [Scenario 16: LOH Fragmentation](16-loh-fragmentation.md)
 
 ## External references

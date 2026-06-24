@@ -1,4 +1,4 @@
-# Scenario 10: Health Checks
+# Scenario 10: Missing Health Probes
 
 ## Goal
 
@@ -58,8 +58,8 @@ This scenario is less about performance counters and more about reliable platfor
 
 ## Related scenarios
 
-- [Scenario 09: Configuration Validation](09-invalid-configuration.md)
-- [Scenario 11: Startup Failure Handling](11-silent-startup-failure.md)
+- [Scenario 09: Invalid Configuration](09-invalid-configuration.md)
+- [Scenario 11: Silent Startup Failure](11-silent-startup-failure.md)
 
 ## External references
 

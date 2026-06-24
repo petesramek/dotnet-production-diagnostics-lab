@@ -1,4 +1,4 @@
-# Scenario 11: Startup Failure Handling
+# Scenario 11: Silent Startup Failure
 
 ## Goal
 
@@ -61,8 +61,8 @@ This scenario is primarily about failure visibility and lifecycle correctness.
 
 ## Related scenarios
 
-- [Scenario 09: Configuration Validation](09-invalid-configuration.md)
-- [Scenario 10: Health Checks](10-health-checks.md)
+- [Scenario 09: Invalid Configuration](09-invalid-configuration.md)
+- [Scenario 10: Missing Health Probes](10-missing-health-probes.md)
 
 ## External references
 

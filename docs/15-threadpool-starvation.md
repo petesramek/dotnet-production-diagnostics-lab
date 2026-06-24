@@ -80,7 +80,7 @@ wrk -t4 -c50 -d30s "http://localhost:5000/15-threadpool-starvation/mitigation?de
 
 ## Related scenarios
 
-- [Scenario 06: Blocking Request Handling](06-blocking-request-handling.md)
+- [Scenario 06: Blocking Request Thread](06-blocking-request-thread.md)
 - [Scenario 02: Missing Cancellation Propagation](02-missing-cancellation-propagation.md)
 
 ## External references

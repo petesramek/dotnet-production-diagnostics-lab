@@ -1,4 +1,4 @@
-# Scenario 12: Logging and Audit Failure Isolation
+# Scenario 12: Logging and Audit Failure Propagation
 
 ## Goal
 
@@ -61,7 +61,7 @@ Use these tools to observe the behavior:
 ## Related scenarios
 
 - [Scenario 03: Missing Log Context](03-missing-log-context.md)
-- [Scenario 11: Startup Failure Handling](11-silent-startup-failure.md)
+- [Scenario 11: Silent Startup Failure](11-silent-startup-failure.md)
 
 ## External references
 

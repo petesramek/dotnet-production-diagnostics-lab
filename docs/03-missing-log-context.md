@@ -66,8 +66,8 @@ The key observation for this scenario is log quality, not raw performance.
 
 ## Related scenarios
 
-- [Scenario 10: Health Checks](10-health-checks.md)
-- [Scenario 12: Logging Failure Isolation](12-logging-failure.md)
+- [Scenario 10: Missing Health Probes](10-missing-health-probes.md)
+- [Scenario 12: Logging Failure Isolation](12-logging-and-audit-failure-propagation.md)
 
 ## External references
 

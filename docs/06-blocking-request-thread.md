@@ -1,4 +1,4 @@
-# Scenario 06: Blocking Request Handling
+# Scenario 06: Blocking Request Thread
 
 ## Goal
 

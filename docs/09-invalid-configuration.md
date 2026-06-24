@@ -1,4 +1,4 @@
-# Scenario 09: Configuration Validation
+# Scenario 09: Invalid Configuration
 
 ## Goal
 
@@ -66,8 +66,8 @@ This scenario is mostly about failure timing and operational visibility, not per
 
 ## Related scenarios
 
-- [Scenario 10: Health Checks](10-health-checks.md)
-- [Scenario 11: Startup Failure Handling](11-silent-startup-failure.md)
+- [Scenario 10: Missing Health Probes](10-missing-health-probes.md)
+- [Scenario 11: Silent Startup Failure](11-silent-startup-failure.md)
 
 ## External references
 
