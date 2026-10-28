@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.Memory;
 
 /// <summary>
 /// Maps endpoints for request body memory pressure scenarios.

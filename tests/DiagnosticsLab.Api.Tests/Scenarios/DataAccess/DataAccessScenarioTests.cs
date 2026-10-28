@@ -2,7 +2,7 @@ using DiagnosticsLab.Api.Tests.Infrastructure;
 using FluentAssertions;
 using Xunit;
 
-namespace DiagnosticsLab.Api.Tests.Scenarios;
+namespace DiagnosticsLab.Api.Tests.Scenarios.DataAccess;
 
 /// <summary>
 /// Contains behavior tests for data access diagnostics scenarios.
@@ -59,7 +59,7 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/05-n-plus-1-data-access/problem?take=10");
+            "/05-n-plus-one-queries/problem?take=10");
 
         JsonAssertions.NormalizeCustomerSummaries(problem)
             .Should()
@@ -75,11 +75,11 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/05-n-plus-1-data-access/problem?take=10");
+            "/05-n-plus-one-queries/problem?take=10");
 
         var mitigation = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/05-n-plus-1-data-access/mitigation?take=10");
+            "/05-n-plus-one-queries/mitigation?take=10");
 
         JsonAssertions.NormalizeCustomerSummaries(mitigation)
             .Should()

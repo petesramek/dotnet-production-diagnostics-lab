@@ -1,13 +1,13 @@
 using DiagnosticsLab.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.DataAccess;
 
 /// <summary>
 /// Maps endpoints for N+1 query scenarios.
 /// </summary>
 public static class NPlusOneQueryEndpoints {
-    private const string Route = "/05-n-plus-1-data-access";
+    private const string Route = "/05-n-plus-one-queries";
 
     public static IEndpointRouteBuilder MapNPlusOneQueryEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

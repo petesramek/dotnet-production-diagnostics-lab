@@ -75,8 +75,8 @@ wrk -t4 -c20 -d30s "http://localhost:5000/01-excessive-data-materialization/miti
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/ExcessiveDataMaterializationEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/ExcessiveDataMaterializationEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/DataAccessScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/DataAccessScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DataAccess/ExcessiveDataMaterializationEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DataAccess/ExcessiveDataMaterializationEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DataAccess/DataAccessScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DataAccess/DataAccessScenarioTests.cs)
 
 ## Related scenarios
 

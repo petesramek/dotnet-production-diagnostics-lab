@@ -20,10 +20,13 @@ You will work with examples of:
 - Large Object Heap pressure and fragmentation
 - Native AOT serialization failures caused by reflection-based JSON metadata
 
-Each scenario has two paths:
+> Documentation links to Microsoft Learn point to the latest docs; the lab itself targets .NET 8.
+
+Each scenario has these paths:
 
 - **Problem** — demonstrates the anti-pattern or failure mode.
-- **Mitigation** — demonstrates the safer implementation or operationally better behavior.
+- **Mitigation** — demonstrates a hand-written safer implementation.
+- **Framework** (`/framework`, where available) — demonstrates the built-in .NET solution for the same problem, such as `HybridCache` for cache stampede or a Polly resilience pipeline for retries. Currently available for scenarios 07 and 17; scenario 10 uses tagged health checks as its mitigation.
 
 ## Repository layout
 
@@ -36,12 +39,26 @@ Each scenario has two paths:
 │   └── tools/README.md
 ├── src/
 │   └── DiagnosticsLab.Api/
+│       ├── Scenarios/
+│       │   ├── DataAccess/
+│       │   ├── DependencyReliability/
+│       │   ├── Memory/
+│       │   ├── Observability/
+│       │   ├── RequestExecution/
+│       │   ├── Startup/
+│       │   └── ScenarioRegistration.cs   # DI registration and route mapping for every scenario
+│       ├── Configuration/ Data/ Json/ Services/
+│       └── Program.cs
 ├── tests/
-│   └── DiagnosticsLab.Tests/
+│   └── DiagnosticsLab.Api.Tests/
+│       ├── Scenarios/                     # one folder per theme, mirroring src
+│       ├── Smoke/
+│       └── Infrastructure/
+├── dotnet-production-diagnostics-lab.slnx
 └── README.md
 ```
 
-The exact project names may evolve, but the intent stays the same: one API project hosts the scenarios, and the test project validates endpoint behavior.
+Scenario endpoint classes live under `src/DiagnosticsLab.Api/Scenarios/<Theme>/`, and tests mirror that structure. The solution targets .NET 8 (`net8.0`) and uses the `.slnx` solution format, which requires a recent .NET SDK (9.0.200 or later).
 
 ## Quick start
 
@@ -142,10 +159,10 @@ Run all tests:
 dotnet test
 ```
 
-The tests include:
+The tests (in `tests/DiagnosticsLab.Api.Tests`) include:
 
-- smoke checks
-- scenario behavior checks
+- smoke checks (every GET route and health probes)
+- scenario behavior checks, grouped by theme
 - startup validation checks
 - endpoint response checks
 

@@ -55,6 +55,8 @@ curl "http://localhost:5000/19-repeated-dependency-failures/mitigation?mode=OK"
 ```
 
 ## What to observe
+- Both endpoints return HTTP `503` while the dependency fails; the mitigation returns `dependencyCalled = false` and `circuitState = "Open"` once the breaker is open.
+- The breaker in this lab opens after 3 consecutive failures (minimum throughput 3, failure ratio 1.0) and stays open for 10 seconds.
 - In the problem path, repeated failing requests keep calling the dependency.
 - In the mitigation path, the first failing calls still reach the dependency.
 - After the breaker opens, later mitigation requests should report that the dependency was not called.
@@ -83,8 +85,8 @@ wrk -t4 -c20 -d15s "http://localhost:5000/19-repeated-dependency-failures/mitiga
 ```
 
 ## Source files
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/RepeatedDependencyFailuresEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/RepeatedDependencyFailuresEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/RepeatedDependencyFailuresEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/RepeatedDependencyFailuresEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
 
 ## Related scenarios
 - [Scenario 04: Missing Dependency Timeouts](04-missing-dependency-timeouts.md)

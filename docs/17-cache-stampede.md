@@ -28,6 +28,12 @@ The mitigation endpoint coordinates recomputation with `SemaphoreSlim`. This mea
 - backend pressure stays lower
 - behavior is more stable under concurrency
 
+## Framework solution
+
+**Endpoint**: `GET /17-cache-stampede/framework`
+
+`HybridCache` (`Microsoft.Extensions.Caching.Hybrid`) provides stampede protection out of the box: concurrent `GetOrCreateAsync` calls for the same key share a single factory execution, so no manual `SemaphoreSlim` is needed. It also supports an optional distributed (L2) cache. The response reports `mechanism = "HybridCache"`.
+
 ## Simulation notes
 
 This scenario uses an in-memory cache and a simulated expensive operation. In a real system, the expensive work would typically be a database query, remote API call, or another costly computation behind a cache entry.
@@ -76,9 +82,9 @@ wrk -t4 -c50 http://localhost:5000/17-cache-stampede/mitigation
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/CacheStampedeEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/CacheStampedeEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
-- Smoke tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/CacheStampedeEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/CacheStampedeEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
+- Smoke tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 
@@ -90,3 +96,4 @@ wrk -t4 -c50 http://localhost:5000/17-cache-stampede/mitigation
 - [Cache in-memory in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-10.0)
 - [Overview of caching in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/overview?view=aspnetcore-10.0)
 - [Caching in .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/caching)
+- [HybridCache library in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid)

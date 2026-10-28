@@ -1,6 +1,7 @@
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 
 /// <summary>
 /// Maps endpoints for cache stampede scenarios.
@@ -83,6 +84,30 @@ public static class CacheStampedeEndpoints {
                 Value = cached,
                 Cached = true,
                 Coordinated = true
+            });
+        });
+
+        // Framework solution:
+        // HybridCache coalesces concurrent calls for the same key into a single factory execution,
+        // so no hand-written semaphore or double-checked locking is required.
+        group.MapGet("/framework", async (HybridCache cache, ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
+            var logger = loggerFactory.CreateLogger("CacheStampede.Framework");
+
+            var value = await cache.GetOrCreateAsync(
+                "hybrid-hot-key",
+                async token => {
+                    logger.LogWarning("Cache miss (HybridCache single recompute)");
+                    await Task.Delay(200, token);
+                    return $"computed-{DateTime.UtcNow.Ticks}";
+                },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(5), LocalCacheExpiration = TimeSpan.FromSeconds(5) },
+                cancellationToken: cancellationToken);
+
+            return Results.Ok(new {
+                Value = value,
+                Cached = true,
+                Coordinated = true,
+                Mechanism = "HybridCache"
             });
         });
 

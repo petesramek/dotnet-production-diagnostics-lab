@@ -61,8 +61,8 @@ The key observation for this scenario is log quality, not raw performance.
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/MissingLogContextEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/MissingLogContextEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Observability/MissingLogContextEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Observability/MissingLogContextEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Observability/ObservabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Observability/ObservabilityScenarioTests.cs)
 
 ## Related scenarios
 

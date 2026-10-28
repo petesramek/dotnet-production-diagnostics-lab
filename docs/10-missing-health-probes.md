@@ -23,11 +23,15 @@ The lab exposes two standard health endpoints:
 - **Liveness**: `GET /health/live`
 - **Readiness**: `GET /health/ready`
 
-These endpoints integrate with ASP.NET Core health checks and give infrastructure reliable signals for traffic management and restart decisions.
+These endpoints use ASP.NET Core health checks (`AddHealthChecks` / `MapHealthChecks`). Checks are tagged and each probe filters by tag with `HealthCheckOptions.Predicate`:
+- `/health/live` runs only checks tagged `live` (process-level, no dependencies)
+- `/health/ready` runs only checks tagged `ready` (dependency checks)
+
+In this lab both registered checks are simulated and always healthy; a real application would register checks for its database, queues, and other dependencies under the `ready` tag.
 
 ## Simulation notes
 
-Unlike the other scenarios, this one is middleware/infrastructure based rather than implemented through a dedicated scenario endpoint class. The value of this scenario is operational visibility and orchestration correctness, not application business logic.
+This scenario has no `/problem` or `/mitigation` route. It is configured through the health checks middleware, registered in `MissingHealthProbesEndpoints.cs`. The value of this scenario is operational visibility and orchestration correctness, not application business logic.
 
 ## How to try it
 
@@ -53,8 +57,8 @@ This scenario is less about performance counters and more about reliable platfor
 
 ## Source files
 
-- Host setup: [../src/DiagnosticsLab.Api/Program.cs](../src/DiagnosticsLab.Api/Program.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoints: [../src/DiagnosticsLab.Api/Scenarios/Observability/MissingHealthProbesEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Observability/MissingHealthProbesEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 

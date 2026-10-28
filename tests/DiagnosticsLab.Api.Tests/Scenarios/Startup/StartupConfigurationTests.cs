@@ -3,12 +3,12 @@ using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Xunit;
 
-namespace DiagnosticsLab.Api.Tests.Scenarios;
+namespace DiagnosticsLab.Api.Tests.Scenarios.Startup;
 
 /// <summary>
 /// Contains tests for startup configuration validation and configuration endpoints.
 /// </summary>
-public sealed class ConfigurationTests {
+public sealed class StartupConfigurationTests {
     /// <summary>
     /// Verifies that application fails fast when required configuration is missing.
     /// </summary>

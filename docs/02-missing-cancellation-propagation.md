@@ -65,8 +65,8 @@ curl --max-time 1 "http://localhost:5000/02-missing-cancellation-propagation/mit
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/MissingCancellationPropagationEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/MissingCancellationPropagationEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/RequestExecution/MissingCancellationPropagationEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/RequestExecution/MissingCancellationPropagationEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs)
 
 ## Related scenarios
 

@@ -1,6 +1,6 @@
 using DiagnosticsLab.Api.Services;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.Startup;
 
 /// <summary>
 /// Maps endpoints for silent startup failure scenarios.

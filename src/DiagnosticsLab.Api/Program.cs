@@ -1,70 +1,12 @@
-using DiagnosticsLab.Api.Configuration;
 using DiagnosticsLab.Api.Data;
-using DiagnosticsLab.Api.Endpoints;
-using DiagnosticsLab.Api.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Http.Resilience;
-using Polly;
-using static DiagnosticsLab.Api.Endpoints.RepeatedDependencyFailuresEndpoints;
+using DiagnosticsLab.Api.Scenarios;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-// Scenario 09: Invalid Configuration
-builder.Services
-    .AddOptions<ExternalServicesOptions>()
-    .Bind(builder.Configuration.GetSection(ExternalServicesOptions.SectionName))
-    .ValidateDataAnnotations()
-    .Validate(options => Uri.TryCreate(options.BillingApiBaseUrl, UriKind.Absolute, out _), "Billing API base URL must be an absolute URI.")
-    .ValidateOnStart();
-
-// Scenario 01 & 05: Data access (slow queries, N+1)
-builder.Services.AddDbContext<AppDbContext>(options => {
-    var connectionString = builder.Configuration.GetConnectionString("Default") ?? "Data Source=diagnostics-lab.db";
-    options.UseSqlite(connectionString);
-});
-
-// Scenario 04 & 07: External dependency simulation
-builder.Services.AddScoped<FakeShippingClient>();
-builder.Services.AddScoped<FakeInventoryClient>();
-
-// Scenario 11: Startup failure simulation
-builder.Services.AddSingleton<FakeStartupDependency>();
-
-// Scenario 12: Logging and Audit Failure Propagation
-builder.Services.AddSingleton<FakeAuditSink>();
-
-// Scenario 14: HttpClient usage
-builder.Services.AddHttpClient();
-
-// Scenario 03 & 13: Request context access
-builder.Services.AddHttpContextAccessor();
-
-// Scenario 17: Cache behavior
-builder.Services.AddMemoryCache();
-
-// Scenario 10: Missing Health Probes
-builder.Services.AddHealthChecks()
-    .AddCheck("self", () => HealthCheckResult.Healthy("Application is running."));
-
-// Scenario 19: Repoeated Dependency Failures
-builder.Services.AddTransient<SimulatedDependencyHandler>();
-builder.Services.AddHttpClient(ProblemClientName)
-    .ConfigurePrimaryHttpMessageHandler<SimulatedDependencyHandler>();
-
-builder.Services.AddHttpClient(MitigationClientName)
-    .ConfigurePrimaryHttpMessageHandler<SimulatedDependencyHandler>()
-    .AddResilienceHandler("circuit-breaker", static builder => {
-        builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions {
-            FailureRatio = 1.0,
-            MinimumThroughput = 3,
-            SamplingDuration = TimeSpan.FromMinutes(1),
-            BreakDuration = TimeSpan.FromSeconds(10)
-        });
-    });
+builder.Services.AddScenarios(builder.Configuration);
 
 var app = builder.Build();
 
@@ -75,60 +17,7 @@ app.MapGet("/", () => Results.Ok(new {
     Description = "Small ASP.NET Core lab for production-style diagnostics scenarios."
 }));
 
-// Scenario 01: Excessive Data Materialization
-app.MapExcessiveDataMaterializationEndpoints();
-
-// Scenario 02: Missing cancellation / timeouts
-app.MapMissingCancellationPropagationEndpoints();
-
-// Scenario 03: Missing Log Context
-app.MapMissingLogContextEndpoints();
-
-// Scenario 04: Missing Dependency Timeouts
-app.MapMissingDependencyTimeoutsEndpoints();
-
-// Scenario 05: N+1 queries
-app.MapNPlusOneQueryEndpoints();
-
-// Scenario 06: Blocking request handling
-app.MapBlockingRequestHandlingEndpoints();
-
-// Scenario 07: Unbounded Retries
-app.MapUnboundedRetriesEndpoints();
-
-// Scenario 08: Large Response Buffering
-app.MapLargeResponseEndpoints();
-
-// Scenario 09: Invalid Configuration
-app.MapInvalidConfigurationEndpoints();
-
-// Scenario 10: Missing Health Probes
-app.MapHealthChecks("/health/live");
-app.MapHealthChecks("/health/ready");
-
-// Scenario 11: Silent Startup Failure
-app.MapSilentStartupFailureEndpoints();
-
-// Scenario 12: Logging and Audit Failure Propagation
-app.MapLoggingAndAuditFailurePropagationEndpoints();
-
-// Scenario 13: Request body memory pressure
-app.MapRequestBodyMemoryPressureEndpoints();
-
-// Scenario 14: Socket exhaustion
-app.MapSocketExhaustionEndpoints();
-
-// Scenario 15: ThreadPool starvation
-app.MapThreadPoolStarvationEndpoints();
-
-// Scenario 16: LOH fragmentation
-app.MapLohFragmentationEndpoints();
-
-// Scenario 17: Cache stampede
-app.MapCacheStampedeEndpoints();
-
-// Scenario 18: Native AOT
-app.MapNativeAotSerializationFailureEndpoints();
+app.MapScenarios();
 
 app.Run();
 

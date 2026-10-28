@@ -1,7 +1,7 @@
 using DiagnosticsLab.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.DataAccess;
 
 /// <summary>
 /// Maps endpoints for Excessive Data Materialization scenarios.

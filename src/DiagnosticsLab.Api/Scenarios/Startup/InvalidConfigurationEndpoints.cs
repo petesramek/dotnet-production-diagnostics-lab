@@ -1,7 +1,7 @@
 using DiagnosticsLab.Api.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.Startup;
 
 /// <summary>
 /// Maps endpoints for missing configuration validation scenarios.

@@ -1,5 +1,8 @@
 using DiagnosticsLab.Api.Services;
-using DiagnosticsLab;
+using Polly;
+using Polly.Retry;
+
+namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 
 /// <summary>
 /// Maps endpoints for unbounded retry scenarios.
@@ -136,6 +139,40 @@ public static class UnboundedRetriesEndpoints {
                         "Inventory provider unavailable after controlled retries",
                         Resilient: true),
                     statusCode: StatusCodes.Status503ServiceUnavailable);
+            });
+
+        // Framework solution:
+        // A Polly ResiliencePipeline (the engine behind Microsoft.Extensions.Http.Resilience)
+        // provides bounded retries, exponential backoff with jitter and an overall timeout declaratively.
+        group.MapGet("/framework", async (
+            string sku,
+            FakeInventoryClient client,
+            CancellationToken cancellationToken) => {
+                var attempts = 0;
+
+                var pipeline = new ResiliencePipelineBuilder()
+                    .AddTimeout(TimeSpan.FromSeconds(2))
+                    .AddRetry(new RetryStrategyOptions {
+                        ShouldHandle = new PredicateBuilder().Handle<InventoryUnavailableException>(),
+                        MaxRetryAttempts = 2,
+                        BackoffType = DelayBackoffType.Exponential,
+                        UseJitter = true,
+                        Delay = TimeSpan.FromMilliseconds(100)
+                    })
+                    .Build();
+
+                try {
+                    var stock = await pipeline.ExecuteAsync(async token => {
+                        attempts++;
+                        return await client.GetAvailableStockAsync(sku, token);
+                    }, cancellationToken);
+
+                    return Results.Ok(new InventoryResult(sku, stock, attempts, Resilient: true));
+                } catch (InventoryUnavailableException) {
+                    return Results.Json(
+                        new InventoryFailure(sku, attempts, "Inventory provider unavailable after pipeline retries", Resilient: true),
+                        statusCode: StatusCodes.Status503ServiceUnavailable);
+                }
             });
 
         return endpoints;

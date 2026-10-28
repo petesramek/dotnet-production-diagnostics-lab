@@ -73,8 +73,8 @@ wrk -t4 -c20 -d30s "http://localhost:5000/08-large-response/mitigation?rows=5000
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/LargeResponseEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/LargeResponseEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Memory/LargeResponseBufferingEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Memory/LargeResponseBufferingEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs)
 
 ## Related scenarios
 

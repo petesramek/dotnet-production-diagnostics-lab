@@ -5,7 +5,7 @@ using Polly;
 using Polly.CircuitBreaker;
 using System.Net;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 
 /// <summary>
 /// Maps endpoints for Scenario 19: Repeated Dependency Failures.
@@ -16,39 +16,56 @@ public static class RepeatedDependencyFailuresEndpoints {
     public const string MitigationClientName = "RepeatedDependencyFailures.Mitigation";
 
     /// <summary>
+    /// Registers the simulated dependency and the named clients used by the scenario.
+    /// </summary>
+    public static IServiceCollection AddRepeatedDependencyFailuresServices(this IServiceCollection services) {
+        services.AddTransient<SimulatedDependencyHandler>();
+
+        services.AddHttpClient(ProblemClientName)
+            .ConfigurePrimaryHttpMessageHandler<SimulatedDependencyHandler>();
+
+        services.AddHttpClient(MitigationClientName)
+            .ConfigurePrimaryHttpMessageHandler<SimulatedDependencyHandler>()
+            .AddResilienceHandler("circuit-breaker", static builder => {
+                builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions {
+                    FailureRatio = 1.0,
+                    MinimumThroughput = 3,
+                    SamplingDuration = TimeSpan.FromMinutes(1),
+                    BreakDuration = TimeSpan.FromSeconds(10)
+                });
+            });
+
+        return services;
+    }
+
+    /// <summary>
     /// Maps scenario endpoints.
     /// </summary>
     public static IEndpointRouteBuilder MapRepeatedDependencyFailuresEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
 
         group.MapGet("/problem", async (
-            string mode,
+            string? mode,
             IHttpClientFactory httpClientFactory,
             CancellationToken cancellationToken) => {
                 using var client = httpClientFactory.CreateClient(ProblemClientName);
                 using var response = await client.GetAsync($"https://dependency.local/repeated-failures?mode={NormalizeMode(mode)}", cancellationToken);
 
-                if (response.IsSuccessStatusCode) {
-                    return new ScenarioResult(
+                var succeeded = response.IsSuccessStatusCode;
+
+                return Results.Json(
+                    new ScenarioResult(
                         Mode: NormalizeMode(mode),
                         DependencyCalled: true,
                         CircuitState: "None",
                         Resilient: false,
-                        Message: "Dependency succeeded",
-                        StatusCode: HttpStatusCode.OK);
-                }
-
-                return new ScenarioResult(
-                    Mode: NormalizeMode(mode),
-                    DependencyCalled: true,
-                    CircuitState: "None",
-                    Resilient: false,
-                    Message: "Dependency failed",
-                    StatusCode: HttpStatusCode.ServiceUnavailable);
+                        Message: succeeded ? "Dependency succeeded" : "Dependency failed",
+                        StatusCode: succeeded ? HttpStatusCode.OK : HttpStatusCode.ServiceUnavailable),
+                    statusCode: succeeded ? StatusCodes.Status200OK : StatusCodes.Status503ServiceUnavailable);
             });
 
         group.MapGet("/mitigation", async (
-            string mode,
+            string? mode,
             IHttpClientFactory httpClientFactory,
             CancellationToken cancellationToken) => {
                 try {
@@ -71,7 +88,8 @@ public static class RepeatedDependencyFailuresEndpoints {
                         CircuitState: "Closed",
                         Resilient: true,
                         Message: "Dependency failed",
-                        StatusCode: HttpStatusCode.ServiceUnavailable));
+                        StatusCode: HttpStatusCode.ServiceUnavailable),
+                        statusCode: StatusCodes.Status503ServiceUnavailable);
                 } catch (BrokenCircuitException) {
                     return Results.Json(new ScenarioResult(
                         Mode: NormalizeMode(mode),
@@ -79,7 +97,8 @@ public static class RepeatedDependencyFailuresEndpoints {
                         CircuitState: "Open",
                         Resilient: true,
                         Message: "Call blocked by circuit breaker",
-                        StatusCode: HttpStatusCode.ServiceUnavailable));
+                        StatusCode: HttpStatusCode.ServiceUnavailable),
+                        statusCode: StatusCodes.Status503ServiceUnavailable);
                 }
             });
 

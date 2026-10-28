@@ -27,6 +27,17 @@ The mitigation endpoint uses controlled retry behavior. This means:
 - backoff delays reduce pressure between attempts
 - failure becomes predictable and easier to operate
 
+## Framework solution
+
+**Endpoint**: `GET /07-unbounded-retries/framework?sku=FAIL`
+
+The mitigation above is hand-written. .NET already ships this as a resilience pipeline (Polly v8, the engine behind `Microsoft.Extensions.Http.Resilience`). The framework endpoint configures it declaratively:
+- an overall timeout of 2 seconds
+- at most 2 retries (3 attempts) on `InventoryUnavailableException`
+- exponential backoff with jitter, which avoids synchronized retry spikes
+
+For outbound `HttpClient` calls, prefer `AddStandardResilienceHandler()`, which bundles rate limiter, total timeout, retry, circuit breaker and attempt timeout.
+
 ## Simulation notes
 This scenario uses a fake inventory client to simulate a failing external dependency. The behavior represents outbound calls to a remote API or service. The important difference is not the fake client itself, but the retry policy around it.
 
@@ -77,8 +88,8 @@ wrk -t4 -c20 -d30s "http://localhost:5000/07-unbounded-retries/mitigation?sku=FA
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/UnboundedRetriesEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/UnboundedRetriesEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/UnboundedRetriesEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/UnboundedRetriesEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
 
 ## Related scenarios
 

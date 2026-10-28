@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.RequestExecution;
 
 /// <summary>
 /// Maps endpoints for ThreadPool starvation scenarios.

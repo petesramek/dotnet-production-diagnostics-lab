@@ -4,7 +4,7 @@ using DiagnosticsLab.Api.Tests.Infrastructure;
 using FluentAssertions;
 using Xunit;
 
-namespace DiagnosticsLab.Api.Tests.Scenarios;
+namespace DiagnosticsLab.Api.Tests.Scenarios.Observability;
 
 /// <summary>
 /// Contains behavior tests for observability and logging failure scenarios.
@@ -64,7 +64,7 @@ public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFacto
 
         using var response = await JsonTestClient.PostJsonDocumentAsync(
             client,
-            "/03-missing-log-context-tracing/problem",
+            "/03-missing-log-context/problem",
             request,
             HttpStatusCode.BadRequest);
 
@@ -89,7 +89,7 @@ public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFacto
 
         using var response = await JsonTestClient.PostJsonDocumentAsync(
             client,
-            "/03-missing-log-context-tracing/mitigation",
+            "/03-missing-log-context/mitigation",
             request,
             HttpStatusCode.BadRequest);
 

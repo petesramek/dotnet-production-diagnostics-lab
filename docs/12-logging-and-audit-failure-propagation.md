@@ -55,8 +55,8 @@ Use these tools to observe the behavior:
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/LoggingAndAuditFailurePropagationEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/LoggingAndAuditFailurePropagationEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ObservabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Observability/LoggingAndAuditFailurePropagationEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Observability/LoggingAndAuditFailurePropagationEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Observability/ObservabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Observability/ObservabilityScenarioTests.cs)
 
 ## Related scenarios
 

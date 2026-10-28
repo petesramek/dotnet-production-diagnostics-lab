@@ -75,8 +75,8 @@ wrk -t4 -c20 -d30s "http://localhost:5000/04-missing-dependency-timeouts/mitigat
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/MissingDependencyTimeoutsEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/MissingDependencyTimeoutsEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/ReliabilityScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/MissingDependencyTimeoutsEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/MissingDependencyTimeoutsEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
 
 ## Related scenarios
 

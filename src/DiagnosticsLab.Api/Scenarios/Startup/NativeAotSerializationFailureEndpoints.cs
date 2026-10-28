@@ -1,5 +1,6 @@
-using DiagnosticsLab.Api;
 using System.Text.Json;
+
+namespace DiagnosticsLab.Api.Scenarios.Startup;
 
 /// <summary>
 /// Maps endpoints for Native AOT serialization scenarios.

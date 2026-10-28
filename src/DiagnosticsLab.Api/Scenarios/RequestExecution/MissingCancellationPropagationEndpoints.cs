@@ -1,4 +1,4 @@
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.RequestExecution;
 
 /// <summary>
 /// Maps endpoints for missing cancellation and timeout handling scenarios.

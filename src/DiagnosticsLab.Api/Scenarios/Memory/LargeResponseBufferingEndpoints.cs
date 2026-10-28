@@ -1,14 +1,14 @@
 using System.Runtime.CompilerServices;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.Memory;
 
 /// <summary>
 /// Maps endpoints for large response allocation and streaming scenarios.
 /// </summary>
-public static class LargeResponseEndpoints {
-    private const string Route = "/08-large-response";
+public static class LargeResponseBufferingEndpoints {
+    private const string Route = "/08-large-response-buffering";
 
-    public static IEndpointRouteBuilder MapLargeResponseEndpoints(this IEndpointRouteBuilder endpoints) {
+    public static IEndpointRouteBuilder MapLargeResponseBufferingEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
 
         // Problem:

@@ -10,7 +10,7 @@ An API can return correct results and still be inefficient if it repeatedly quer
 
 ## Problem
 
-**Endpoint**: `GET /05-n-plus-1-data-access/problem?take=25`
+**Endpoint**: `GET /05-n-plus-one-queries/problem?take=25`
 
 The problem endpoint first loads customers and then performs additional queries for each customer to compute aggregates. This means:
 - one initial query for the customer list
@@ -19,7 +19,7 @@ The problem endpoint first loads customers and then performs additional queries 
 
 ## Mitigation
 
-**Endpoint**: `GET /05-n-plus-1-data-access/mitigation?take=25`
+**Endpoint**: `GET /05-n-plus-one-queries/mitigation?take=25`
 
 The mitigation endpoint computes the required customer data in a single set-based query. This means:
 - customer data and aggregates are fetched together
@@ -33,8 +33,8 @@ This scenario uses a small relational dataset, but it represents a very common p
 ## How to try it
 
 ```bash
-curl "http://localhost:5000/05-n-plus-1-data-access/problem?take=25"
-curl "http://localhost:5000/05-n-plus-1-data-access/mitigation?take=25"
+curl "http://localhost:5000/05-n-plus-one-queries/problem?take=25"
+curl "http://localhost:5000/05-n-plus-one-queries/mitigation?take=25"
 ```
 
 Try increasing `take` to make the difference more visible.
@@ -66,14 +66,14 @@ Use these tools to observe the behavior:
 Example:
 
 ```bash
-wrk -t4 -c20 -d30s "http://localhost:5000/05-n-plus-1-data-access/problem?take=100"
-wrk -t4 -c20 -d30s "http://localhost:5000/05-n-plus-1-data-access/mitigation?take=100"
+wrk -t4 -c20 -d30s "http://localhost:5000/05-n-plus-one-queries/problem?take=100"
+wrk -t4 -c20 -d30s "http://localhost:5000/05-n-plus-one-queries/mitigation?take=100"
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/NPlusOneQueryEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/NPlusOneQueryEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/DataAccessScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/DataAccessScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DataAccess/NPlusOneQueryEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DataAccess/NPlusOneQueryEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DataAccess/DataAccessScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DataAccess/DataAccessScenarioTests.cs)
 
 ## Related scenarios
 

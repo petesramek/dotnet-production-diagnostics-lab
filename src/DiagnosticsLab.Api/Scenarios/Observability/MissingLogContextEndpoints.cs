@@ -1,10 +1,10 @@
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.Observability;
 
 /// <summary>
 /// Maps endpoints for observability and tracing scenarios.
 /// </summary>
 public static class MissingLogContextEndpoints {
-    private const string Route = "/03-missing-log-context-tracing";
+    private const string Route = "/03-missing-log-context";
 
     public static IEndpointRouteBuilder MapMissingLogContextEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

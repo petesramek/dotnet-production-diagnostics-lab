@@ -74,9 +74,9 @@ dotnet-counters monitor --process-id <pid> System.Runtime
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/RequestBodyMemoryPressureEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/RequestBodyMemoryPressureEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
-- Smoke tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Memory/RequestBodyMemoryPressureEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Memory/RequestBodyMemoryPressureEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs)
+- Smoke tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 

@@ -73,8 +73,8 @@ wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-thread/mitigation?
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/BlockingRequestThreadEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/BlockingRequestThreadEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/RequestExecution/BlockingRequestThreadEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/RequestExecution/BlockingRequestThreadEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs)
 
 ## Related scenarios
 

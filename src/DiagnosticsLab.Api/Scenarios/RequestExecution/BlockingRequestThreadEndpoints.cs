@@ -1,20 +1,20 @@
 using System.Diagnostics;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.RequestExecution;
 
 /// <summary>
 /// Maps endpoints for blocking vs asynchronous request handling scenarios.
 /// </summary>
-public static class BlockingRequestHandlingEndpoints {
-    private const string Route = "/06-blocking-request-handling";
+public static class BlockingRequestThreadEndpoints {
+    private const string Route = "/06-blocking-request-thread";
 
-    public static IEndpointRouteBuilder MapBlockingRequestHandlingEndpoints(this IEndpointRouteBuilder endpoints) {
+    public static IEndpointRouteBuilder MapBlockingRequestThreadEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
 
         // Problem:
         // Blocking operations occupy ThreadPool threads and reduce system throughput under load.
         group.MapGet("/problem", (int? delayMs, ILoggerFactory loggerFactory) => {
-            var logger = loggerFactory.CreateLogger("BlockingRequestHandling.Problem");
+            var logger = loggerFactory.CreateLogger("BlockingRequestThread.Problem");
 
             var delay = NormalizeDelay(delayMs);
             var stopwatch = Stopwatch.StartNew();
@@ -47,7 +47,7 @@ public static class BlockingRequestHandlingEndpoints {
         // Mitigation:
         // Use asynchronous operations so threads are released while waiting.
         group.MapGet("/mitigation", async (int? delayMs, ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
-            var logger = loggerFactory.CreateLogger("BlockingRequestHandling.Mitigation");
+            var logger = loggerFactory.CreateLogger("BlockingRequestThread.Mitigation");
 
             var delay = NormalizeDelay(delayMs);
             var stopwatch = Stopwatch.StartNew();

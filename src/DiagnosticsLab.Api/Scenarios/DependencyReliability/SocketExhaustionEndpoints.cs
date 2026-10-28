@@ -1,4 +1,4 @@
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 
 /// <summary>
 /// Maps endpoints for HttpClient socket exhaustion scenarios.

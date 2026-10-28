@@ -74,9 +74,9 @@ wrk -t4 -c50 -d30s "http://localhost:5000/15-threadpool-starvation/mitigation?de
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Endpoints/ThreadPoolStarvationEndpoints.cs](../src/DiagnosticsLab.Api/Endpoints/ThreadPoolStarvationEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs](../tests/DiagnosticsLab.Tests/Scenarios/PerformanceScenarioTests.cs)
-- Smoke tests: [../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/RequestExecution/ThreadPoolStarvationEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/RequestExecution/ThreadPoolStarvationEndpoints.cs)
+- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs)
+- Smoke tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 

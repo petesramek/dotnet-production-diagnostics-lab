@@ -1,11 +1,11 @@
 using DiagnosticsLab.Api.Services;
 
-namespace DiagnosticsLab.Api.Endpoints;
+namespace DiagnosticsLab.Api.Scenarios.Observability;
 
 /// <summary>
 /// Maps endpoints for logging failure scenarios.
 /// </summary>
-public static class LoggingFailureEndpoints {
+public static class LoggingAndAuditFailurePropagationEndpoints {
     private const string Route = "/12-logging-and-audit-failure-propagation";
 
     public static IEndpointRouteBuilder MapLoggingAndAuditFailurePropagationEndpoints(this IEndpointRouteBuilder endpoints) {
