@@ -27,12 +27,11 @@ The mitigation endpoint coordinates recomputation with `SemaphoreSlim`. This mea
 - other callers wait and reuse the result
 - backend pressure stays lower
 - behavior is more stable under concurrency
+- waiting and the simulated work honor the request's `CancellationToken`, so abandoned requests do not hold the semaphore
 
-## Framework solution
+## Framework alternative
 
-**Endpoint**: `GET /17-cache-stampede/framework`
-
-`HybridCache` (`Microsoft.Extensions.Caching.Hybrid`) provides stampede protection out of the box: concurrent `GetOrCreateAsync` calls for the same key share a single factory execution, so no manual `SemaphoreSlim` is needed. It also supports an optional distributed (L2) cache. The response reports `mechanism = "HybridCache"`.
+`HybridCache` (`Microsoft.Extensions.Caching.Hybrid`) provides stampede protection out of the box: concurrent `GetOrCreateAsync` calls for the same key share a single factory execution, so no manual `SemaphoreSlim` is needed. It also supports an optional distributed (L2) cache. A comment in the mitigation endpoint shows the usage.
 
 ## Simulation notes
 

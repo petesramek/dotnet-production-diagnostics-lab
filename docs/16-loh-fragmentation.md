@@ -22,22 +22,22 @@ The problem endpoint buffers the full request body into memory before deserializ
 
 **Endpoint**: `POST /16-loh-fragmentation/mitigation`
 
-The mitigation endpoint deserializes directly from the request stream. This means:
-- large intermediate buffers are avoided
-- LOH allocations are reduced
+The mitigation endpoint deserializes directly from the request stream with `JsonSerializer.DeserializeAsyncEnumerable<T>`, a built-in System.Text.Json API that yields one item at a time. This means:
+- no large intermediate buffer is allocated for the body
+- the full list is never held in memory, only one small item at a time
+- LOH allocations are avoided
 - memory usage stays more stable under load
-- JSON processing becomes more efficient for large payloads
 
 ## Simulation notes
 
-This scenario uses a generated large JSON payload so the memory behavior is reproducible in the lab. The same pattern occurs in production when APIs receive large JSON documents, imports, or bulk request payloads.
+The `/generate` helper returns a JSON array of 200 small items (about 2 KB each, roughly 400 KB in total; adjustable with `?items=`). Each item is far below the 85 KB LOH threshold, but the whole body is above it, which is exactly what makes buffering costly and streaming cheap. The same pattern occurs in production when APIs receive large JSON documents, imports, or bulk request payloads.
 
 ## How to try it
 
-First generate a large payload:
+First generate a payload:
 
 ```bash
-curl "http://localhost:5000/16-loh-fragmentation/generate" -o payload.json
+curl "http://localhost:5000/16-loh-fragmentation/generate?items=200" -o payload.json
 ```
 
 Then post it to both endpoints:

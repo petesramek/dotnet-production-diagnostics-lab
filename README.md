@@ -26,7 +26,8 @@ Each scenario has these paths:
 
 - **Problem** — demonstrates the anti-pattern or failure mode.
 - **Mitigation** — demonstrates a hand-written safer implementation.
-- **Framework** (`/framework`, where available) — demonstrates the built-in .NET solution for the same problem, such as `HybridCache` for cache stampede or a Polly resilience pipeline for retries. Currently available for scenarios 07, 14 and 17; scenario 10 uses tagged health checks as its mitigation.
+
+Where .NET ships a ready-made solution (for example `HybridCache` for cache stampede or `AddStandardResilienceHandler()` for retries), the mitigation endpoint's code comments and the scenario doc point to it.
 
 ## Repository layout
 

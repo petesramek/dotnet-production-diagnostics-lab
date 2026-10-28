@@ -27,16 +27,9 @@ The mitigation endpoint uses controlled retry behavior. This means:
 - backoff delays reduce pressure between attempts
 - failure becomes predictable and easier to operate
 
-## Framework solution
+## Framework alternative
 
-**Endpoint**: `GET /07-unbounded-retries/framework?sku=FAIL`
-
-The mitigation above is hand-written. .NET already ships this as a resilience pipeline (Polly v8, the engine behind `Microsoft.Extensions.Http.Resilience`). The framework endpoint configures it declaratively:
-- an overall timeout of 2 seconds
-- at most 2 retries (3 attempts) on `InventoryUnavailableException`
-- exponential backoff with jitter, which avoids synchronized retry spikes
-
-For outbound `HttpClient` calls, prefer `AddStandardResilienceHandler()`, which bundles rate limiter, total timeout, retry, circuit breaker and attempt timeout.
+The mitigation above is hand-written for teaching. .NET ships this as `Microsoft.Extensions.Http.Resilience` (built on Polly v8). For outbound `HttpClient` calls, use `AddStandardResilienceHandler()`, which bundles rate limiter, total timeout, retry with exponential backoff and jitter, circuit breaker and attempt timeout. A comment in the mitigation endpoint describes this. Jitter avoids synchronized retry spikes, which the hand-written version does not do.
 
 ## Simulation notes
 This scenario uses a fake inventory client to simulate a failing external dependency. The behavior represents outbound calls to a remote API or service. The important difference is not the fake client itself, but the retry policy around it.

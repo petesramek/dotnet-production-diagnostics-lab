@@ -46,11 +46,9 @@ public static class ScenarioRegistration {
         // Scenarios 14 and 17: HttpClient factory and in-memory cache
         services.AddHttpClient();
         services.AddMemoryCache();
-        services.AddHybridCache();
 
         services.AddMissingHealthProbesServices();
         services.AddRepeatedDependencyFailuresServices();
-        services.AddSocketExhaustionServices();
 
         return services;
     }

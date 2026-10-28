@@ -11,30 +11,14 @@ namespace DiagnosticsLab.Api.Tests.Scenarios.DependencyReliability;
 /// <param name="factory">The test application factory.</param>
 public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicationFactory factory) : IClassFixture<DiagnosticsLabWebApplicationFactory> {
     /// <summary>
-    /// Verifies that the framework pipeline retries a bounded number of times and then fails.
+    /// Verifies that the mitigation coordinates concurrent requests into a single computation.
     /// </summary>
     [Fact]
-    public async Task UnboundedRetries_Framework_Returns_ServiceUnavailable_After_Bounded_Retries() {
-        using var client = factory.CreateClient();
-
-        using var result = await JsonTestClient.GetJsonDocumentAsync(
-            client,
-            "/07-unbounded-retries/framework?sku=FAIL",
-            HttpStatusCode.ServiceUnavailable);
-
-        result.RootElement.GetProperty("attempts").GetInt32().Should().Be(3);
-        result.RootElement.GetProperty("resilient").GetBoolean().Should().BeTrue();
-    }
-
-    /// <summary>
-    /// Verifies that HybridCache coalesces concurrent requests into one computation.
-    /// </summary>
-    [Fact]
-    public async Task CacheStampede_Framework_Returns_Same_Value_For_Concurrent_Requests() {
+    public async Task CacheStampede_Mitigation_Returns_Same_Value_For_Concurrent_Requests() {
         using var client = factory.CreateClient();
 
         var responses = await Task.WhenAll(Enumerable.Range(0, 10)
-            .Select(_ => client.GetStringAsync("/17-cache-stampede/framework")));
+            .Select(_ => client.GetStringAsync("/17-cache-stampede/mitigation")));
 
         var values = responses
             .Select(body => System.Text.Json.JsonDocument.Parse(body).RootElement.GetProperty("value").GetString())

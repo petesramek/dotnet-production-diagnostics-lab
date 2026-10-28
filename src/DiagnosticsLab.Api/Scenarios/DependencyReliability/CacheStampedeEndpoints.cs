@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
@@ -17,7 +16,7 @@ public static class CacheStampedeEndpoints {
 
         // Problem:
         // Multiple concurrent requests recompute the same value when cache is empty.
-        group.MapGet("/problem", async (IMemoryCache cache, ILoggerFactory loggerFactory) => {
+        group.MapGet("/problem", async (IMemoryCache cache, ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
             var logger = loggerFactory.CreateLogger("CacheStampede.Problem");
 
             // Cache miss means value is not present.
@@ -32,7 +31,7 @@ public static class CacheStampedeEndpoints {
                 // - every request entering here recomputes the same value
                 // - N concurrent requests → N identical expensive operations
                 // - load is amplified dramatically (retry storm–like behavior)
-                await Task.Delay(200);
+                await Task.Delay(200, cancellationToken);
 
                 value = $"computed-{DateTime.UtcNow.Ticks}";
                 cache.Set(CacheKey, value, TimeSpan.FromSeconds(5));
@@ -47,7 +46,18 @@ public static class CacheStampedeEndpoints {
 
         // Mitigation:
         // Ensure only one request recomputes the value.
-        group.MapGet("/mitigation", async (IMemoryCache cache, ILoggerFactory loggerFactory) => {
+        //
+        // Framework alternative:
+        // HybridCache (Microsoft.Extensions.Caching.Hybrid, registered with services.AddHybridCache())
+        // has stampede protection built in. Concurrent GetOrCreateAsync calls for the same key
+        // share a single factory execution, so no hand-written semaphore or double-checked
+        // locking is needed, and a per-key lock replaces the single global one used here:
+        //
+        //   var value = await hybridCache.GetOrCreateAsync(
+        //       CacheKey,
+        //       async token => await ComputeExpensiveValueAsync(token),
+        //       cancellationToken: cancellationToken);
+        group.MapGet("/mitigation", async (IMemoryCache cache, ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
             var logger = loggerFactory.CreateLogger("CacheStampede.Mitigation");
 
             // Simulation:
@@ -61,7 +71,8 @@ public static class CacheStampedeEndpoints {
             }
 
             // Only one request is allowed to recompute at a time.
-            await Semaphore.WaitAsync();
+            // The token lets a caller that disconnects stop waiting for the lock.
+            await Semaphore.WaitAsync(cancellationToken);
 
             try {
                 // Double-check after acquiring lock
@@ -71,7 +82,7 @@ public static class CacheStampedeEndpoints {
                     // Simulation:
                     // Expensive operation executed only once,
                     // preventing duplicate work under concurrency.
-                    await Task.Delay(200);
+                    await Task.Delay(200, cancellationToken);
 
                     cached = $"computed-{DateTime.UtcNow.Ticks}";
                     cache.Set(CacheKey, cached, TimeSpan.FromSeconds(5));
@@ -84,30 +95,6 @@ public static class CacheStampedeEndpoints {
                 Value = cached,
                 Cached = true,
                 Coordinated = true
-            });
-        });
-
-        // Framework solution:
-        // HybridCache coalesces concurrent calls for the same key into a single factory execution,
-        // so no hand-written semaphore or double-checked locking is required.
-        group.MapGet("/framework", async (HybridCache cache, ILoggerFactory loggerFactory, CancellationToken cancellationToken) => {
-            var logger = loggerFactory.CreateLogger("CacheStampede.Framework");
-
-            var value = await cache.GetOrCreateAsync(
-                "hybrid-hot-key",
-                async token => {
-                    logger.LogWarning("Cache miss (HybridCache single recompute)");
-                    await Task.Delay(200, token);
-                    return $"computed-{DateTime.UtcNow.Ticks}";
-                },
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(5), LocalCacheExpiration = TimeSpan.FromSeconds(5) },
-                cancellationToken: cancellationToken);
-
-            return Results.Ok(new {
-                Value = value,
-                Cached = true,
-                Coordinated = true,
-                Mechanism = "HybridCache"
             });
         });
 
