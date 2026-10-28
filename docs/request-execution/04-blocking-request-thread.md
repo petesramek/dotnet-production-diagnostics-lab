@@ -1,4 +1,4 @@
-# Scenario 06: Blocking Request Thread
+# Scenario 04: Blocking Request Thread
 
 ## Goal
 
@@ -10,7 +10,7 @@ When request handling blocks a thread with synchronous waiting, fewer threads re
 
 ## Problem
 
-**Endpoint**: `GET /06-blocking-request-thread/problem?delayMs=500`
+**Endpoint**: `GET /04-blocking-request-thread/problem?delayMs=500`
 
 The problem endpoint blocks the current request thread using `Thread.Sleep`. This means:
 - the thread does no useful work while waiting
@@ -19,7 +19,7 @@ The problem endpoint blocks the current request thread using `Thread.Sleep`. Thi
 
 ## Mitigation
 
-**Endpoint**: `GET /06-blocking-request-thread/mitigation?delayMs=500`
+**Endpoint**: `GET /04-blocking-request-thread/mitigation?delayMs=500`
 
 The mitigation endpoint uses asynchronous waiting with `Task.Delay(...)`. This means:
 - the request thread is released while waiting
@@ -33,8 +33,8 @@ This scenario uses `Thread.Sleep(...)` versus `Task.Delay(...)` to make the diff
 ## How to try it
 
 ```bash
-curl "http://localhost:5000/06-blocking-request-thread/problem?delayMs=500"
-curl "http://localhost:5000/06-blocking-request-thread/mitigation?delayMs=500"
+curl "http://localhost:5000/04-blocking-request-thread/problem?delayMs=500"
+curl "http://localhost:5000/04-blocking-request-thread/mitigation?delayMs=500"
 ```
 
 Then repeat under load.
@@ -55,7 +55,7 @@ Suggested tools:
 - optional `dotnet-trace`
 - a load tool (`wrk` or `bombardier`)
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -67,19 +67,19 @@ Use these tools to observe the behavior:
 Example:
 
 ```bash
-wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-thread/problem?delayMs=500"
-wrk -t4 -c50 -d30s "http://localhost:5000/06-blocking-request-thread/mitigation?delayMs=500"
+wrk -t4 -c50 -d30s "http://localhost:5000/04-blocking-request-thread/problem?delayMs=500"
+wrk -t4 -c50 -d30s "http://localhost:5000/04-blocking-request-thread/mitigation?delayMs=500"
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/RequestExecution/BlockingRequestThreadEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/RequestExecution/BlockingRequestThreadEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/RequestExecution/BlockingRequestThreadEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/RequestExecution/BlockingRequestThreadEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs)
 
 ## Related scenarios
 
-- [Scenario 02: Missing Cancellation Propagation](02-missing-cancellation-propagation.md)
-- [Scenario 15: ThreadPool Starvation](15-threadpool-starvation.md)
+- [Scenario 03: Missing Cancellation Propagation](03-missing-cancellation-propagation.md)
+- [Scenario 05: ThreadPool Starvation](05-threadpool-starvation.md)
 
 ## External references
 

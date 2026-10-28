@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.Memory;
 /// Maps endpoints for request body memory pressure scenarios.
 /// </summary>
 public static class RequestBodyMemoryPressureEndpoints {
-    private const string Route = "/13-request-body-memory-pressure";
+    private const string Route = "/15-request-body-memory-pressure";
     private const long MaxUploadBytes = 5 * 1024 * 1024;
 
     public static IEndpointRouteBuilder MapRequestBodyMemoryPressureEndpoints(this IEndpointRouteBuilder endpoints) {

@@ -7,7 +7,7 @@ namespace DiagnosticsLab.Api.Scenarios.DataAccess;
 /// Maps endpoints for N+1 query scenarios.
 /// </summary>
 public static class NPlusOneQueryEndpoints {
-    private const string Route = "/05-n-plus-one-queries";
+    private const string Route = "/02-n-plus-one-queries";
 
     public static IEndpointRouteBuilder MapNPlusOneQueryEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

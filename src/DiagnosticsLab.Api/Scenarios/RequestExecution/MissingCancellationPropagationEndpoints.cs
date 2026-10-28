@@ -4,7 +4,7 @@ namespace DiagnosticsLab.Api.Scenarios.RequestExecution;
 /// Maps endpoints for missing cancellation and timeout handling scenarios.
 /// </summary>
 public static class MissingCancellationPropagationEndpoints {
-    private const string Route = "/02-missing-cancellation-propagation";
+    private const string Route = "/03-missing-cancellation-propagation";
 
     public static IEndpointRouteBuilder MapMissingCancellationPropagationEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

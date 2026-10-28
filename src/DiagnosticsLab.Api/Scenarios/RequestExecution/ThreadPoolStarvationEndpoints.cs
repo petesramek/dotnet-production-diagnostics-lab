@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.RequestExecution;
 /// Maps endpoints for ThreadPool starvation scenarios.
 /// </summary>
 public static class ThreadPoolStarvationEndpoints {
-    private const string Route = "/15-threadpool-starvation";
+    private const string Route = "/05-threadpool-starvation";
 
     public static IEndpointRouteBuilder MapThreadPoolStarvationEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

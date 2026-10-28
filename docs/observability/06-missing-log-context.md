@@ -1,4 +1,4 @@
-# Scenario 03: Missing Log Context
+# Scenario 06: Missing Log Context
 
 ## Goal
 
@@ -10,7 +10,7 @@ An endpoint can be functionally correct and still be operationally hard to debug
 
 ## Problem
 
-**Endpoint**: `POST /03-missing-log-context/problem`
+**Endpoint**: `POST /06-missing-log-context/problem`
 
 The problem endpoint processes a payment but emits generic logs without useful context. This means:
 - logs do not identify the payment or customer
@@ -19,7 +19,7 @@ The problem endpoint processes a payment but emits generic logs without useful c
 
 ## Mitigation
 
-**Endpoint**: `POST /03-missing-log-context/mitigation`
+**Endpoint**: `POST /06-missing-log-context/mitigation`
 
 The mitigation endpoint uses structured logging and logging scope/context. Logs include fields such as:
 - `PaymentId`
@@ -37,9 +37,9 @@ This scenario does not simulate performance; it simulates operational visibility
 Use invalid input to force the validation path in both endpoints:
 
 ```bash
-curl -X POST "http://localhost:5000/03-missing-log-context/problem"   -H "Content-Type: application/json"   -d '{"paymentId":"00000000-0000-0000-0000-000000000001","customerId":42,"amount":-5}'
+curl -X POST "http://localhost:5000/06-missing-log-context/problem"   -H "Content-Type: application/json"   -d '{"paymentId":"00000000-0000-0000-0000-000000000001","customerId":42,"amount":-5}'
 
-curl -X POST "http://localhost:5000/03-missing-log-context/mitigation"   -H "Content-Type: application/json"   -d '{"paymentId":"00000000-0000-0000-0000-000000000001","customerId":42,"amount":-5}'
+curl -X POST "http://localhost:5000/06-missing-log-context/mitigation"   -H "Content-Type: application/json"   -d '{"paymentId":"00000000-0000-0000-0000-000000000001","customerId":42,"amount":-5}'
 ```
 
 ## What to observe
@@ -61,13 +61,13 @@ The key observation for this scenario is log quality, not raw performance.
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Observability/MissingLogContextEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Observability/MissingLogContextEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Observability/ObservabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Observability/ObservabilityScenarioTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/Observability/MissingLogContextEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/Observability/MissingLogContextEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/Observability/ObservabilityScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/Observability/ObservabilityScenarioTests.cs)
 
 ## Related scenarios
 
-- [Scenario 10: Missing Health Probes](10-missing-health-probes.md)
-- [Scenario 12: Logging and Audit Failure Propagation](12-logging-and-audit-failure-propagation.md)
+- [Scenario 07: Missing Health Probes](07-missing-health-probes.md)
+- [Scenario 08: Logging and Audit Failure Propagation](08-logging-and-audit-failure-propagation.md)
 
 ## External references
 

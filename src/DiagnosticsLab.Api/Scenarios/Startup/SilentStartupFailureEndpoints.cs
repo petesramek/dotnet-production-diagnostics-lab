@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.Startup;
 /// Maps endpoints for silent startup failure scenarios.
 /// </summary>
 public static class SilentStartupFailureEndpoints {
-    private const string Route = "/11-silent-startup-failure";
+    private const string Route = "/18-silent-startup-failure";
 
     public static IEndpointRouteBuilder MapSilentStartupFailureEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

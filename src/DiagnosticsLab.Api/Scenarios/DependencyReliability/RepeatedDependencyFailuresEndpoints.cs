@@ -8,10 +8,10 @@ using System.Net;
 namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 
 /// <summary>
-/// Maps endpoints for Scenario 19: Repeated Dependency Failures.
+/// Maps endpoints for Scenario 13: Repeated Dependency Failures.
 /// </summary>
 public static class RepeatedDependencyFailuresEndpoints {
-    public const string Route = "/19-repeated-dependency-failures";
+    public const string Route = "/13-repeated-dependency-failures";
     public const string ProblemClientName = "RepeatedDependencyFailures.Problem";
     public const string MitigationClientName = "RepeatedDependencyFailures.Mitigation";
 

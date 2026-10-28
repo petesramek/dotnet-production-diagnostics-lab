@@ -56,7 +56,7 @@ Optional if you want to measure runtime impact:
 - `dotnet-counters`
 - a load tool (`wrk` or `bombardier`)
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -75,13 +75,13 @@ wrk -t4 -c20 -d30s "http://localhost:5000/01-excessive-data-materialization/miti
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DataAccess/ExcessiveDataMaterializationEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DataAccess/ExcessiveDataMaterializationEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DataAccess/DataAccessScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DataAccess/DataAccessScenarioTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/DataAccess/ExcessiveDataMaterializationEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/DataAccess/ExcessiveDataMaterializationEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/DataAccess/DataAccessScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/DataAccess/DataAccessScenarioTests.cs)
 
 ## Related scenarios
 
-- [Scenario 05: N + 1 Queries](05-n-plus-one-queries.md)
-- [Scenario 08: Large Response Buffering](08-large-response-buffering.md)
+- [Scenario 02: N + 1 Queries](02-n-plus-one-queries.md)
+- [Scenario 14: Large Response Buffering](../memory/14-large-response-buffering.md)
 
 ## External references
 

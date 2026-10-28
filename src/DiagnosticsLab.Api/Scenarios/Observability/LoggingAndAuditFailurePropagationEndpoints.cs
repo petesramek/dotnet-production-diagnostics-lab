@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.Observability;
 /// Maps endpoints for logging failure scenarios.
 /// </summary>
 public static class LoggingAndAuditFailurePropagationEndpoints {
-    private const string Route = "/12-logging-and-audit-failure-propagation";
+    private const string Route = "/08-logging-and-audit-failure-propagation";
 
     public static IEndpointRouteBuilder MapLoggingAndAuditFailurePropagationEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

@@ -1,4 +1,4 @@
-# Scenario 11: Silent Startup Failure
+# Scenario 18: Silent Startup Failure
 
 ## Goal
 
@@ -10,7 +10,7 @@ If critical initialization fails but the application continues running, deployme
 
 ## Problem
 
-**Endpoint**: `GET /11-silent-startup-failure/problem`
+**Endpoint**: `GET /18-silent-startup-failure/problem`
 
 The problem endpoint simulates a startup-style initialization failure that is swallowed. This means:
 - the failure is hidden from operators
@@ -19,7 +19,7 @@ The problem endpoint simulates a startup-style initialization failure that is sw
 
 ## Mitigation
 
-**Endpoint**: `GET /11-silent-startup-failure/mitigation`
+**Endpoint**: `GET /18-silent-startup-failure/mitigation`
 
 The mitigation endpoint makes the startup-style failure visible and returns a failure response. This means:
 - the error is surfaced clearly
@@ -35,8 +35,8 @@ This scenario simulates startup behavior inside an endpoint so that it can be ob
 ## How to try it
 
 ```bash
-curl "http://localhost:5000/11-silent-startup-failure/problem"
-curl "http://localhost:5000/11-silent-startup-failure/mitigation"
+curl "http://localhost:5000/18-silent-startup-failure/problem"
+curl "http://localhost:5000/18-silent-startup-failure/mitigation"
 ```
 
 ## What to observe
@@ -56,13 +56,13 @@ This scenario is primarily about failure visibility and lifecycle correctness.
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Startup/SilentStartupFailureEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Startup/SilentStartupFailureEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Startup/StartupScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Startup/StartupScenarioTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/Startup/SilentStartupFailureEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/Startup/SilentStartupFailureEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/Startup/StartupScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/Startup/StartupScenarioTests.cs)
 
 ## Related scenarios
 
-- [Scenario 09: Invalid Configuration](09-invalid-configuration.md)
-- [Scenario 10: Missing Health Probes](10-missing-health-probes.md)
+- [Scenario 17: Invalid Configuration](17-invalid-configuration.md)
+- [Scenario 07: Missing Health Probes](../observability/07-missing-health-probes.md)
 
 ## External references
 

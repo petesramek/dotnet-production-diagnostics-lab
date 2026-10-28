@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 /// Maps endpoints for Missing Dependency Timeouts scenarios.
 /// </summary>
 public static class MissingDependencyTimeoutsEndpoints {
-    private const string Route = "/04-missing-dependency-timeouts";
+    private const string Route = "/09-missing-dependency-timeouts";
 
     public static IEndpointRouteBuilder MapMissingDependencyTimeoutsEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

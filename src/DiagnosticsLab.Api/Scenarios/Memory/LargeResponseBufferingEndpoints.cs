@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.Memory;
 /// Maps endpoints for large response allocation and streaming scenarios.
 /// </summary>
 public static class LargeResponseBufferingEndpoints {
-    private const string Route = "/08-large-response-buffering";
+    private const string Route = "/14-large-response-buffering";
 
     public static IEndpointRouteBuilder MapLargeResponseBufferingEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

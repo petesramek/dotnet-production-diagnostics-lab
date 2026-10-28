@@ -20,7 +20,7 @@ public sealed class MemoryScenarioTests(DiagnosticsLabWebApplicationFactory fact
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/08-large-response-buffering/problem?rows=25");
+            "/14-large-response-buffering/problem?rows=25");
 
         JsonAssertions.GetIds(problem).Should().NotBeEmpty();
     }
@@ -34,11 +34,11 @@ public sealed class MemoryScenarioTests(DiagnosticsLabWebApplicationFactory fact
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/08-large-response-buffering/problem?rows=25");
+            "/14-large-response-buffering/problem?rows=25");
 
         var mitigation = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/08-large-response-buffering/mitigation?rows=25");
+            "/14-large-response-buffering/mitigation?rows=25");
 
         JsonAssertions.GetIds(mitigation).Should().Equal(JsonAssertions.GetIds(problem));
     }
@@ -53,7 +53,7 @@ public sealed class MemoryScenarioTests(DiagnosticsLabWebApplicationFactory fact
 
         using var document = await JsonTestClient.PostJsonDocumentAsync(
             client,
-            "/13-request-body-memory-pressure/mitigation",
+            "/15-request-body-memory-pressure/mitigation",
             content);
 
         document.RootElement.GetProperty("streamed").GetBoolean().Should().BeTrue();
@@ -71,7 +71,7 @@ public sealed class MemoryScenarioTests(DiagnosticsLabWebApplicationFactory fact
 
         using var document = await JsonTestClient.PostJsonDocumentAsync(
             client,
-            "/13-request-body-memory-pressure/problem",
+            "/15-request-body-memory-pressure/problem",
             content);
 
         document.RootElement.GetProperty("streamed").GetBoolean().Should().BeFalse();
@@ -88,7 +88,7 @@ public sealed class MemoryScenarioTests(DiagnosticsLabWebApplicationFactory fact
         var largeBody = new string('x', (5 * 1024 * 1024) + 1);
         using var content = new StringContent(largeBody, Encoding.UTF8, "text/plain");
 
-        var response = await client.PostAsync("/13-request-body-memory-pressure/mitigation", content);
+        var response = await client.PostAsync("/15-request-body-memory-pressure/mitigation", content);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }

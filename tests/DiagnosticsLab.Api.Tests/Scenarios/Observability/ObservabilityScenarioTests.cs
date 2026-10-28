@@ -24,7 +24,7 @@ public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFacto
         };
 
         var response = await client.PostAsJsonAsync(
-            "/12-logging-and-audit-failure-propagation/problem",
+            "/08-logging-and-audit-failure-propagation/problem",
             request);
 
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
@@ -43,7 +43,7 @@ public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFacto
 
         using var response = await JsonTestClient.PostJsonDocumentAsync(
             client,
-            "/12-logging-and-audit-failure-propagation/mitigation",
+            "/08-logging-and-audit-failure-propagation/mitigation",
             request);
 
         response.RootElement.GetProperty("businessOperationCompleted").GetBoolean().Should().BeTrue();
@@ -64,7 +64,7 @@ public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFacto
 
         using var response = await JsonTestClient.PostJsonDocumentAsync(
             client,
-            "/03-missing-log-context/problem",
+            "/06-missing-log-context/problem",
             request,
             HttpStatusCode.BadRequest);
 
@@ -89,7 +89,7 @@ public sealed class ObservabilityScenarioTests(DiagnosticsLabWebApplicationFacto
 
         using var response = await JsonTestClient.PostJsonDocumentAsync(
             client,
-            "/03-missing-log-context/mitigation",
+            "/06-missing-log-context/mitigation",
             request,
             HttpStatusCode.BadRequest);
 

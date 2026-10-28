@@ -7,7 +7,7 @@ namespace DiagnosticsLab.Api.Scenarios.Startup;
 /// Maps endpoints for missing configuration validation scenarios.
 /// </summary>
 public static class InvalidConfigurationEndpoints {
-    private const string Route = "/09-invalid-configuration";
+    private const string Route = "/17-invalid-configuration";
 
     public static IEndpointRouteBuilder MapInvalidConfigurationEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

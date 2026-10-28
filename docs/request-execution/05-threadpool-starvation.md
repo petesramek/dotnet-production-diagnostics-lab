@@ -1,4 +1,4 @@
-# Scenario 15: ThreadPool Starvation
+# Scenario 05: ThreadPool Starvation
 
 ## Goal
 
@@ -10,7 +10,7 @@ ASP.NET Core relies on thread-pool threads to execute requests. If those threads
 
 ## Problem
 
-**Endpoint**: `GET /15-threadpool-starvation/problem?delayMs=500`
+**Endpoint**: `GET /05-threadpool-starvation/problem?delayMs=500`
 
 The problem endpoint blocks the current thread while simulating work. This means:
 - a thread-pool thread is occupied for the full delay
@@ -19,7 +19,7 @@ The problem endpoint blocks the current thread while simulating work. This means
 
 ## Mitigation
 
-**Endpoint**: `GET /15-threadpool-starvation/mitigation?delayMs=500`
+**Endpoint**: `GET /05-threadpool-starvation/mitigation?delayMs=500`
 
 The mitigation endpoint uses asynchronous waiting. This means:
 - the thread is released while the operation is waiting
@@ -33,8 +33,8 @@ This scenario uses `Thread.Sleep(...)` versus `Task.Delay(...)` to make the diff
 ## How to try it
 
 ```bash
-curl "http://localhost:5000/15-threadpool-starvation/problem?delayMs=500"
-curl "http://localhost:5000/15-threadpool-starvation/mitigation?delayMs=500"
+curl "http://localhost:5000/05-threadpool-starvation/problem?delayMs=500"
+curl "http://localhost:5000/05-threadpool-starvation/mitigation?delayMs=500"
 ```
 
 Then repeat under concurrent load.
@@ -56,7 +56,7 @@ Suggested tools:
 - optional `dotnet-stack`
 - a load tool (`wrk` or `bombardier`)
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -68,20 +68,20 @@ Use these tools to observe the difference:
 Example:
 
 ```bash
-wrk -t4 -c50 -d30s "http://localhost:5000/15-threadpool-starvation/problem?delayMs=500"
-wrk -t4 -c50 -d30s "http://localhost:5000/15-threadpool-starvation/mitigation?delayMs=500"
+wrk -t4 -c50 -d30s "http://localhost:5000/05-threadpool-starvation/problem?delayMs=500"
+wrk -t4 -c50 -d30s "http://localhost:5000/05-threadpool-starvation/mitigation?delayMs=500"
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/RequestExecution/ThreadPoolStarvationEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/RequestExecution/ThreadPoolStarvationEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs)
-- Smoke tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/RequestExecution/ThreadPoolStarvationEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/RequestExecution/ThreadPoolStarvationEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs)
+- Smoke tests: [../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 
-- [Scenario 06: Blocking Request Thread](06-blocking-request-thread.md)
-- [Scenario 02: Missing Cancellation Propagation](02-missing-cancellation-propagation.md)
+- [Scenario 04: Blocking Request Thread](04-blocking-request-thread.md)
+- [Scenario 03: Missing Cancellation Propagation](03-missing-cancellation-propagation.md)
 
 ## External references
 

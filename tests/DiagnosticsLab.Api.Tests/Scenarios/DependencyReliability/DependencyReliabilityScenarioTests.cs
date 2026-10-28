@@ -18,7 +18,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
         using var client = factory.CreateClient();
 
         var responses = await Task.WhenAll(Enumerable.Range(0, 10)
-            .Select(_ => client.GetStringAsync("/17-cache-stampede/mitigation")));
+            .Select(_ => client.GetStringAsync("/12-cache-stampede/mitigation")));
 
         var values = responses
             .Select(body => System.Text.Json.JsonDocument.Parse(body).RootElement.GetProperty("value").GetString())
@@ -34,7 +34,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
     public async Task MissingDependencyTimeouts_Problem_Returns_Success_For_Normal_Dependency() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/04-missing-dependency-timeouts/problem?country=CZ");
+        var response = await client.GetAsync("/09-missing-dependency-timeouts/problem?country=CZ");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -46,7 +46,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
     public async Task MissingDependencyTimeouts_Mitigation_Returns_GatewayTimeout_For_Slow_Dependency() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/04-missing-dependency-timeouts/mitigation?country=SLOW");
+        var response = await client.GetAsync("/09-missing-dependency-timeouts/mitigation?country=SLOW");
 
         response.StatusCode.Should().Be(HttpStatusCode.GatewayTimeout);
     }
@@ -60,7 +60,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/07-unbounded-retries/problem?sku=FAIL",
+            "/10-unbounded-retries/problem?sku=FAIL",
             HttpStatusCode.ServiceUnavailable);
 
         problem.RootElement.GetProperty("attempts").GetInt32().Should().BeGreaterThan(0);
@@ -76,12 +76,12 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/07-unbounded-retries/problem?sku=FAIL",
+            "/10-unbounded-retries/problem?sku=FAIL",
             HttpStatusCode.ServiceUnavailable);
 
         using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/07-unbounded-retries/mitigation?sku=FAIL",
+            "/10-unbounded-retries/mitigation?sku=FAIL",
             HttpStatusCode.ServiceUnavailable);
 
         var problemAttempts = problem.RootElement.GetProperty("attempts").GetInt32();
@@ -98,7 +98,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
     public async Task SocketExhaustion_Problem_Returns_Success() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/14-socket-exhaustion/problem");
+        var response = await client.GetAsync("/11-socket-exhaustion/problem");
 
         response.EnsureSuccessStatusCode();
     }
@@ -110,7 +110,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
     public async Task SocketExhaustion_Mitigation_Returns_Success() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/14-socket-exhaustion/mitigation");
+        var response = await client.GetAsync("/11-socket-exhaustion/mitigation");
 
         response.EnsureSuccessStatusCode();
     }
@@ -122,7 +122,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
     public async Task CacheStampede_Problem_Returns_Value() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/17-cache-stampede/problem");
+        var response = await client.GetAsync("/12-cache-stampede/problem");
 
         response.EnsureSuccessStatusCode();
     }
@@ -134,7 +134,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
     public async Task CacheStampede_Mitigation_Returns_Value() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/17-cache-stampede/mitigation");
+        var response = await client.GetAsync("/12-cache-stampede/mitigation");
 
         response.EnsureSuccessStatusCode();
     }
@@ -149,7 +149,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
         for (var i = 0; i < 5; i++) {
             using var problem = await JsonTestClient.GetJsonDocumentAsync(
                 client,
-                "/19-repeated-dependency-failures/problem?mode=FAIL",
+                "/13-repeated-dependency-failures/problem?mode=FAIL",
                 HttpStatusCode.ServiceUnavailable);
 
             problem.RootElement.GetProperty("dependencyCalled").GetBoolean().Should().BeTrue();
@@ -168,7 +168,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
         for (var i = 0; i < 3; i++) {
             using var failing = await JsonTestClient.GetJsonDocumentAsync(
                 client,
-                "/19-repeated-dependency-failures/mitigation?mode=FAIL",
+                "/13-repeated-dependency-failures/mitigation?mode=FAIL",
                 HttpStatusCode.ServiceUnavailable);
 
             failing.RootElement.GetProperty("dependencyCalled").GetBoolean().Should().BeTrue();
@@ -176,7 +176,7 @@ public sealed class DependencyReliabilityScenarioTests(DiagnosticsLabWebApplicat
 
         using var blocked = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/19-repeated-dependency-failures/mitigation?mode=FAIL",
+            "/13-repeated-dependency-failures/mitigation?mode=FAIL",
             HttpStatusCode.ServiceUnavailable);
 
         blocked.RootElement.GetProperty("dependencyCalled").GetBoolean().Should().BeFalse();

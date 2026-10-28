@@ -4,7 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace DiagnosticsLab.Api.Scenarios.Observability;
 
 /// <summary>
-/// Registers and maps the health probes for Scenario 10: Missing Health Probes.
+/// Registers and maps the health probes for Scenario 07: Missing Health Probes.
 /// </summary>
 public static class MissingHealthProbesEndpoints {
     public const string LivePath = "/health/live";

@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 /// Maps endpoints for unbounded retry scenarios.
 /// </summary>
 public static class UnboundedRetriesEndpoints {
-    private const string Route = "/07-unbounded-retries";
+    private const string Route = "/10-unbounded-retries";
 
     public static IEndpointRouteBuilder MapUnboundedRetriesEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

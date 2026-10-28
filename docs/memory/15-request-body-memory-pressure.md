@@ -1,4 +1,4 @@
-# Scenario 13: Request Body Memory Pressure
+# Scenario 15: Request Body Memory Pressure
 
 ## Goal
 
@@ -10,7 +10,7 @@ Large uploads can create significant memory pressure if the application reads th
 
 ## Problem
 
-**Endpoint**: `POST /13-request-body-memory-pressure/problem`
+**Endpoint**: `POST /15-request-body-memory-pressure/problem`
 
 The problem endpoint copies the entire request body into memory before processing it. This means:
 - large uploads allocate large in-memory buffers
@@ -19,7 +19,7 @@ The problem endpoint copies the entire request body into memory before processin
 
 ## Mitigation
 
-**Endpoint**: `POST /13-request-body-memory-pressure/mitigation`
+**Endpoint**: `POST /15-request-body-memory-pressure/mitigation`
 
 The mitigation endpoint processes the request body incrementally. This means:
 - data is read in chunks instead of buffered in full
@@ -35,9 +35,9 @@ This scenario uses a simple request body rather than a full multipart upload pip
 Send a small body first:
 
 ```bash
-curl -X POST "http://localhost:5000/13-request-body-memory-pressure/problem"   -H "Content-Type: text/plain"   --data-binary "small upload body"
+curl -X POST "http://localhost:5000/15-request-body-memory-pressure/problem"   -H "Content-Type: text/plain"   --data-binary "small upload body"
 
-curl -X POST "http://localhost:5000/13-request-body-memory-pressure/mitigation"   -H "Content-Type: text/plain"   --data-binary "small upload body"
+curl -X POST "http://localhost:5000/15-request-body-memory-pressure/mitigation"   -H "Content-Type: text/plain"   --data-binary "small upload body"
 ```
 
 Then try a larger body to observe the mitigation path rejecting oversized uploads.
@@ -57,7 +57,7 @@ Suggested tools:
 - `dotnet-counters`
 - repeated requests with `curl`, `wrk`, or `bombardier`
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -74,13 +74,13 @@ dotnet-counters monitor --process-id <pid> System.Runtime
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Memory/RequestBodyMemoryPressureEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Memory/RequestBodyMemoryPressureEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs)
-- Smoke tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/Memory/RequestBodyMemoryPressureEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/Memory/RequestBodyMemoryPressureEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs)
+- Smoke tests: [../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 
-- [Scenario 08: Large Response Buffering](08-large-response-buffering.md)
+- [Scenario 14: Large Response Buffering](14-large-response-buffering.md)
 - [Scenario 16: LOH Fragmentation](16-loh-fragmentation.md)
 
 ## External references

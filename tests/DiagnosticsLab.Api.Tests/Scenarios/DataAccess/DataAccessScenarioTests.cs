@@ -59,7 +59,7 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/05-n-plus-one-queries/problem?take=10");
+            "/02-n-plus-one-queries/problem?take=10");
 
         JsonAssertions.NormalizeCustomerSummaries(problem)
             .Should()
@@ -75,11 +75,11 @@ public sealed class DataAccessScenarioTests(DiagnosticsLabWebApplicationFactory 
 
         var problem = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/05-n-plus-one-queries/problem?take=10");
+            "/02-n-plus-one-queries/problem?take=10");
 
         var mitigation = await JsonTestClient.GetJsonArrayAsync(
             client,
-            "/05-n-plus-one-queries/mitigation?take=10");
+            "/02-n-plus-one-queries/mitigation?take=10");
 
         JsonAssertions.NormalizeCustomerSummaries(mitigation)
             .Should()

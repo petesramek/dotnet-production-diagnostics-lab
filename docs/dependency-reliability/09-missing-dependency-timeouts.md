@@ -1,4 +1,4 @@
-# Scenario 04: Missing Dependency Timeouts
+# Scenario 09: Missing Dependency Timeouts
 
 ## Goal
 
@@ -10,7 +10,7 @@ External dependencies can be slow, overloaded, or temporarily unavailable. If an
 
 ## Problem
 
-**Endpoint**: `GET /04-missing-dependency-timeouts/problem?country=SLOW`
+**Endpoint**: `GET /09-missing-dependency-timeouts/problem?country=SLOW`
 
 The problem endpoint calls an external dependency without timeout control. This means:
 - the request can wait indefinitely for a slow upstream service
@@ -19,7 +19,7 @@ The problem endpoint calls an external dependency without timeout control. This 
 
 ## Mitigation
 
-**Endpoint**: `GET /04-missing-dependency-timeouts/mitigation?country=SLOW`
+**Endpoint**: `GET /09-missing-dependency-timeouts/mitigation?country=SLOW`
 
 The mitigation endpoint applies timeout and cancellation. This means:
 - the application stops waiting after a defined limit
@@ -35,11 +35,11 @@ This scenario uses a fake shipping client to simulate an external system. The ap
 Use a normal country value and a slow value:
 
 ```bash
-curl "http://localhost:5000/04-missing-dependency-timeouts/problem?country=CZ"
-curl "http://localhost:5000/04-missing-dependency-timeouts/problem?country=SLOW"
+curl "http://localhost:5000/09-missing-dependency-timeouts/problem?country=CZ"
+curl "http://localhost:5000/09-missing-dependency-timeouts/problem?country=SLOW"
 
-curl "http://localhost:5000/04-missing-dependency-timeouts/mitigation?country=CZ"
-curl "http://localhost:5000/04-missing-dependency-timeouts/mitigation?country=SLOW"
+curl "http://localhost:5000/09-missing-dependency-timeouts/mitigation?country=CZ"
+curl "http://localhost:5000/09-missing-dependency-timeouts/mitigation?country=SLOW"
 ```
 
 ## What to observe
@@ -57,7 +57,7 @@ Suggested tools:
 - `dotnet-counters`
 - a load tool (`wrk` or `bombardier`)
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -69,20 +69,20 @@ Use these tools to observe the behavior:
 Example:
 
 ```bash
-wrk -t4 -c20 -d30s "http://localhost:5000/04-missing-dependency-timeouts/problem?country=SLOW"
-wrk -t4 -c20 -d30s "http://localhost:5000/04-missing-dependency-timeouts/mitigation?country=SLOW"
+wrk -t4 -c20 -d30s "http://localhost:5000/09-missing-dependency-timeouts/problem?country=SLOW"
+wrk -t4 -c20 -d30s "http://localhost:5000/09-missing-dependency-timeouts/mitigation?country=SLOW"
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/MissingDependencyTimeoutsEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/MissingDependencyTimeoutsEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/MissingDependencyTimeoutsEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/MissingDependencyTimeoutsEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
 
 ## Related scenarios
 
-- [Scenario 02: Missing Cancellation Propagation](02-missing-cancellation-propagation.md)
-- [Scenario 07: Unbounded Retries](07-unbounded-retries.md)
-- [Scenario 14: Socket Exhaustion](14-socket-exhaustion.md)
+- [Scenario 03: Missing Cancellation Propagation](../request-execution/03-missing-cancellation-propagation.md)
+- [Scenario 10: Unbounded Retries](10-unbounded-retries.md)
+- [Scenario 11: Socket Exhaustion](11-socket-exhaustion.md)
 
 ## External references
 

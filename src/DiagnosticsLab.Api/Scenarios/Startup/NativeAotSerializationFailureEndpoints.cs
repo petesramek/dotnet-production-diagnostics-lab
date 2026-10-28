@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.Startup;
 /// Maps endpoints for Native AOT serialization scenarios.
 /// </summary>
 public static class NativeAotSerializationFailureEndpoints {
-    private const string Route = "/18-native-aot-serialization-failure";
+    private const string Route = "/19-native-aot-serialization-failure";
 
     public static IEndpointRouteBuilder MapNativeAotSerializationFailureEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

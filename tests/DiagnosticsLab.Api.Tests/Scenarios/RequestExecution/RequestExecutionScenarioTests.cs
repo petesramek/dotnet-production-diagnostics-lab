@@ -18,7 +18,7 @@ public sealed class RequestExecutionScenarioTests(DiagnosticsLabWebApplicationFa
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/02-missing-cancellation-propagation/problem");
+            "/03-missing-cancellation-propagation/problem");
 
         problem.RootElement.GetProperty("cancellationAware").GetBoolean().Should().BeFalse();
     }
@@ -32,7 +32,7 @@ public sealed class RequestExecutionScenarioTests(DiagnosticsLabWebApplicationFa
 
         using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/02-missing-cancellation-propagation/mitigation");
+            "/03-missing-cancellation-propagation/mitigation");
 
         mitigation.RootElement.GetProperty("cancellationAware").GetBoolean().Should().BeTrue();
     }
@@ -46,7 +46,7 @@ public sealed class RequestExecutionScenarioTests(DiagnosticsLabWebApplicationFa
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/06-blocking-request-thread/problem?delayMs=100");
+            "/04-blocking-request-thread/problem?delayMs=100");
 
         problem.RootElement.GetProperty("blocking").GetBoolean().Should().BeTrue();
     }
@@ -60,7 +60,7 @@ public sealed class RequestExecutionScenarioTests(DiagnosticsLabWebApplicationFa
 
         using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/06-blocking-request-thread/mitigation?delayMs=1");
+            "/04-blocking-request-thread/mitigation?delayMs=1");
 
         mitigation.RootElement.GetProperty("blocking").GetBoolean().Should().BeFalse();
     }
@@ -74,7 +74,7 @@ public sealed class RequestExecutionScenarioTests(DiagnosticsLabWebApplicationFa
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/15-threadpool-starvation/problem?delayMs=50");
+            "/05-threadpool-starvation/problem?delayMs=50");
 
         problem.RootElement.GetProperty("blocking").GetBoolean().Should().BeTrue();
     }
@@ -88,7 +88,7 @@ public sealed class RequestExecutionScenarioTests(DiagnosticsLabWebApplicationFa
 
         using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/15-threadpool-starvation/mitigation?delayMs=50");
+            "/05-threadpool-starvation/mitigation?delayMs=50");
 
         mitigation.RootElement.GetProperty("blocking").GetBoolean().Should().BeFalse();
     }

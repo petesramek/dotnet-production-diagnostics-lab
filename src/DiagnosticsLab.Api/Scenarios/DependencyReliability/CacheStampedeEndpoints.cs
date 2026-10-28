@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 /// Maps endpoints for cache stampede scenarios.
 /// </summary>
 public static class CacheStampedeEndpoints {
-    private const string Route = "/17-cache-stampede";
+    private const string Route = "/12-cache-stampede";
     private const string CacheKey = "hot-key";
 
     private static readonly SemaphoreSlim Semaphore = new(1, 1);

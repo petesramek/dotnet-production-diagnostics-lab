@@ -1,4 +1,4 @@
-# Scenario 14: Socket Exhaustion
+# Scenario 11: Socket Exhaustion
 
 ## Goal
 
@@ -10,7 +10,7 @@ Outbound HTTP communication is common in production services. If a new `HttpClie
 
 ## Problem
 
-**Endpoint**: `GET /14-socket-exhaustion/problem`
+**Endpoint**: `GET /11-socket-exhaustion/problem`
 
 The problem endpoint creates a new `HttpClient` repeatedly. This means:
 - connection pools are not reused effectively
@@ -19,7 +19,7 @@ The problem endpoint creates a new `HttpClient` repeatedly. This means:
 
 ## Mitigation
 
-**Endpoint**: `GET /14-socket-exhaustion/mitigation`
+**Endpoint**: `GET /11-socket-exhaustion/mitigation`
 
 The mitigation endpoint uses `IHttpClientFactory`. This means:
 - connection management is pooled and reused
@@ -37,8 +37,8 @@ This scenario simulates repeated outbound calls but does not create real interne
 ## How to try it
 
 ```bash
-curl "http://localhost:5000/14-socket-exhaustion/problem"
-curl "http://localhost:5000/14-socket-exhaustion/mitigation"
+curl "http://localhost:5000/11-socket-exhaustion/problem"
+curl "http://localhost:5000/11-socket-exhaustion/mitigation"
 ```
 
 Then increase load with a load generator.
@@ -59,7 +59,7 @@ Suggested tools:
 - Windows `netstat` or Linux `ss`
 - optional `dotnet-counters`
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -71,22 +71,22 @@ Use these tools to observe the difference:
 Example:
 
 ```bash
-wrk -t4 -c50 http://localhost:5000/14-socket-exhaustion/problem
-wrk -t4 -c50 http://localhost:5000/14-socket-exhaustion/mitigation
+wrk -t4 -c50 http://localhost:5000/11-socket-exhaustion/problem
+wrk -t4 -c50 http://localhost:5000/11-socket-exhaustion/mitigation
 ```
 
 Then inspect sockets on the host while the load is running.
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/SocketExhaustionEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/SocketExhaustionEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
-- Smoke tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/SocketExhaustionEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/SocketExhaustionEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
+- Smoke tests: [../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 
-- [Scenario 04: Missing Dependency Timeouts](04-missing-dependency-timeouts.md)
-- [Scenario 07: Unbounded Retries](07-unbounded-retries.md)
+- [Scenario 09: Missing Dependency Timeouts](09-missing-dependency-timeouts.md)
+- [Scenario 10: Unbounded Retries](10-unbounded-retries.md)
 
 ## External references
 

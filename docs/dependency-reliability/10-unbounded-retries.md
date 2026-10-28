@@ -1,4 +1,4 @@
-# Scenario 07: Unbounded Retries
+# Scenario 10: Unbounded Retries
 
 ## Goal
 
@@ -10,7 +10,7 @@ Retries are useful only when they are controlled. If every request retries immed
 
 ## Problem
 
-**Endpoint**: `GET /07-unbounded-retries/problem?sku=FAIL`
+**Endpoint**: `GET /10-unbounded-retries/problem?sku=FAIL`
 
 The problem endpoint retries immediately when the inventory provider fails. This means:
 - repeated rapid calls hit the same failing dependency
@@ -19,7 +19,7 @@ The problem endpoint retries immediately when the inventory provider fails. This
 
 ## Mitigation
 
-**Endpoint**: `GET /07-unbounded-retries/mitigation?sku=FAIL`
+**Endpoint**: `GET /10-unbounded-retries/mitigation?sku=FAIL`
 
 The mitigation endpoint uses controlled retry behavior. This means:
 - retries are limited
@@ -37,15 +37,15 @@ This scenario uses a fake inventory client to simulate a failing external depend
 ## How to try it
 
 ```bash
-curl "http://localhost:5000/07-unbounded-retries/problem?sku=FAIL"
-curl "http://localhost:5000/07-unbounded-retries/mitigation?sku=FAIL"
+curl "http://localhost:5000/10-unbounded-retries/problem?sku=FAIL"
+curl "http://localhost:5000/10-unbounded-retries/mitigation?sku=FAIL"
 ```
 
 Also try a non-failing SKU:
 
 ```bash
-curl "http://localhost:5000/07-unbounded-retries/problem?sku=ABC"
-curl "http://localhost:5000/07-unbounded-retries/mitigation?sku=ABC"
+curl "http://localhost:5000/10-unbounded-retries/problem?sku=ABC"
+curl "http://localhost:5000/10-unbounded-retries/mitigation?sku=ABC"
 ```
 
 ## What to observe
@@ -63,7 +63,7 @@ Suggested tools:
 - logs
 - optional `dotnet-counters`
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -75,19 +75,19 @@ Use these tools to observe the retry behavior:
 Example:
 
 ```bash
-wrk -t4 -c20 -d30s "http://localhost:5000/07-unbounded-retries/problem?sku=FAIL"
-wrk -t4 -c20 -d30s "http://localhost:5000/07-unbounded-retries/mitigation?sku=FAIL"
+wrk -t4 -c20 -d30s "http://localhost:5000/10-unbounded-retries/problem?sku=FAIL"
+wrk -t4 -c20 -d30s "http://localhost:5000/10-unbounded-retries/mitigation?sku=FAIL"
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/UnboundedRetriesEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/UnboundedRetriesEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/UnboundedRetriesEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/UnboundedRetriesEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
 
 ## Related scenarios
 
-- [Scenario 04: Missing Dependency Timeouts](04-missing-dependency-timeouts.md)
-- [Scenario 14: Socket Exhaustion](14-socket-exhaustion.md)
+- [Scenario 09: Missing Dependency Timeouts](09-missing-dependency-timeouts.md)
+- [Scenario 11: Socket Exhaustion](11-socket-exhaustion.md)
 
 ## External references
 

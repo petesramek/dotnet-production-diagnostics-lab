@@ -1,4 +1,4 @@
-# Scenario 19: Repeated Dependency Failures
+# Scenario 13: Repeated Dependency Failures
 
 ## Goal
   
@@ -10,7 +10,7 @@ When a dependency keeps failing, continuing to call it on every request wastes r
 
 ## Problem
   
-**Endpoint**: `GET /19-repeated-dependency-failures/problem?mode=FAIL`
+**Endpoint**: `GET /13-repeated-dependency-failures/problem?mode=FAIL`
 The problem endpoint calls the dependency on every request without circuit-breaker protection. This means:
 - every failing request still reaches the dependency
 - repeated failures continue to consume request and dependency capacity
@@ -18,7 +18,7 @@ The problem endpoint calls the dependency on every request without circuit-break
 
 ## Mitigation
   
-**Endpoint**: `GET /19-repeated-dependency-failures/mitigation?mode=FAIL`
+**Endpoint**: `GET /13-repeated-dependency-failures/mitigation?mode=FAIL`
 The mitigation endpoint uses circuit-breaker behavior on the dependency client. This means:
 - initial failures are still observed normally
 - after the failure threshold is crossed, later requests stop calling the dependency temporarily
@@ -34,24 +34,24 @@ This scenario uses an HTTP dependency client with a simulated failing downstream
 Call the problem endpoint repeatedly with a failing dependency mode:
 
 ```bash
-curl "http://localhost:5000/19-repeated-dependency-failures/problem?mode=FAIL"
-curl "http://localhost:5000/19-repeated-dependency-failures/problem?mode=FAIL"
-curl "http://localhost:5000/19-repeated-dependency-failures/problem?mode=FAIL"
+curl "http://localhost:5000/13-repeated-dependency-failures/problem?mode=FAIL"
+curl "http://localhost:5000/13-repeated-dependency-failures/problem?mode=FAIL"
+curl "http://localhost:5000/13-repeated-dependency-failures/problem?mode=FAIL"
 ```
 
 Then call the mitigation endpoint repeatedly with the same failing mode:
 
 ```bash
-curl "http://localhost:5000/19-repeated-dependency-failures/mitigation?mode=FAIL"
-curl "http://localhost:5000/19-repeated-dependency-failures/mitigation?mode=FAIL"
-curl "http://localhost:5000/19-repeated-dependency-failures/mitigation?mode=FAIL"
-curl "http://localhost:5000/19-repeated-dependency-failures/mitigation?mode=FAIL"
+curl "http://localhost:5000/13-repeated-dependency-failures/mitigation?mode=FAIL"
+curl "http://localhost:5000/13-repeated-dependency-failures/mitigation?mode=FAIL"
+curl "http://localhost:5000/13-repeated-dependency-failures/mitigation?mode=FAIL"
+curl "http://localhost:5000/13-repeated-dependency-failures/mitigation?mode=FAIL"
 ```
 
 To verify recovery after the break duration expires, wait for the breaker window to pass and then call:
 
 ```bash
-curl "http://localhost:5000/19-repeated-dependency-failures/mitigation?mode=OK"
+curl "http://localhost:5000/13-repeated-dependency-failures/mitigation?mode=OK"
 ```
 
 ## What to observe
@@ -69,7 +69,7 @@ Suggested tools:
 - logs
 - curl
 - optional a load tool (`wrk` or `bombardier`)  
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
   
@@ -80,17 +80,17 @@ Use these tools to observe the difference:
 Example:
 
 ```bash
-wrk -t4 -c20 -d15s "http://localhost:5000/19-repeated-dependency-failures/problem?mode=FAIL"
-wrk -t4 -c20 -d15s "http://localhost:5000/19-repeated-dependency-failures/mitigation?mode=FAIL"
+wrk -t4 -c20 -d15s "http://localhost:5000/13-repeated-dependency-failures/problem?mode=FAIL"
+wrk -t4 -c20 -d15s "http://localhost:5000/13-repeated-dependency-failures/mitigation?mode=FAIL"
 ```
 
 ## Source files
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/RepeatedDependencyFailuresEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/RepeatedDependencyFailuresEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/RepeatedDependencyFailuresEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/RepeatedDependencyFailuresEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
 
 ## Related scenarios
-- [Scenario 04: Missing Dependency Timeouts](04-missing-dependency-timeouts.md)
-- [Scenario 07: Unbounded Retries](07-unbounded-retries.md)
+- [Scenario 09: Missing Dependency Timeouts](09-missing-dependency-timeouts.md)
+- [Scenario 10: Unbounded Retries](10-unbounded-retries.md)
 
 ## External references
 - [Build resilient HTTP apps: Key development patterns - .NET](https://learn.microsoft.com/en-us/dotnet/core/resilience/http-resilience)

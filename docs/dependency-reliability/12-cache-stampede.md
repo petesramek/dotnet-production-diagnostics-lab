@@ -1,4 +1,4 @@
-# Scenario 17: Cache Stampede
+# Scenario 12: Cache Stampede
 
 ## Goal
 
@@ -10,7 +10,7 @@ When a hot cache key expires, many requests can miss at the same time. If every 
 
 ## Problem
 
-**Endpoint**: `GET /17-cache-stampede/problem`
+**Endpoint**: `GET /12-cache-stampede/problem`
 
 The problem endpoint recomputes a missing cache value without coordination. This means:
 - multiple callers can compute the same value at once
@@ -20,7 +20,7 @@ The problem endpoint recomputes a missing cache value without coordination. This
 
 ## Mitigation
 
-**Endpoint**: `GET /17-cache-stampede/mitigation`
+**Endpoint**: `GET /12-cache-stampede/mitigation`
 
 The mitigation endpoint coordinates recomputation with `SemaphoreSlim`. This means:
 - only one caller computes the missing value
@@ -42,8 +42,8 @@ This scenario uses an in-memory cache and a simulated expensive operation. In a 
 Warm and call the endpoints repeatedly:
 
 ```bash
-curl "http://localhost:5000/17-cache-stampede/problem"
-curl "http://localhost:5000/17-cache-stampede/mitigation"
+curl "http://localhost:5000/12-cache-stampede/problem"
+curl "http://localhost:5000/12-cache-stampede/mitigation"
 ```
 
 Then use concurrent load to make the difference visible.
@@ -63,7 +63,7 @@ Suggested tools:
 - a load tool (`wrk` or `bombardier`)
 - logs
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -75,20 +75,20 @@ Use these tools to observe the difference:
 Example:
 
 ```bash
-wrk -t4 -c50 http://localhost:5000/17-cache-stampede/problem
-wrk -t4 -c50 http://localhost:5000/17-cache-stampede/mitigation
+wrk -t4 -c50 http://localhost:5000/12-cache-stampede/problem
+wrk -t4 -c50 http://localhost:5000/12-cache-stampede/mitigation
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/CacheStampedeEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/CacheStampedeEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
-- Smoke tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/CacheStampedeEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/CacheStampedeEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
+- Smoke tests: [../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 
-- [Scenario 07: Unbounded Retries](07-unbounded-retries.md)
-- [Scenario 14: Socket Exhaustion](14-socket-exhaustion.md)
+- [Scenario 10: Unbounded Retries](10-unbounded-retries.md)
+- [Scenario 11: Socket Exhaustion](11-socket-exhaustion.md)
 
 ## External references
 

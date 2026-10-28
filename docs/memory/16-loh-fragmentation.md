@@ -64,7 +64,7 @@ Suggested tools:
 - optional `dotnet-gcdump`
 - a load tool (`wrk` or `bombardier`)
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -83,14 +83,14 @@ wrk -t4 -c20 -d30s -s post-json.lua http://localhost:5000/16-loh-fragmentation/m
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Memory/LohFragmentationEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Memory/LohFragmentationEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs)
-- Smoke tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/Memory/LohFragmentationEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/Memory/LohFragmentationEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs)
+- Smoke tests: [../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 
-- [Scenario 08: Large Response Buffering](08-large-response-buffering.md)
-- [Scenario 13: Request Body Memory Pressure](13-request-body-memory-pressure.md)
+- [Scenario 14: Large Response Buffering](14-large-response-buffering.md)
+- [Scenario 15: Request Body Memory Pressure](15-request-body-memory-pressure.md)
 
 ## External references
 

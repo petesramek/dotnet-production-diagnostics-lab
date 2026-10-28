@@ -20,7 +20,7 @@ public sealed class StartupScenarioTests(DiagnosticsLabWebApplicationFactory fac
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/11-silent-startup-failure/problem");
+            "/18-silent-startup-failure/problem");
 
         problem.RootElement.GetProperty("initialized").GetBoolean().Should().BeFalse();
         problem.RootElement.GetProperty("failureVisible").GetBoolean().Should().BeFalse();
@@ -33,7 +33,7 @@ public sealed class StartupScenarioTests(DiagnosticsLabWebApplicationFactory fac
     public async Task SilentStartupFailure_Mitigation_Returns_ServiceUnavailable() {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/11-silent-startup-failure/mitigation");
+        var response = await client.GetAsync("/18-silent-startup-failure/mitigation");
 
         response.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
     }
@@ -46,7 +46,7 @@ public sealed class StartupScenarioTests(DiagnosticsLabWebApplicationFactory fac
         using var client = factory.CreateClient();
 
         var response = await client.PostAsJsonAsync(
-            "/18-native-aot-serialization-failure/problem",
+            "/19-native-aot-serialization-failure/problem",
             new { Name = "Pete", Age = 30 });
 
         response.EnsureSuccessStatusCode();
@@ -60,7 +60,7 @@ public sealed class StartupScenarioTests(DiagnosticsLabWebApplicationFactory fac
         using var client = factory.CreateClient();
 
         var response = await client.PostAsJsonAsync(
-            "/18-native-aot-serialization-failure/mitigation",
+            "/19-native-aot-serialization-failure/mitigation",
             new { Name = "Pete", Age = 30 });
 
         response.EnsureSuccessStatusCode();

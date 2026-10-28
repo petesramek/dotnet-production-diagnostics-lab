@@ -1,4 +1,4 @@
-# Scenario 09: Invalid Configuration
+# Scenario 17: Invalid Configuration
 
 ## Goal
 
@@ -10,7 +10,7 @@ If configuration is consumed without validation, the application can start succe
 
 ## Problem
 
-**Endpoint**: `GET /09-invalid-configuration/problem`
+**Endpoint**: `GET /17-invalid-configuration/problem`
 
 The problem endpoint reads raw configuration at runtime without validation. This means:
 - the app may start even when required configuration is missing or invalid
@@ -19,7 +19,7 @@ The problem endpoint reads raw configuration at runtime without validation. This
 
 ## Mitigation
 
-**Endpoint**: `GET /09-invalid-configuration/mitigation`
+**Endpoint**: `GET /17-invalid-configuration/mitigation`
 
 The mitigation path uses strongly typed options validated at startup. This means:
 - invalid configuration is detected before the application starts serving traffic
@@ -35,8 +35,8 @@ This scenario uses application configuration for an external billing service URL
 Call the endpoints with valid configuration first:
 
 ```bash
-curl "http://localhost:5000/09-invalid-configuration/problem"
-curl "http://localhost:5000/09-invalid-configuration/mitigation"
+curl "http://localhost:5000/17-invalid-configuration/problem"
+curl "http://localhost:5000/17-invalid-configuration/mitigation"
 ```
 
 Then break the configuration (for example `ExternalServices:BillingApiBaseUrl`) and compare:
@@ -61,13 +61,13 @@ This scenario is mostly about failure timing and operational visibility, not per
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Startup/InvalidConfigurationEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Startup/InvalidConfigurationEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Startup/StartupConfigurationTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Startup/StartupConfigurationTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/Startup/InvalidConfigurationEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/Startup/InvalidConfigurationEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/Startup/StartupConfigurationTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/Startup/StartupConfigurationTests.cs)
 
 ## Related scenarios
 
-- [Scenario 10: Missing Health Probes](10-missing-health-probes.md)
-- [Scenario 11: Silent Startup Failure](11-silent-startup-failure.md)
+- [Scenario 07: Missing Health Probes](../observability/07-missing-health-probes.md)
+- [Scenario 18: Silent Startup Failure](18-silent-startup-failure.md)
 
 ## External references
 

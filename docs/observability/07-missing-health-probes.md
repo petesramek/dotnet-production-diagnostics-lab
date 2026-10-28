@@ -1,4 +1,4 @@
-# Scenario 10: Missing Health Probes
+# Scenario 07: Missing Health Probes
 
 ## Goal
 
@@ -57,13 +57,13 @@ This scenario is less about performance counters and more about reliable platfor
 
 ## Source files
 
-- Endpoints: [../src/DiagnosticsLab.Api/Scenarios/Observability/MissingHealthProbesEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Observability/MissingHealthProbesEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
+- Endpoints: [../../src/DiagnosticsLab.Api/Scenarios/Observability/MissingHealthProbesEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/Observability/MissingHealthProbesEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
 
 ## Related scenarios
 
-- [Scenario 09: Invalid Configuration](09-invalid-configuration.md)
-- [Scenario 11: Silent Startup Failure](11-silent-startup-failure.md)
+- [Scenario 17: Invalid Configuration](../startup/17-invalid-configuration.md)
+- [Scenario 18: Silent Startup Failure](../startup/18-silent-startup-failure.md)
 
 ## External references
 

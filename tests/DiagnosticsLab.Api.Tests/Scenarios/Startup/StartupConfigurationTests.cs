@@ -34,7 +34,7 @@ public sealed class StartupConfigurationTests {
 
         using var problem = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/09-invalid-configuration/problem");
+            "/17-invalid-configuration/problem");
 
         problem.RootElement
             .GetProperty("validated")
@@ -53,7 +53,7 @@ public sealed class StartupConfigurationTests {
 
         using var mitigation = await JsonTestClient.GetJsonDocumentAsync(
             client,
-            "/09-invalid-configuration/mitigation");
+            "/17-invalid-configuration/mitigation");
 
         mitigation.RootElement
             .GetProperty("validated")

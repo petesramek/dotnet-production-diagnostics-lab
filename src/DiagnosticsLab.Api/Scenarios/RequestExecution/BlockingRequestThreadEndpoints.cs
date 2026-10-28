@@ -6,7 +6,7 @@ namespace DiagnosticsLab.Api.Scenarios.RequestExecution;
 /// Maps endpoints for blocking vs asynchronous request handling scenarios.
 /// </summary>
 public static class BlockingRequestThreadEndpoints {
-    private const string Route = "/06-blocking-request-thread";
+    private const string Route = "/04-blocking-request-thread";
 
     public static IEndpointRouteBuilder MapBlockingRequestThreadEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);

@@ -1,4 +1,4 @@
-# Scenario 08: Large Response Buffering
+# Scenario 14: Large Response Buffering
 
 ## Goal
 
@@ -10,7 +10,7 @@ When an API builds a large result set in memory before returning it, memory usag
 
 ## Problem
 
-**Endpoint**: `GET /08-large-response/problem?rows=1000`
+**Endpoint**: `GET /14-large-response-buffering/problem?rows=1000`
 
 The problem endpoint materializes the full result set before sending the response. This means:
 - a large in-memory collection is allocated up front
@@ -19,7 +19,7 @@ The problem endpoint materializes the full result set before sending the respons
 
 ## Mitigation
 
-**Endpoint**: `GET /08-large-response/mitigation?rows=1000`
+**Endpoint**: `GET /14-large-response-buffering/mitigation?rows=1000`
 
 The mitigation endpoint streams the response using `IAsyncEnumerable`. This means:
 - data is produced incrementally
@@ -34,8 +34,8 @@ The problem is allocating large in-memory collections instead of streaming the r
 ## How to try it
 
 ```bash
-curl "http://localhost:5000/08-large-response/problem?rows=1000"
-curl "http://localhost:5000/08-large-response/mitigation?rows=1000"
+curl "http://localhost:5000/14-large-response-buffering/problem?rows=1000"
+curl "http://localhost:5000/14-large-response-buffering/mitigation?rows=1000"
 ```
 
 Increase `rows` to make the difference more visible.
@@ -54,7 +54,7 @@ Suggested tools:
 - `dotnet-counters`
 - a load tool (`wrk` or `bombardier`)
 
-See [tools README](tools/README.md).
+See [tools README](../tools/README.md).
 
 ## Diagnostic tools
 
@@ -67,18 +67,18 @@ Example:
 
 ```bash
 dotnet-counters monitor --process-id <pid> System.Runtime
-wrk -t4 -c20 -d30s "http://localhost:5000/08-large-response/problem?rows=5000"
-wrk -t4 -c20 -d30s "http://localhost:5000/08-large-response/mitigation?rows=5000"
+wrk -t4 -c20 -d30s "http://localhost:5000/14-large-response-buffering/problem?rows=5000"
+wrk -t4 -c20 -d30s "http://localhost:5000/14-large-response-buffering/mitigation?rows=5000"
 ```
 
 ## Source files
 
-- Endpoint: [../src/DiagnosticsLab.Api/Scenarios/Memory/LargeResponseBufferingEndpoints.cs](../src/DiagnosticsLab.Api/Scenarios/Memory/LargeResponseBufferingEndpoints.cs)
-- Tests: [../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs](../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs)
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/Memory/LargeResponseBufferingEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/Memory/LargeResponseBufferingEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/Memory/MemoryScenarioTests.cs)
 
 ## Related scenarios
 
-- [Scenario 01: Excessive Data Materialization](01-excessive-data-materialization.md)
+- [Scenario 01: Excessive Data Materialization](../data-access/01-excessive-data-materialization.md)
 - [Scenario 16: LOH Fragmentation](16-loh-fragmentation.md)
 
 ## External references

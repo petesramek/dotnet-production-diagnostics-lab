@@ -16,7 +16,7 @@ namespace DiagnosticsLab.Api.Scenarios;
 /// </summary>
 public static class ScenarioRegistration {
     public static IServiceCollection AddScenarios(this IServiceCollection services, IConfiguration configuration) {
-        // Scenario 09: Invalid Configuration
+        // Scenario 17: Invalid Configuration
         services
             .AddOptions<ExternalServicesOptions>()
             .Bind(configuration.GetSection(ExternalServicesOptions.SectionName))
@@ -30,20 +30,20 @@ public static class ScenarioRegistration {
             options.UseSqlite(connectionString);
         });
 
-        // Scenarios 04 and 07: simulated external dependencies
+        // Scenarios 09 and 07: simulated external dependencies
         services.AddScoped<FakeShippingClient>();
         services.AddScoped<FakeInventoryClient>();
 
-        // Scenario 11: startup dependency
+        // Scenario 18: startup dependency
         services.AddSingleton<FakeStartupDependency>();
 
-        // Scenario 12: audit sink
+        // Scenario 08: audit sink
         services.AddSingleton<FakeAuditSink>();
 
-        // Scenarios 03 and 13: request context access
+        // Scenarios 06 and 13: request context access
         services.AddHttpContextAccessor();
 
-        // Scenarios 14 and 17: HttpClient factory and in-memory cache
+        // Scenarios 11 and 17: HttpClient factory and in-memory cache
         services.AddHttpClient();
         services.AddMemoryCache();
 

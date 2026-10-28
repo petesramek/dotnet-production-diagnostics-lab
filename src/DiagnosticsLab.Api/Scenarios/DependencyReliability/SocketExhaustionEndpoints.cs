@@ -4,7 +4,7 @@ namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 /// Maps endpoints for HttpClient socket exhaustion scenarios.
 /// </summary>
 public static class SocketExhaustionEndpoints {
-    private const string Route = "/14-socket-exhaustion";
+    private const string Route = "/11-socket-exhaustion";
 
     public static IEndpointRouteBuilder MapSocketExhaustionEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
