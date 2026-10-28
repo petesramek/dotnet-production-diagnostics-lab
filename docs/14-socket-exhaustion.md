@@ -26,6 +26,12 @@ The mitigation endpoint uses `IHttpClientFactory`. This means:
 - socket churn stays lower
 - outbound HTTP behavior remains more stable under load
 
+## Framework solution
+
+**Endpoint**: `GET /14-socket-exhaustion/framework`
+
+Uses a named client from `IHttpClientFactory` whose primary handler is a `SocketsHttpHandler` with `PooledConnectionLifetime` set to 2 minutes. The factory pools handlers so connections are reused, and the lifetime limit recycles them so DNS changes are still picked up. As in the other endpoints, no real network call is made.
+
 ## Simulation notes
 
 This scenario simulates repeated outbound calls but does not create real internet traffic. The important behavior is `HttpClient` lifetime management. Real socket exhaustion is best observed under local load while monitoring OS socket states.

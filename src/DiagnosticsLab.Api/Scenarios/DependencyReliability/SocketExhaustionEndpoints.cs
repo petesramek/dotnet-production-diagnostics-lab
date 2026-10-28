@@ -5,6 +5,7 @@ namespace DiagnosticsLab.Api.Scenarios.DependencyReliability;
 /// </summary>
 public static class SocketExhaustionEndpoints {
     private const string Route = "/14-socket-exhaustion";
+    private const string FrameworkClientName = "SocketExhaustion.Framework";
 
     public static IEndpointRouteBuilder MapSocketExhaustionEndpoints(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup(Route);
@@ -73,6 +74,41 @@ public static class SocketExhaustionEndpoints {
                 });
             });
 
+        // Framework solution:
+        // A named client from IHttpClientFactory with an explicit SocketsHttpHandler.
+        // The factory pools handlers, and PooledConnectionLifetime recycles connections
+        // so DNS changes are honored without creating a new HttpClient per call.
+        group.MapGet("/framework", async (
+            IHttpClientFactory factory,
+            CancellationToken cancellationToken) => {
+                const int requests = 5;
+
+                var client = factory.CreateClient(FrameworkClientName);
+
+                for (int i = 0; i < requests; i++) {
+                    await Task.Delay(10, cancellationToken);
+                }
+
+                return Results.Ok(new {
+                    Requests = requests,
+                    ReusedConnections = true,
+                    Mechanism = "IHttpClientFactory + SocketsHttpHandler.PooledConnectionLifetime",
+                    client.Timeout
+                });
+            });
+
         return endpoints;
+    }
+
+    /// <summary>
+    /// Registers the named client used by the framework solution.
+    /// </summary>
+    public static IServiceCollection AddSocketExhaustionServices(this IServiceCollection services) {
+        services.AddHttpClient(FrameworkClientName, client => client.Timeout = TimeSpan.FromSeconds(10))
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(2)
+            });
+
+        return services;
     }
 }

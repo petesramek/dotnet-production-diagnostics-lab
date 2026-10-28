@@ -50,6 +50,7 @@ public static class ScenarioRegistration {
 
         services.AddMissingHealthProbesServices();
         services.AddRepeatedDependencyFailuresServices();
+        services.AddSocketExhaustionServices();
 
         return services;
     }
