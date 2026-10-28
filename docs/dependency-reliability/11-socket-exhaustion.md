@@ -1,0 +1,95 @@
+# Scenario 11: Socket Exhaustion
+
+## Goal
+
+Show why creating new `HttpClient` instances repeatedly causes connection churn and can exhaust available sockets under load.
+
+## Why this matters
+
+Outbound HTTP communication is common in production services. If a new `HttpClient` is created per operation, connection pools are not reused efficiently and the operating system can accumulate many sockets in `TIME_WAIT`. Under load, this leads to failed outbound calls and degraded reliability.
+
+## Problem
+
+**Endpoint**: `GET /11-socket-exhaustion/problem`
+
+The problem endpoint creates a new `HttpClient` repeatedly. This means:
+- connection pools are not reused effectively
+- socket churn increases
+- available ports can be exhausted under sustained traffic
+
+## Mitigation
+
+**Endpoint**: `GET /11-socket-exhaustion/mitigation`
+
+The mitigation endpoint uses `IHttpClientFactory`. This means:
+- connection management is pooled and reused
+- socket churn stays lower
+- outbound HTTP behavior remains more stable under load
+
+## Framework alternative
+
+`IHttpClientFactory` is already the framework solution. A comment in the mitigation endpoint shows how to configure a `SocketsHttpHandler` with `PooledConnectionLifetime` through `ConfigurePrimaryHttpMessageHandler`, so connections are reused and recycled to pick up DNS changes.
+
+## Simulation notes
+
+This scenario simulates repeated outbound calls but does not create real internet traffic. The important behavior is `HttpClient` lifetime management. Real socket exhaustion is best observed under local load while monitoring OS socket states.
+
+## How to try it
+
+```bash
+curl "http://localhost:5000/11-socket-exhaustion/problem"
+curl "http://localhost:5000/11-socket-exhaustion/mitigation"
+```
+
+Then increase load with a load generator.
+
+## What to observe
+
+- Both endpoints return success in the lab.
+- The problem endpoint reports `reusedConnections = false`.
+- The mitigation endpoint reports `reusedConnections = true`.
+- Under load, the problem path creates more connection churn.
+
+## Tools to use
+
+This scenario needs external tooling to confirm connection churn and socket state.
+
+Suggested tools:
+- a load tool (`wrk` or `bombardier`)
+- Windows `netstat` or Linux `ss`
+- optional `dotnet-counters`
+
+See [tools README](../tools/README.md).
+
+## Diagnostic tools
+
+Use these tools to observe the difference:
+- `wrk` → generate concurrent requests
+- `netstat` / `ss` → inspect socket states such as `TIME_WAIT`
+- `dotnet-counters` → watch `System.Net.Http` and runtime activity
+
+Example:
+
+```bash
+wrk -t4 -c50 http://localhost:5000/11-socket-exhaustion/problem
+wrk -t4 -c50 http://localhost:5000/11-socket-exhaustion/mitigation
+```
+
+Then inspect sockets on the host while the load is running.
+
+## Source files
+
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/SocketExhaustionEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/DependencyReliability/SocketExhaustionEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/DependencyReliability/DependencyReliabilityScenarioTests.cs)
+- Smoke tests: [../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs](../../tests/DiagnosticsLab.Api.Tests/Smoke/ApiSmokeTests.cs)
+
+## Related scenarios
+
+- [Scenario 09: Missing Dependency Timeouts](09-missing-dependency-timeouts.md)
+- [Scenario 10: Unbounded Retries](10-unbounded-retries.md)
+
+## External references
+
+- [Use the IHttpClientFactory - .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory)
+- [HttpClient guidelines for .NET](https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines)
+- [HTTP requests with IHttpClientFactory - ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-10.0)

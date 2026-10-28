@@ -20,28 +20,49 @@ You will work with examples of:
 - Large Object Heap pressure and fragmentation
 - Native AOT serialization failures caused by reflection-based JSON metadata
 
-Each scenario has two paths:
+> Documentation links to Microsoft Learn point to the latest docs; the lab itself targets .NET 8.
+
+Each scenario has these paths:
 
 - **Problem** — demonstrates the anti-pattern or failure mode.
-- **Mitigation** — demonstrates the safer implementation or operationally better behavior.
+- **Mitigation** — demonstrates a hand-written safer implementation.
+
+Where .NET ships a ready-made solution (for example `HybridCache` for cache stampede or `AddStandardResilienceHandler()` for retries), the mitigation endpoint's code comments and the scenario doc point to it.
 
 ## Repository layout
 
 ```text
 .
 ├── docs/
-│   ├── 01-excessive-data-materialization.md
-│   ├── ...
-│   ├── 19-repeated-dependency-failures.md
+│   ├── data-access/                   # scenarios 01-02
+│   ├── request-execution/             # scenarios 03-05
+│   ├── observability/                 # scenarios 06-08
+│   ├── dependency-reliability/        # scenarios 09-13
+│   ├── memory/                        # scenarios 14-16
+│   ├── startup/                       # scenarios 17-19
 │   └── tools/README.md
 ├── src/
 │   └── DiagnosticsLab.Api/
+│       ├── Scenarios/
+│       │   ├── DataAccess/
+│       │   ├── DependencyReliability/
+│       │   ├── Memory/
+│       │   ├── Observability/
+│       │   ├── RequestExecution/
+│       │   ├── Startup/
+│       │   └── ScenarioRegistration.cs   # DI registration and route mapping for every scenario
+│       ├── Configuration/ Data/ Json/ Services/
+│       └── Program.cs
 ├── tests/
-│   └── DiagnosticsLab.Tests/
+│   └── DiagnosticsLab.Api.Tests/
+│       ├── Scenarios/                     # one folder per theme, mirroring src
+│       ├── Smoke/
+│       └── Infrastructure/
+├── dotnet-production-diagnostics-lab.slnx
 └── README.md
 ```
 
-The exact project names may evolve, but the intent stays the same: one API project hosts the scenarios, and the test project validates endpoint behavior.
+Scenario endpoint classes live under `src/DiagnosticsLab.Api/Scenarios/<Theme>/`, and tests mirror that structure. The solution targets .NET 8 (`net8.0`) and uses the `.slnx` solution format, which requires a recent .NET SDK (9.0.200 or later).
 
 ## Quick start
 
@@ -81,40 +102,40 @@ For optional diagnostic tooling, see [docs/tools/README.md](docs/tools/README.md
 
 ### Data access
 
-- [Scenario 01: Excessive Data Materialization](docs/01-excessive-data-materialization.md)
-- [Scenario 05: N + 1 Queries](docs/05-n-plus-one-queries.md)
+- [Scenario 01: Excessive Data Materialization](docs/data-access/01-excessive-data-materialization.md)
+- [Scenario 02: N + 1 Queries](docs/data-access/02-n-plus-one-queries.md)
 
 ### Request execution and runtime pressure
 
-- [Scenario 02: Missing Cancellation Propagation](docs/02-missing-cancellation-propagation.md)
-- [Scenario 06: Blocking Request Thread](docs/06-blocking-request-thread.md)
-- [Scenario 15: ThreadPool Starvation](docs/15-threadpool-starvation.md)
+- [Scenario 03: Missing Cancellation Propagation](docs/request-execution/03-missing-cancellation-propagation.md)
+- [Scenario 04: Blocking Request Thread](docs/request-execution/04-blocking-request-thread.md)
+- [Scenario 05: ThreadPool Starvation](docs/request-execution/05-threadpool-starvation.md)
 
 ### Observability and operational visibility
 
-- [Scenario 03: Missing Log Context](docs/03-missing-log-context.md)
-- [Scenario 10: Missing Health Probes](docs/10-missing-health-probes.md)
-- [Scenario 12: Logging and Audit Failure Propagation](docs/12-logging-and-audit-failure-propagation.md)
+- [Scenario 06: Missing Log Context](docs/observability/06-missing-log-context.md)
+- [Scenario 07: Missing Health Probes](docs/observability/07-missing-health-probes.md)
+- [Scenario 08: Logging and Audit Failure Propagation](docs/observability/08-logging-and-audit-failure-propagation.md)
 
 ### Dependency reliability
 
-- [Scenario 04: Missing Dependency Timeouts](docs/04-missing-dependency-timeouts.md)
-- [Scenario 07: Unbounded Retries](docs/07-unbounded-retries.md)
-- [Scenario 14: Socket Exhaustion](docs/14-socket-exhaustion.md)
-- [Scenario 17: Cache Stampede](docs/17-cache-stampede.md)
-- [Scenario 19: Repeated Dependency Failures](docs/19-repeated-dependency-failures.md)
+- [Scenario 09: Missing Dependency Timeouts](docs/dependency-reliability/09-missing-dependency-timeouts.md)
+- [Scenario 10: Unbounded Retries](docs/dependency-reliability/10-unbounded-retries.md)
+- [Scenario 11: Socket Exhaustion](docs/dependency-reliability/11-socket-exhaustion.md)
+- [Scenario 12: Cache Stampede](docs/dependency-reliability/12-cache-stampede.md)
+- [Scenario 13: Repeated Dependency Failures](docs/dependency-reliability/13-repeated-dependency-failures.md)
 
 ### Memory and payload handling
 
-- [Scenario 08: Large Response Buffering](docs/08-large-response-buffering.md)
-- [Scenario 13: Request Body Memory Pressure](docs/13-request-body-memory-pressure.md)
-- [Scenario 16: LOH Fragmentation](docs/16-loh-fragmentation.md)
+- [Scenario 14: Large Response Buffering](docs/memory/14-large-response-buffering.md)
+- [Scenario 15: Request Body Memory Pressure](docs/memory/15-request-body-memory-pressure.md)
+- [Scenario 16: LOH Fragmentation](docs/memory/16-loh-fragmentation.md)
 
 ### Startup, configuration, and deployment behavior
 
-- [Scenario 09: Invalid Configuration](docs/09-invalid-configuration.md)
-- [Scenario 11: Silent Startup Failure](docs/11-silent-startup-failure.md)
-- [Scenario 18: Native AOT Serialization Failure](docs/18-native-aot-serialization-failure.md)
+- [Scenario 17: Invalid Configuration](docs/startup/17-invalid-configuration.md)
+- [Scenario 18: Silent Startup Failure](docs/startup/18-silent-startup-failure.md)
+- [Scenario 19: Native AOT Serialization Failure](docs/startup/19-native-aot-serialization-failure.md)
 
 ## Diagnostic tools
 
@@ -142,10 +163,10 @@ Run all tests:
 dotnet test
 ```
 
-The tests include:
+The tests (in `tests/DiagnosticsLab.Api.Tests`) include:
 
-- smoke checks
-- scenario behavior checks
+- smoke checks (every GET route and health probes)
+- scenario behavior checks, grouped by theme
 - startup validation checks
 - endpoint response checks
 

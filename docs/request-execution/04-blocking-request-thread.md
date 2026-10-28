@@ -1,0 +1,88 @@
+# Scenario 04: Blocking Request Thread
+
+## Goal
+
+Show the difference between blocking a request thread and using asynchronous waiting that releases the thread back to the runtime.
+
+## Why this matters
+
+When request handling blocks a thread with synchronous waiting, fewer threads remain available to process incoming work. Under load, this reduces throughput and can contribute to thread-pool starvation.
+
+## Problem
+
+**Endpoint**: `GET /04-blocking-request-thread/problem?delayMs=500`
+
+The problem endpoint blocks the current request thread using `Thread.Sleep`. This means:
+- the thread does no useful work while waiting
+- the runtime cannot reuse that thread for other requests
+- throughput falls under concurrent load
+
+## Mitigation
+
+**Endpoint**: `GET /04-blocking-request-thread/mitigation?delayMs=500`
+
+The mitigation endpoint uses asynchronous waiting with `Task.Delay(...)`. This means:
+- the request thread is released while waiting
+- other requests can use the thread pool more efficiently
+- the application scales better under load
+
+## Simulation notes
+
+This scenario uses `Thread.Sleep(...)` versus `Task.Delay(...)` to make the difference visible. In a real system, the same problem appears with synchronous I/O, blocking waits, or sync-over-async patterns in request processing.
+
+## How to try it
+
+```bash
+curl "http://localhost:5000/04-blocking-request-thread/problem?delayMs=500"
+curl "http://localhost:5000/04-blocking-request-thread/mitigation?delayMs=500"
+```
+
+Then repeat under load.
+
+## What to observe
+
+- Both endpoints return the same logical response shape.
+- The problem endpoint reports blocking behavior.
+- The mitigation endpoint reports non-blocking behavior.
+- Under load, blocking reduces throughput and increases latency.
+
+## Tools to use
+
+Use external tooling to make blocking and throughput differences visible.
+
+Suggested tools:
+- `dotnet-counters`
+- optional `dotnet-trace`
+- a load tool (`wrk` or `bombardier`)
+
+See [tools README](../tools/README.md).
+
+## Diagnostic tools
+
+Use these tools to observe the behavior:
+- `wrk` or another load generator → generate concurrent requests
+- `dotnet-counters` → watch thread-pool activity, queue length, and runtime counters
+- application logs → confirm blocking vs non-blocking path execution
+
+Example:
+
+```bash
+wrk -t4 -c50 -d30s "http://localhost:5000/04-blocking-request-thread/problem?delayMs=500"
+wrk -t4 -c50 -d30s "http://localhost:5000/04-blocking-request-thread/mitigation?delayMs=500"
+```
+
+## Source files
+
+- Endpoint: [../../src/DiagnosticsLab.Api/Scenarios/RequestExecution/BlockingRequestThreadEndpoints.cs](../../src/DiagnosticsLab.Api/Scenarios/RequestExecution/BlockingRequestThreadEndpoints.cs)
+- Tests: [../../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs](../../tests/DiagnosticsLab.Api.Tests/Scenarios/RequestExecution/RequestExecutionScenarioTests.cs)
+
+## Related scenarios
+
+- [Scenario 03: Missing Cancellation Propagation](03-missing-cancellation-propagation.md)
+- [Scenario 05: ThreadPool Starvation](05-threadpool-starvation.md)
+
+## External references
+
+- [ASP.NET Core Best Practices](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/best-practices?view=aspnetcore-10.0)
+- [Task.Delay Method](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.delay?view=net-10.0)
+- [Asynchronous programming scenarios - C#](https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/async-scenarios)

@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using DiagnosticsLab.Api.Endpoints;
+using DiagnosticsLab.Api.Scenarios.Startup;
 
 namespace DiagnosticsLab.Api;
 
